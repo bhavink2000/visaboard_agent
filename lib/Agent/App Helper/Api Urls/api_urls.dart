@@ -1,0 +1,41 @@
+class ApiUrls{
+  static const mainUrl = 'https://demo.visaboard.in/api/vb-agent/';
+
+  static const loginUrl = '${mainUrl}login';
+  static const signUrl = '${mainUrl}signup';
+  static const forgotPasswordUrl = '${mainUrl}post-forgot-password';
+  static const changePasswordUrl = '${mainUrl}change-password';
+  static const profileEditUrl = '${mainUrl}edit-profile';
+  static const userUrl = '${mainUrl}user/list';
+  static const userFullListUrl = '${mainUrl}user/list/full-list';
+  static const userAddUrl = '${mainUrl}user/add';
+  static const transactionUrl = '${mainUrl}user/transaction/list';
+  static const refundWalletUrl = '${mainUrl}user/sop/refund-to-wallet';
+  static const sopListUrl = '${mainUrl}user/sop/list';
+  static const sopListUnreadUrl = '${mainUrl}user/sop/list/unread';
+  static const sendMessageUrl = '${mainUrl}send/message';
+  static const qrCodeStickerUrl = '${mainUrl}user/download-qr-code/download/sticker';
+  static const qrCodeDownUrl = '${mainUrl}user/download-qr-code/download';
+  static const qrCodeVisitingCardUrl = '${mainUrl}user/download-qr-code/download/visiting-card';
+  static const applyForStandeeUrl = '${mainUrl}user/download-qr-code/apply-for-standee';
+  static const walletUrl = '${mainUrl}user/wallet/list';
+  static const walletTransactionUrl = '${mainUrl}user/sop/wallet-transaction/list';
+  static const walletAddUrl = 'http://localhost/visaboard/api/vb-agent/user/wallet/add';
+  static const walletWithdrawUrl = '${mainUrl}user/wallet/withdraw/add';
+  static const qrCodeDownLoadUrl = '${mainUrl}user/download-qr-code';
+  static const dashboardCounterUrl = '${mainUrl}user/dashboard/counter';
+  static const userEditUrl = '${mainUrl}user/edit';
+  static const userUpdateUrl = 'http://localhost/visaboard/api/vb-agent/user/update';
+  static const uploadDocsUrl = '${mainUrl}user/upload-document';
+  static const docsDeleteUrl = 'http://localhost/visaboard/api/vb-agent/user/upload-document/delete';
+  static const sopApplyUrl = '${mainUrl}user/apply-sop';
+  static const checkPaymentMethodUrl = '${mainUrl}user/check-available-payment-method';
+  static const quickApplyUrl = '${mainUrl}quick-apply';
+  static const sopCalculationUrl = '${mainUrl}sop-calculation';
+  static const letterTypeUrl = '${mainUrl}letter-type/get';
+  static const templateUrl = '${mainUrl}get-templates-list';
+  static const razorpayUrl = '${mainUrl}user/sop/payment/razorpay-pay';
+  static const stripeUrl = 'https://localhost/visaboard/api/vb-agent/user/sop/payment/stripe-pay';
+  static const paytmUrl = 'https://localhost/visaboard/api/vb-agent/user/sop/payment/paytm-pay';
+  static const leadManagementUrl = '${mainUrl}get-lead-management-list';
+}
