@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:flutter/cupertino.dart';
 
 import '../constants/constants.dart';
@@ -9,9 +8,9 @@ class Slider {
   final String sliderSubHeading;
 
   Slider({
-      @required this.sliderImageUrl,
-      @required this.sliderHeading,
-      @required this.sliderSubHeading
+      required this.sliderImageUrl,
+      required this.sliderHeading,
+      required this.sliderSubHeading
   });
 }
 

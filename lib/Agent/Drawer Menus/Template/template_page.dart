@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: missing_return
 
 import 'dart:ui';
@@ -23,7 +22,7 @@ import '../drawer_menus.dart';
 
 
 class TemplatePage extends StatefulWidget {
-  const TemplatePage({Key key}) : super(key: key);
+  const TemplatePage({Key? key}) : super(key: key);
 
   @override
   State<TemplatePage> createState() => _TemplatePageState();
@@ -81,7 +80,7 @@ class _TemplatePageState extends State<TemplatePage> {
                   create: (BuildContext context)=>agentDrawerMenuProvider,
                   child: Consumer<AgentDrawerMenuProvider>(
                     builder: (context, value, __){
-                      switch(value.templateDataList.status){
+                      switch(value.templateDataList.status!){
                         case Status.loading:
                           return CenterLoading();
                         case Status.error:
@@ -91,9 +90,9 @@ class _TemplatePageState extends State<TemplatePage> {
                             child: ListView.builder(
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                               physics: const BouncingScrollPhysics(),
-                              itemCount: value.templateDataList.data.templateData.data.length,
+                              itemCount: value.templateDataList.data!.templateData!.data!.length,
                               itemBuilder: (context, index){
-                                var tempData = value.templateDataList.data.templateData.data;
+                                var tempData = value.templateDataList.data!.templateData!.data;
 
                                 return AnimationConfiguration.staggeredList(
                                   position: index,
@@ -122,7 +121,7 @@ class _TemplatePageState extends State<TemplatePage> {
                                                         alignment: Alignment.bottomLeft,
                                                         child: Padding(
                                                           padding: PaddingIDNM,
-                                                          child: Text("Sr. No. ${tempData[index].id}",style: FrontHeaderID),
+                                                          child: Text("Sr. No. ${tempData![index].id}",style: FrontHeaderID),
                                                         ),
                                                       ),
                                                     ],
@@ -179,7 +178,7 @@ class _TemplatePageState extends State<TemplatePage> {
                                                               child: ListView.builder(
                                                                 scrollDirection: Axis.horizontal,
                                                                 physics: const BouncingScrollPhysics(),
-                                                                itemCount: tempData[index].documents.length,
+                                                                itemCount: tempData[index].documents!.length,
                                                                 itemBuilder: (context, indexfile){
                                                                   return InkWell(
                                                                     onTap: (){
@@ -189,9 +188,9 @@ class _TemplatePageState extends State<TemplatePage> {
                                                                     },
                                                                     child: Padding(
                                                                       padding: const EdgeInsets.fromLTRB(8, 10, 0, 0),
-                                                                      child: tempData[index].documents.isEmpty
+                                                                      child: tempData[index].documents!.isEmpty
                                                                           ? const Text("No File")
-                                                                          : Text(tempData[index].documents[indexfile].toString().split('/').last,style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.white,fontSize: 12,decoration: TextDecoration.underline)),
+                                                                          : Text(tempData[index].documents![indexfile].toString().split('/').last,style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.white,fontSize: 12,decoration: TextDecoration.underline)),
                                                                     ),
                                                                   );
                                                                 },
@@ -215,7 +214,7 @@ class _TemplatePageState extends State<TemplatePage> {
 
                                         index + 1 == tempData.length ? CustomPaginationWidget(
                                           currentPage: curentindex,
-                                          lastPage: agentDrawerMenuProvider.templateDataList.data.templateData.lastPage,
+                                          lastPage: agentDrawerMenuProvider.templateDataList.data!.templateData!.lastPage!,
                                           onPageChange: (page) {
                                             setState(() {
                                               curentindex = page - 1;

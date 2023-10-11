@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: non_constant_identifier_names, missing_return, prefer_typing_uninitialized_variables
 
 import 'dart:convert';
@@ -23,7 +22,7 @@ import '../../Authentication Pages/OnBoarding/constants/constants.dart';
 import '../drawer_menus.dart';
 
 class TransactionPage extends StatefulWidget{
-  const TransactionPage({Key key}) : super(key: key);
+  const TransactionPage({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return _TransactionPage();
@@ -37,8 +36,7 @@ class _TransactionPage extends State<TransactionPage>{
 
   final GlobalKey<ScaffoldState> key = GlobalKey();
 
-  final TextEditingController _searchController = TextEditingController();
-  String _searchText = '';
+  final tSearch = TextEditingController();
   int curentindex = 0;
 
 
@@ -48,26 +46,28 @@ class _TransactionPage extends State<TransactionPage>{
     getAccessToken.checkAuthentication(context, setState);
     Future.delayed(const Duration(seconds: 1),(){
       setState(() {
-        agentDrawerMenuProvider.fetchTransaction(1, getAccessToken.access_token);
+        agentDrawerMenuProvider.fetchTransaction(1, getAccessToken.access_token, '');
       });
     });
   }
   @override
   void dispose() {
-    _searchController.dispose();
     super.dispose();
   }
 
-  String searchQuery = '';
-  void setSearchQuery(String query) {
-    setState(() {
-      searchQuery = query;
-    });
-  }
+  // String searchQuery = '';
+  // void setSearchQuery(String query) {
+  //   setState(() {
+  //     searchQuery = query;
+  //   });
+  // }
 
   final _advancedDrawerController = AdvancedDrawerController();
   @override
   Widget build(BuildContext context) {
+    Map tData = {
+      'search_text': tSearch.text,
+    };
     return AdvancedDrawer(
       key: key,
       drawer: CustomDrawer(controller: _advancedDrawerController,),
@@ -106,27 +106,42 @@ class _TransactionPage extends State<TransactionPage>{
                         ),
                         padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                         child: TextFormField(
-                          controller: _searchController,
+                          controller: tSearch,
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Search',
-                              hintStyle: TextStyle(fontSize: 15,fontFamily: Constants.OPEN_SANS)
+                              hintStyle: TextStyle(fontSize: 15,fontFamily: Constants.OPEN_SANS),
+                            suffixIcon: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  tSearch.clear();
+                                  tSearch.text = '';
+                                });
+                                Map tData = {
+                                  'search_text': '',
+                                };
+                                agentDrawerMenuProvider.fetchTransaction(1, getAccessToken.access_token, tData);
+                                //homeMenusProvider.fetchTest(1, getAccessToken.access_token, testData);
+                              },
+                              child: const Icon(Icons.close),
+                            ),
                           ),
                           onChanged: (value) {
-                            setState(() {
-                              _searchText = value;
-                            });
+                            Map tData = {
+                              'search_text': tSearch.text,
+                            };
+                            agentDrawerMenuProvider.fetchTransaction(1, getAccessToken.access_token, tData);
                           },
-                          onTap: (){
-                            showSearch(
-                              context: context,
-                              delegate: TransactionSearch(
-                                context: context,
-                                access_token: getAccessToken.access_token,
-                                onQueryChanged: setSearchQuery,
-                              ),
-                            );
-                          },
+                          // onTap: (){
+                          //   showSearch(
+                          //     context: context,
+                          //     delegate: TransactionSearch(
+                          //       context: context,
+                          //       access_token: getAccessToken.access_token,
+                          //       onQueryChanged: setSearchQuery,
+                          //     ),
+                          //   );
+                          // },
                         ),
                       ),
                     ),
@@ -155,7 +170,7 @@ class _TransactionPage extends State<TransactionPage>{
                   create: (BuildContext context)=>agentDrawerMenuProvider,
                   child: Consumer<AgentDrawerMenuProvider>(
                     builder: (context, value, __){
-                      switch(value.transactionDataList.status){
+                      switch(value.transactionDataList.status!){
                         case Status.loading:
                           return const CenterLoading();
                         case Status.error:
@@ -164,9 +179,9 @@ class _TransactionPage extends State<TransactionPage>{
                           return AnimationLimiter(
                             child: ListView.builder(
                               physics: const BouncingScrollPhysics(),
-                              itemCount: value.transactionDataList.data.transactionData.data.length,
+                              itemCount: value.transactionDataList.data!.transactionData!.data!.length,
                               itemBuilder: (context, index){
-                                var transaction = value.transactionDataList.data.transactionData.data;
+                                var transaction = value.transactionDataList.data!.transactionData!.data;
                                 return AnimationConfiguration.staggeredList(
                                   position: index,
                                   duration: const Duration(milliseconds: 1000),
@@ -184,7 +199,7 @@ class _TransactionPage extends State<TransactionPage>{
                                                       var controller = ExpandableController.of(context, required: true);
                                                       return InkWell(
                                                         onTap: (){
-                                                          controller.toggle();
+                                                          controller!.toggle();
                                                         },
                                                         child: Card(
                                                           elevation: 5,
@@ -194,7 +209,7 @@ class _TransactionPage extends State<TransactionPage>{
                                                             children: <Widget>[
                                                               Expandable(
                                                                 collapsed: buildCollapsed1(
-                                                                  transaction[index].userId,
+                                                                  transaction![index].userId,
                                                                   transaction[index].firstName,
                                                                   transaction[index].middleName,
                                                                   transaction[index].lastName
@@ -224,19 +239,19 @@ class _TransactionPage extends State<TransactionPage>{
                                           ),
                                         ),
 
-                                        if (transaction.length == 10 || index + 1 != transaction.length)
+                                        if (transaction!.length == 10 || index + 1 != transaction!.length)
                                           Container()
                                         else
                                           SizedBox(height: MediaQuery.of(context).size.height / 4),
 
                                         index + 1 == transaction.length ? CustomPaginationWidget(
                                           currentPage: curentindex,
-                                          lastPage: agentDrawerMenuProvider.transactionDataList.data.transactionData.lastPage,
+                                          lastPage: agentDrawerMenuProvider.transactionDataList.data!.transactionData!.lastPage!,
                                           onPageChange: (page) {
                                             setState(() {
                                               curentindex = page - 1;
                                             });
-                                            agentDrawerMenuProvider.fetchTransaction(curentindex + 1, getAccessToken.access_token);
+                                            agentDrawerMenuProvider.fetchTransaction(curentindex + 1, getAccessToken.access_token, tData);
                                           },
                                         ) : Container(),
                                       ],
@@ -352,7 +367,7 @@ class _TransactionPage extends State<TransactionPage>{
               Expanded(
                 child: Container(
                     padding: PaddingField,
-                    child: Text("",style: BackHeaderTopR)
+                    child: Text("N/A",style: BackHeaderTopR)
                 ),
               )
             ],

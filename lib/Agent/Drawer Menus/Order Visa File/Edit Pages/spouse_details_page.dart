@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: use_build_context_synchronously, must_be_immutable
 
 import 'dart:convert';
@@ -21,7 +20,7 @@ class SpouseDetailsPage extends StatefulWidget {
   OVFEditData editDetails;
   var user_id, user_sop_id;
   var tabStatus,tabName;
-  SpouseDetailsPage({Key key,this.pagecontroller,this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
+  SpouseDetailsPage({Key? key,this.pagecontroller,required this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
 
   @override
   State<SpouseDetailsPage> createState() => _SpouseDetailsPageState();
@@ -54,7 +53,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
   List<TextEditingController> sdChildSchoolNm = [TextEditingController()];
   List<TextEditingController> sdChildStudy = [TextEditingController()];
 
-  String _spOccupation;
+  String? _spOccupation;
 
   GetAccessToken getAccessToken = GetAccessToken();
   @override
@@ -179,7 +178,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                           labelText: "DOB of Spouse"
                       ),
                       onTap: () async {
-                        DateTime pickedDate = await showDatePicker(
+                        DateTime? pickedDate = await showDatePicker(
                             context: context,
                             initialDate: DateTime.now(),
                             firstDate: DateTime(2000),
@@ -211,7 +210,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                           labelText: "Marriage Date"
                       ),
                       onTap: () async {
-                        DateTime pickedDate = await showDatePicker(
+                        DateTime? pickedDate = await showDatePicker(
                           context: context,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2000),
@@ -260,7 +259,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                           labelText: "Engagement Date"
                       ),
                       onTap: () async {
-                        DateTime pickedDate = await showDatePicker(
+                        DateTime? pickedDate = await showDatePicker(
                             context: context,
                             initialDate: DateTime.now(),
                             firstDate: DateTime(2000),
@@ -297,16 +296,16 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                         isExpanded: true,
                         onChanged: (value) {
                           setState(() {
-                            _spOccupation = value;
+                            _spOccupation = value as String?;
                           });
                         },
                         onSaved: (value) {
                           setState(() {
-                            _spOccupation = value;
+                            _spOccupation = value as String?;
                           });
                         },
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value == null) {
                             return "can't empty";
                           } else {
                             return null;
@@ -317,7 +316,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                             value: item['id'].toString(),
                             child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
                           );
-                        })?.toList() ?? [],
+                        }).toList() ?? [],
                       )
                   ),
                 ),
@@ -404,7 +403,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                           labelText: "Start Date"
                       ),
                       onTap: () async {
-                        DateTime pickedDate = await showDatePicker(
+                        DateTime? pickedDate = await showDatePicker(
                             context: context,
                             initialDate: DateTime.now(),
                             firstDate: DateTime(2000),
@@ -436,7 +435,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                           labelText: "End Date"
                       ),
                       onTap: () async {
-                        DateTime pickedDate = await showDatePicker(
+                        DateTime? pickedDate = await showDatePicker(
                           context: context,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2000),
@@ -566,7 +565,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                                     labelText: "Date of Birth of Child"
                                 ),
                                 onTap: () async {
-                                  DateTime pickedDate = await showDatePicker(
+                                  DateTime? pickedDate = await showDatePicker(
                                       context: context,
                                       initialDate: DateTime.now(),
                                       firstDate: DateTime(2000),
@@ -697,8 +696,8 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
     );
   }
 
-  List occupationTypes;
-  Future<String> getOccupationType(var accesstoken) async {
+  List? occupationTypes;
+  Future<String?> getOccupationType(var accesstoken) async {
     print("States Calling");
     await http.post(
         Uri.parse(ApiConstants.getOVFEdit),
@@ -772,6 +771,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
           }
       ).onError((error, stackTrace){
         print("error > $error");
+        return Future.error(error!);
       });
       print("response code ->${response.statusCode}");
       print("response Message ->${response.statusMessage}");

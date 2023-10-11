@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
@@ -19,7 +18,7 @@ class FundingSponsorPage extends StatefulWidget {
   OVFEditData editDetails;
   var user_id, user_sop_id;
   var tabStatus, tabName;
-  FundingSponsorPage({Key key,this.pagecontroller,this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
+  FundingSponsorPage({Key? key,this.pagecontroller,required this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
 
   @override
   State<FundingSponsorPage> createState() => _FundingSponsorPageState();
@@ -27,9 +26,9 @@ class FundingSponsorPage extends StatefulWidget {
 
 class _FundingSponsorPageState extends State<FundingSponsorPage> {
 
-  String _fsSStudies;
+  String? _fsSStudies;
   final fsName = TextEditingController();
-  String _fsSOccupation;
+  String? _fsSOccupation;
   final fsSOrganization = TextEditingController();
   final fsSAnnualIncome = TextEditingController();
   final fsSFundAvaiable = TextEditingController();
@@ -39,7 +38,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
   final fsLoanAmount = TextEditingController();
   final fsGuarantor = TextEditingController();
 
-  List<String> fsFundsType = [null];
+  List<String?> fsFundsType = [];
   List<TextEditingController> fsAmount = [TextEditingController()];
   String fsSponsorship = '';
   int numberofitems = 1;
@@ -123,7 +122,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
               padding: EdgeInsets.all(10),
               child: InkWell(
                 onTap: (){
-                  fsFundsType.add(null);
+                  fsFundsType.add('');
                   fsAmount.add(TextEditingController());
                   numberofitems++;
                   setState(() {});
@@ -161,16 +160,16 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                           isExpanded: true,
                           onChanged: (value) {
                             setState(() {
-                              _fsSStudies = value;
+                              _fsSStudies = value as String?;
                             });
                           },
                           onSaved: (value) {
                             setState(() {
-                              _fsSStudies = value;
+                              _fsSStudies = value as String?;
                             });
                           },
                           validator: (value) {
-                            if (value.isEmpty) {
+                            if (value == null) {
                               return "can't empty";
                             } else {
                               return null;
@@ -215,16 +214,16 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                           isExpanded: true,
                           onChanged: (value) {
                             setState(() {
-                              _fsSOccupation = value;
+                              _fsSOccupation = value as String?;
                             });
                           },
                           onSaved: (value) {
                             setState(() {
-                              _fsSOccupation = value;
+                              _fsSOccupation = value as String?;
                             });
                           },
                           validator: (value) {
-                            if (value.isEmpty) {
+                            if (value == null) {
                               return "can't empty";
                             } else {
                               return null;
@@ -235,7 +234,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                               value: item['id'].toString(),
                               child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
                             );
-                          })?.toList() ?? [],
+                          }).toList() ?? [],
                         )
                     ),
                   ),
@@ -435,16 +434,16 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                                       isExpanded: true,
                                       onChanged: (value) {
                                         setState(() {
-                                          fsFundsType[index] = value;
+                                          fsFundsType[index] = value as String?;
                                         });
                                       },
                                       onSaved: (value) {
                                         setState(() {
-                                          fsFundsType[index] = value;
+                                          fsFundsType[index] = value as String?;
                                         });
                                       },
                                       validator: (value) {
-                                        if (value.isEmpty) {
+                                        if (value == null) {
                                           return "can't empty";
                                         } else {
                                           return null;
@@ -455,7 +454,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                                           value: item['id'].toString(),
                                           child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
                                         );
-                                      })?.toList() ?? [],
+                                      }).toList() ?? [],
                                     )
                                 ),
                               ),
@@ -535,8 +534,8 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
     );
   }
 
-  List fundsTypes;
-  Future<String> getFundsType(var accesstoken) async {
+  List? fundsTypes;
+  Future<String?> getFundsType(var accesstoken) async {
     print("States Calling");
     await http.post(
         Uri.parse(ApiConstants.getOVFEdit),
@@ -556,8 +555,8 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
       print("Education List -> $fundsTypes");
     });
   }
-  List occupationTypes;
-  Future<String> getOccupationType(var accesstoken) async {
+  List? occupationTypes;
+  Future<String?> getOccupationType(var accesstoken) async {
     print("States Calling");
     await http.post(
         Uri.parse(ApiConstants.getOVFEdit),
@@ -577,8 +576,8 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
       print("Education List -> $occupationTypes");
     });
   }
-  List relationTypes;
-  Future<String> getRelationType(var accesstoken) async {
+  List? relationTypes;
+  Future<String?> getRelationType(var accesstoken) async {
     print("States Calling");
     await http.post(
         Uri.parse(ApiConstants.getOVFEdit),

@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
@@ -20,7 +19,7 @@ class LanguageTestPage extends StatefulWidget {
   OVFEditData editDetails;
   var user_id, user_sop_id;
   var tabStatus,tabName;
-  LanguageTestPage({Key key,this.pagecontroller,this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
+  LanguageTestPage({Key? key,this.pagecontroller,required this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
 
   @override
   State<LanguageTestPage> createState() => _LanguageTestPageState();
@@ -45,10 +44,10 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
   List<TextEditingController> listen = [TextEditingController()];
   List<TextEditingController> overA = [TextEditingController()];
   List<TextEditingController> tDate = [TextEditingController()];
-  List<String> yes_no = [null];
+  List<String> yes_no = [];
 
   int numberofitems = 1;
-  List<String> eType = [null];
+  List<String?> eType = [];
 
   GetAccessToken getAccessToken = GetAccessToken();
   @override
@@ -127,8 +126,8 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                   listen.add(TextEditingController());
                   overA.add(TextEditingController());
                   tDate.add(TextEditingController());
-                  eType.add(null);
-                  yes_no.add(null);
+                  eType.add('');
+                  yes_no.add('');
                   numberofitems++;
                   setState(() {});
                 },
@@ -269,7 +268,7 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                                       labelText: "Test Date"
                                   ),
                                   onTap: () async {
-                                    DateTime pickedDate = await showDatePicker(
+                                    DateTime? pickedDate = await showDatePicker(
                                         context: context,
                                         initialDate: DateTime.now(),
                                         firstDate: DateTime(2000),
@@ -307,27 +306,27 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                               isExpanded: true,
                               onChanged: (value) {
                                 setState(() {
-                                  eType[index] = value;
+                                  eType[index] = value as String?;
                                 });
                               },
                               onSaved: (value) {
                                 setState(() {
-                                  eType[index] = value;
+                                  eType[index] = value as String?;
                                 });
                               },
                               validator: (value) {
-                                if (value.isEmpty) {
+                                if (value == null) {
                                   return "can't empty";
                                 } else {
                                   return null;
                                 }
                               },
-                              items: testTypes?.map((item) {
+                              items: testTypes!.map((item) {
                                 return DropdownMenuItem(
                                   value: item['id'].toString(),
                                   child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
                                 );
-                              })?.toList() ?? [],
+                              }).toList() ?? [],
                             )
                         ),
                       ),
@@ -407,8 +406,8 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
     );
   }
 
-  List testTypes;
-  Future<String> getTestType(var accesstoken) async {
+  List? testTypes;
+  Future<String?> getTestType(var accesstoken) async {
     print("States Calling");
     await http.post(
         Uri.parse(ApiConstants.getOVFEdit),
@@ -443,7 +442,7 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
       groupValue: yes_no[index],
       onChanged: (value) {
         setState(() {
-          yes_no[index] = value;
+          yes_no[index] = value!;
         });
       },
     );

@@ -29,9 +29,9 @@ class DashboardDataProvider with ChangeNotifier{
     walletDData = walletDResponse;
     notifyListeners();
   }
-  Future<void> fetchWalletDashboard(var index,var access_token)async{
+  Future<void> fetchWalletDashboard(var index,var access_token, var data)async{
     setWalletDResponse(ApiResponseType.loading());
-    dashboardRepo.walletDashboard(index,access_token).then((value){
+    dashboardRepo.walletDashboard(index,access_token, data).then((value){
       setWalletDResponse(ApiResponseType.complate(value));
     }).onError((error, stackTrace){
       setWalletDResponse(ApiResponseType.error(error.toString()));

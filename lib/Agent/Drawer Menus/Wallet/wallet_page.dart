@@ -1,14 +1,15 @@
-//@dart=2.9
 // ignore_for_file: non_constant_identifier_names, missing_return, use_build_context_synchronously
 
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:expandable/expandable.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 //import 'package:url_launcher/url_launcher.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Enums/enums_status.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Ui%20Helper/error_helper.dart';
@@ -17,6 +18,7 @@ import '../../App Helper/Api Repository/api_urls.dart';
 import '../../App Helper/Get Access Token/get_access_token.dart';
 import '../../App Helper/Providers/Drawer Data Provider/drawer_menu_provider.dart';
 import '../../App Helper/Routes/App Routes/app_routes_name.dart';
+import '../../App Helper/Routes/App Routes/drawer_menus_routes_names.dart';
 import '../../App Helper/Search Data/search_wallet_data.dart';
 import '../../App Helper/Ui Helper/Drawer Menus Helper/drawer_menus_datashow_helper.dart';
 import '../../App Helper/Ui Helper/divider_helper.dart';
@@ -30,7 +32,7 @@ import '../drawer_menus.dart';
 
 
 class WalletPageD extends StatefulWidget{
-  const WalletPageD({Key key}) : super(key: key);
+  const WalletPageD({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return _WalletPageD();
@@ -43,7 +45,7 @@ class _WalletPageD extends State<WalletPageD>{
   AgentDrawerMenuProvider agentDrawerMenuProvider = AgentDrawerMenuProvider();
 
   final GlobalKey<ScaffoldState> key = GlobalKey();
-  String search = '';
+  final wSearch = TextEditingController();
   int curentindex = 0;
 
   @override
@@ -52,7 +54,7 @@ class _WalletPageD extends State<WalletPageD>{
     getAccessToken.checkAuthentication(context, setState);
     Future.delayed(const Duration(seconds: 2),(){
       setState(() {
-        agentDrawerMenuProvider.fetchWalletTransaction(1, getAccessToken.access_token);
+        agentDrawerMenuProvider.fetchWalletTransaction(1, getAccessToken.access_token,'');
       });
     });
   }
@@ -62,6 +64,9 @@ class _WalletPageD extends State<WalletPageD>{
 
   @override
   Widget build(BuildContext context) {
+    Map wData = {
+      'search_text': wSearch.text,
+    };
     return AdvancedDrawer(
       key: key,
       drawer: CustomDrawer(controller: _advancedDrawerController,),
@@ -106,23 +111,38 @@ class _WalletPageD extends State<WalletPageD>{
                                 ),
                                 padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                                 child: TextFormField(
+                                  controller: wSearch,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Search',
                                       hintStyle: TextStyle(fontSize: 15,fontFamily: Constants.OPEN_SANS),
-                                      suffixIcon: const Icon(Icons.search)
+                                    suffixIcon: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          wSearch.clear();
+                                          wSearch.text = '';
+                                        });
+                                        Map wData = {
+                                          'search_text': '',
+                                        };
+                                        agentDrawerMenuProvider.fetchWalletTransaction(1, getAccessToken.access_token, wData);
+                                        //homeMenusProvider.fetchTest(1, getAccessToken.access_token, testData);
+                                      },
+                                      child: const Icon(Icons.close),
+                                    ),
                                   ),
                                   onChanged: (value) {
-                                    setState(() {
-                                      search = value;
-                                    });
+                                    Map wData = {
+                                      'search_text': wSearch.text,
+                                    };
+                                    agentDrawerMenuProvider.fetchWalletTransaction(1, getAccessToken.access_token, wData);
                                   },
-                                  onTap: (){
-                                    showSearch(
-                                      context: context,
-                                      delegate: WalletSearch(context: context,access_token: getAccessToken.access_token)
-                                    );
-                                  },
+                                  // onTap: (){
+                                  //   showSearch(
+                                  //     context: context,
+                                  //     delegate: WalletSearch(context: context,access_token: getAccessToken.access_token)
+                                  //   );
+                                  // },
                                 ),
                               ),
                             ),
@@ -163,7 +183,7 @@ class _WalletPageD extends State<WalletPageD>{
                   create: (BuildContext context)=>agentDrawerMenuProvider,
                   child: Consumer<AgentDrawerMenuProvider>(
                     builder: (context, value, __){
-                      switch(value.walletTDataList.status){
+                      switch(value.walletTDataList.status!){
                         case Status.loading:
                           return CenterLoading();
                         case Status.error:
@@ -172,9 +192,9 @@ class _WalletPageD extends State<WalletPageD>{
                           return AnimationLimiter(
                             child: ListView.builder(
                               physics: const BouncingScrollPhysics(),
-                              itemCount: value.walletTDataList.data.walletTData.data.length,
+                              itemCount: value.walletTDataList.data!.walletTData!.data!.length,
                               itemBuilder: (context, index){
-                                var walletTransaction = value.walletTDataList.data.walletTData.data;
+                                var walletTransaction = value.walletTDataList.data!.walletTData!.data;
                                 return AnimationConfiguration.staggeredList(
                                   position: index,
                                   duration: const Duration(milliseconds: 1000),
@@ -192,7 +212,7 @@ class _WalletPageD extends State<WalletPageD>{
                                                       var controller = ExpandableController.of(context, required: true);
                                                       return InkWell(
                                                         onTap: (){
-                                                          controller.toggle();
+                                                          controller!.toggle();
                                                         },
                                                         child: Card(
                                                           elevation: 5,
@@ -202,7 +222,7 @@ class _WalletPageD extends State<WalletPageD>{
                                                             children: <Widget>[
                                                               Expandable(
                                                                 collapsed: buildCollapsed1(
-                                                                  walletTransaction[index].id
+                                                                  walletTransaction![index].id
                                                                 ),
                                                                 expanded: buildExpanded1(index),
                                                               ),
@@ -228,19 +248,19 @@ class _WalletPageD extends State<WalletPageD>{
                                           ),
                                         ),
 
-                                        if (walletTransaction.length == 10 || index + 1 != walletTransaction.length)
+                                        if (walletTransaction!.length == 10 || index + 1 != walletTransaction!.length)
                                           Container()
                                         else
                                           SizedBox(height: MediaQuery.of(context).size.height / 4),
 
                                         index + 1 == walletTransaction.length ? CustomPaginationWidget(
                                           currentPage: curentindex,
-                                          lastPage: agentDrawerMenuProvider.walletTDataList.data.walletTData.lastPage,
+                                          lastPage: agentDrawerMenuProvider.walletTDataList.data!.walletTData!.lastPage!,
                                           onPageChange: (page) {
                                             setState(() {
                                               curentindex = page - 1;
                                             });
-                                            agentDrawerMenuProvider.fetchWalletTransaction(curentindex + 1, getAccessToken.access_token);
+                                            agentDrawerMenuProvider.fetchWalletTransaction(curentindex + 1, getAccessToken.access_token,wData);
                                           },
                                         ) : Container(),
                                       ],
@@ -417,6 +437,7 @@ class _WalletPageD extends State<WalletPageD>{
                         controller: amount,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                             hintText: 'amount',
                             hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12)
                         ),
@@ -438,6 +459,7 @@ class _WalletPageD extends State<WalletPageD>{
                             padding: const EdgeInsets.fromLTRB(20, 10, 10, 10),
                             child: InkWell(
                               onTap: (){
+                                amount.text = '';
                                 Navigator.pop(context);
                               },
                               child: Text(
@@ -452,7 +474,12 @@ class _WalletPageD extends State<WalletPageD>{
                             padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
                             child: InkWell(
                               onTap: (){
-                                addWallet();
+                                if(amount.text.isEmpty){
+                                  Fluttertoast.showToast(msg: 'This field is required.');
+                                }
+                                else{
+                                  addWallet();
+                                }
                               },
                               child: Text(
                                 "Submit",
@@ -474,6 +501,7 @@ class _WalletPageD extends State<WalletPageD>{
   }
 
   Future<void> addWallet() async {
+    print("in addwallet");
     Map<String, String> headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer ${getAccessToken.access_token}',
@@ -481,18 +509,24 @@ class _WalletPageD extends State<WalletPageD>{
     try {
       final response = await http.post(Uri.parse(ApiConstants.getWalletAdd), headers: headers);
       final responseData = json.decode(response.body);
-
+      print("response ->$responseData");
       var bodyStatus = responseData['status'];
-      var bodyMSG = responseData['redirect_link'];
-
+      var bodyMSG = responseData['data']['payment_url'];
+      print("bodymsg->$bodyMSG");
       if (bodyStatus == 200) {
-        //launch("$bodyMSG");
+        launch("$bodyMSG");
+        amount.text = '';
+        Navigator.pop(context);
       } else {
-        SnackBarMessageShow.errorMSG('$bodyMSG', context);
+        SnackBarMessageShow.warningMSG('$bodyMSG', context);
+        amount.text = '';
+        Navigator.pop(context);
       }
     } catch (error) {
       print(error.toString());
+      amount.text = '';
       SnackBarMessageShow.errorMSG('Something went wrong', context);
+      Navigator.pop(context);
     }
   }
 
@@ -523,7 +557,7 @@ class _WalletPageD extends State<WalletPageD>{
                         controller: withdrawamount,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                             hintText: 'amount',
                             hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12)
                         ),
@@ -560,7 +594,12 @@ class _WalletPageD extends State<WalletPageD>{
                             padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
                             child: InkWell(
                               onTap: (){
-                                withdrawWallet();
+                                if(withdrawamount.text.isEmpty){
+                                  Fluttertoast.showToast(msg: 'This field is required.');
+                                }
+                                else{
+                                  withdrawWallet();
+                                }
                               },
                               child: Text(
                                 "Submit",
@@ -614,7 +653,7 @@ class _WalletPageD extends State<WalletPageD>{
 
       if (status == 200) {
         SnackBarMessageShow.successsMSG('$message', context);
-        Navigator.pushNamed(context, AppRoutesName.dashboard);
+        Navigator.pushNamed(context, DrawerMenusName.wallet_page_d);
         LoadingIndicater().onLoadExit(false, context);
       } else {
         SnackBarMessageShow.errorMSG('$message', context);

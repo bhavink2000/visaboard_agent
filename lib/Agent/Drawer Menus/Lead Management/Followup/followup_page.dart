@@ -1,18 +1,22 @@
-//@dart=2.9
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../App Helper/Enums/enums_status.dart';
+import '../../../App Helper/Get Access Token/get_access_token.dart';
+import '../../../App Helper/Providers/Drawer Data Provider/drawer_menu_provider.dart';
+import '../../../App Helper/Ui Helper/error_helper.dart';
 import '../../../App Helper/Ui Helper/loading_always.dart';
 import '../../../App Helper/Ui Helper/ui_helper.dart';
 import '../../../Authentication Pages/OnBoarding/constants/constants.dart';
 import '../../drawer_menus.dart';
 
 class FollowUpPage extends StatefulWidget{
-  const FollowUpPage({Key key}) : super(key: key);
+  const FollowUpPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -21,18 +25,21 @@ class FollowUpPage extends StatefulWidget{
 }
 
 class _FollowUpPage extends State<FollowUpPage>{
+  GetAccessToken getAccessToken = GetAccessToken();
+  AgentDrawerMenuProvider agentDrawerMenuProvider = AgentDrawerMenuProvider();
 
-  bool isLoading;
+  bool? isLoading;
   final GlobalKey<ScaffoldState> key = GlobalKey();
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   String access_token = "",token_type = "";
+
   @override
   void initState() {
-    //loadSharedPrefs();
     isLoading = true;
+    getAccessToken.checkAuthentication(context, setState);
     Future.delayed(const Duration(seconds: 2),(){
       setState(() {
-        isLoading = false;
+        agentDrawerMenuProvider.fetchLeadFollowUp(1, getAccessToken.access_token, '');
       });
     });
     super.initState();
@@ -98,80 +105,97 @@ class _FollowUpPage extends State<FollowUpPage>{
             ),
             Expanded(
               child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ),color: Colors.white,
-                ),
-                padding: MainWhiteContinerTopPadding,
-                child: isLoading == false
-                  ? AnimationLimiter(
-                  child: ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: 5,
-                    itemBuilder: (context, index){
-                      return AnimationConfiguration.staggeredList(
-                        position: index,
-                        duration: const Duration(milliseconds: 1000),
-                        child: SlideAnimation(
-                          horizontalOffset: 50.0,
-                          child: Column(
-                            children: [
-                              FadeInAnimation(
-                                child: ExpandableNotifier(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                                      child: ScrollOnExpand(
-                                        child: Builder(
-                                          builder: (context){
-                                            var controller = ExpandableController.of(context, required: true);
-                                            return InkWell(
-                                              onTap: (){
-                                                controller.toggle();
-                                              },
-                                              child: Card(
-                                                elevation: 5,
-                                                clipBehavior: Clip.antiAlias,
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Expandable(
-                                                      collapsed: buildCollapsed1(index),
-                                                      expanded: buildExpanded1(index),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  decoration: MainWhiteContainerDecoration,
+                  padding: MainWhiteContinerTopPadding,
+                  child: ChangeNotifierProvider<AgentDrawerMenuProvider>(
+                    create: (BuildContext context)=>agentDrawerMenuProvider,
+                    child: Consumer<AgentDrawerMenuProvider>(
+                      builder: (context, value, __){
+                        switch(value.leadFollowUpList.status!){
+                          case Status.loading:
+                            return const CenterLoading();
+                          case Status.error:
+                            return const ErrorHelper();
+                          case Status.completed:
+                            return AnimationLimiter(
+                              child: ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: value.leadFollowUpList.data!.data!.data!.length,
+                                itemBuilder: (context, index){
+                                  var leadF = value.leadFollowUpList.data!.data!.data![index];
+                                  return AnimationConfiguration.staggeredList(
+                                    position: index,
+                                    duration: const Duration(milliseconds: 1000),
+                                    child: SlideAnimation(
+                                      horizontalOffset: 50.0,
+                                      child: Column(
+                                        children: [
+                                          FadeInAnimation(
+                                            child: ExpandableNotifier(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                                                  child: ScrollOnExpand(
+                                                    child: Builder(
+                                                      builder: (context){
+                                                        var controller = ExpandableController.of(context, required: true);
+                                                        return InkWell(
+                                                          onTap: (){
+                                                            controller!.toggle();
+                                                          },
+                                                          child: Card(
+                                                            elevation: 5,
+                                                            clipBehavior: Clip.antiAlias,
+                                                            child: Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: <Widget>[
+                                                                Expandable(
+                                                                  collapsed: buildCollapsed1(
+                                                                    leadF.id,
+                                                                    leadF.followupName
+                                                                  ),
+                                                                  expanded: buildExpanded1(index),
+                                                                ),
+                                                                Expandable(
+                                                                  collapsed: buildCollapsed3(
+                                                                    leadF.followupEmail,
+                                                                    leadF.followupContactNumber
+                                                                  ),
+                                                                  expanded: buildExpanded3(
+                                                                    leadF.followupReason,
+                                                                    leadF.createAt
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
                                                     ),
-                                                    Expandable(
-                                                      collapsed: buildCollapsed3(),
-                                                      expanded: buildExpanded3(),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
+                                                  ),
+                                                )
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    )
-                                ),
+                                    ),
+                                  );
+                                },
                               ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                )
-                  : CenterLoading(),
+                            );
+                        }
+                      },
+                    ),
+                  )
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
-  buildCollapsed1(var index) {
+  buildCollapsed1(var id, var fNm) {
     return Container(
       width: MediaQuery.of(context).size.width,
       color: PrimaryColorOne,
@@ -180,20 +204,20 @@ class _FollowUpPage extends State<FollowUpPage>{
         children: [
           Container(
               padding: PaddingField,
-              child: Text("110" ?? "",style: FrontHeaderID)
+              child: Text("${id}" ?? "",style: FrontHeaderID)
           ),
           CardDots,
           Expanded(
             child: Container(
                 padding: PaddingField,
-                child: Text("Talhabhaii abdulkadir Gandhi",style: FrontHeaderNM)
+                child: Text("${fNm}",style: FrontHeaderNM)
             ),
           )
         ],
       ),
     );
   }
-  buildCollapsed3() {
+  buildCollapsed3(var fMail, var fNumber) {
     return Container(
       child: Column(
         children: [
@@ -208,7 +232,7 @@ class _FollowUpPage extends State<FollowUpPage>{
               Expanded(
                 child: Container(
                     padding: PaddingField,
-                    child: Text("Talhagandhi22794@gmail.com",style: FottorR)
+                    child: Text("${fMail}",style: FottorR)
                 ),
               )
             ],
@@ -223,10 +247,10 @@ class _FollowUpPage extends State<FollowUpPage>{
               const Text(":",style: TextStyle(color: Colors.black)),
               Expanded(
                 child: InkWell(
-                  onTap: ()=>launch("tel://8849842687"),
+                  onTap: ()=>launch("tel://$fNumber"),
                   child: Container(
                       padding: PaddingField,
-                      child: Text("8849842687",style: FottorR)
+                      child: Text("${fNumber}",style: FottorR)
                   ),
                 ),
               )
@@ -240,7 +264,7 @@ class _FollowUpPage extends State<FollowUpPage>{
   buildExpanded1(var index) {
     return Container();
   }
-  buildExpanded3() {
+  buildExpanded3(var fReason, var createOn) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -255,7 +279,7 @@ class _FollowUpPage extends State<FollowUpPage>{
             Expanded(
               child: Container(
                   padding: PaddingField,
-                  child: Text("Visiting visa inquiry",style: FottorR)
+                  child: Text("${fReason}",style: FottorR)
               ),
             )
           ],
@@ -271,7 +295,7 @@ class _FollowUpPage extends State<FollowUpPage>{
             Expanded(
               child: Container(
                   padding: PaddingField,
-                  child: Text("12 Oct 22 1:01 PM",style: FottorR)
+                  child: Text("${createOn}",style: FottorR)
               ),
             )
           ],

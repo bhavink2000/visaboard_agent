@@ -1,19 +1,22 @@
 class WalletDashModel {
   int? status;
+  String? totalWalletAmount;
   WalletDData? walletDData;
 
-  WalletDashModel({this.status, this.walletDData});
+  WalletDashModel({this.status, this.totalWalletAmount, this.walletDData});
 
   WalletDashModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    walletDData = json['data'] != null ? WalletDData.fromJson(json['data']) : null;
+    totalWalletAmount = json['total_wallet_amount'];
+    walletDData = json['data'] != null ? new WalletDData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['status'] = status;
-    if (walletDData != null) {
-      data['data'] = walletDData!.toJson();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['total_wallet_amount'] = this.totalWalletAmount;
+    if (this.walletDData != null) {
+      data['data'] = this.walletDData!.toJson();
     }
     return data;
   }
@@ -54,7 +57,7 @@ class WalletDData {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(Data.fromJson(v));
+        data!.add(new Data.fromJson(v));
       });
     }
     firstPageUrl = json['first_page_url'];
@@ -64,7 +67,7 @@ class WalletDData {
     if (json['links'] != null) {
       links = <Links>[];
       json['links'].forEach((v) {
-        links!.add(Links.fromJson(v));
+        links!.add(new Links.fromJson(v));
       });
     }
     nextPageUrl = json['next_page_url'];
@@ -76,24 +79,24 @@ class WalletDData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['current_page'] = currentPage;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['current_page'] = this.currentPage;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    data['first_page_url'] = firstPageUrl;
-    data['from'] = from;
-    data['last_page'] = lastPage;
-    data['last_page_url'] = lastPageUrl;
-    if (links != null) {
-      data['links'] = links!.map((v) => v.toJson()).toList();
+    data['first_page_url'] = this.firstPageUrl;
+    data['from'] = this.from;
+    data['last_page'] = this.lastPage;
+    data['last_page_url'] = this.lastPageUrl;
+    if (this.links != null) {
+      data['links'] = this.links!.map((v) => v.toJson()).toList();
     }
-    data['next_page_url'] = nextPageUrl;
-    data['path'] = path;
-    data['per_page'] = perPage;
-    data['prev_page_url'] = prevPageUrl;
-    data['to'] = to;
-    data['total'] = total;
+    data['next_page_url'] = this.nextPageUrl;
+    data['path'] = this.path;
+    data['per_page'] = this.perPage;
+    data['prev_page_url'] = this.prevPageUrl;
+    data['to'] = this.to;
+    data['total'] = this.total;
     return data;
   }
 }
@@ -169,28 +172,28 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = id;
-    data['first_name'] = firstName;
-    data['service_name'] = serviceName;
-    data['letter_type_name'] = letterTypeName;
-    data['user_id'] = userId;
-    data['credit_amount'] = creditAmount;
-    data['debit_amount'] = debitAmount;
-    data['debit_transaction_type'] = debitTransactionType;
-    data['credit_date'] = creditDate;
-    data['refund_date'] = refundDate;
-    data['payment_date'] = paymentDate;
-    data['created_at'] = createdAt;
-    data['status'] = status;
-    data['wallet_payment_status'] = walletPaymentStatus;
-    data['last_name'] = lastName;
-    data['middle_name'] = middleName;
-    data['order_price'] = orderPrice;
-    data['cdata'] = cdata;
-    data['payment_on'] = paymentOn;
-    data['cancel_on'] = cancelOn;
-    data['refund_on'] = refundOn;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['first_name'] = this.firstName;
+    data['service_name'] = this.serviceName;
+    data['letter_type_name'] = this.letterTypeName;
+    data['user_id'] = this.userId;
+    data['credit_amount'] = this.creditAmount;
+    data['debit_amount'] = this.debitAmount;
+    data['debit_transaction_type'] = this.debitTransactionType;
+    data['credit_date'] = this.creditDate;
+    data['refund_date'] = this.refundDate;
+    data['payment_date'] = this.paymentDate;
+    data['created_at'] = this.createdAt;
+    data['status'] = this.status;
+    data['wallet_payment_status'] = this.walletPaymentStatus;
+    data['last_name'] = this.lastName;
+    data['middle_name'] = this.middleName;
+    data['order_price'] = this.orderPrice;
+    data['cdata'] = this.cdata;
+    data['payment_on'] = this.paymentOn;
+    data['cancel_on'] = this.cancelOn;
+    data['refund_on'] = this.refundOn;
     return data;
   }
 }
@@ -209,10 +212,10 @@ class Links {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['url'] = url;
-    data['label'] = label;
-    data['active'] = active;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['url'] = this.url;
+    data['label'] = this.label;
+    data['active'] = this.active;
     return data;
   }
 }

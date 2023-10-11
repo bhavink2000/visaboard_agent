@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:dio/dio.dart';
@@ -18,7 +17,7 @@ class ProposedStudiesPage extends StatefulWidget {
   OVFEditData editDetails;
   var user_id, user_sop_id;
   var tabStatus,tabName;
-  ProposedStudiesPage({Key key,this.pagecontroller,this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
+  ProposedStudiesPage({Key? key,this.pagecontroller,required this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
 
   @override
   State<ProposedStudiesPage> createState() => _ProposedStudiesPageState();
@@ -32,7 +31,7 @@ class _ProposedStudiesPageState extends State<ProposedStudiesPage> {
   List<TextEditingController> cINtake = [TextEditingController()];
   List<TextEditingController> eDate = [TextEditingController()];
   List<TextEditingController> eFees = [TextEditingController()];
-  List<String> offerLetter = [null];
+  List<String> offerLetter = [];
 
   int numberofitems = 1;
   GetAccessToken getAccessToken = GetAccessToken();
@@ -105,7 +104,7 @@ class _ProposedStudiesPageState extends State<ProposedStudiesPage> {
                   cINtake.add(TextEditingController());
                   eDate.add(TextEditingController());
                   eFees.add(TextEditingController());
-                  offerLetter.add(null);
+                  offerLetter.add('');
                   numberofitems++;
                   setState(() {});
                 },
@@ -214,7 +213,7 @@ class _ProposedStudiesPageState extends State<ProposedStudiesPage> {
                                       labelText: "Study Commencement Date"
                                   ),
                                   onTap: () async {
-                                    DateTime pickedDate = await showDatePicker(
+                                    DateTime? pickedDate = await showDatePicker(
                                         context: context,
                                         initialDate: DateTime.now(),
                                         firstDate: DateTime(2000),
@@ -321,7 +320,7 @@ class _ProposedStudiesPageState extends State<ProposedStudiesPage> {
       groupValue: offerLetter[index],
       onChanged: (value) {
         setState(() {
-          offerLetter[index] = value;
+          offerLetter[index] = value!;
         });
       },
     );

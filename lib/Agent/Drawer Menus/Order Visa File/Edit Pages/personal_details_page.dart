@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: use_build_context_synchronously, must_be_immutable, prefer_typing_uninitialized_variables, non_constant_identifier_names
 
 import 'dart:convert';
@@ -23,7 +22,7 @@ class PersonalDetailsPage extends StatefulWidget {
   OVFEditData editDetails;
   var user_id, user_sop_id;
   var tabStatus, tabName;
-  PersonalDetailsPage({Key key,this.pagecontroller,this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
+  PersonalDetailsPage({Key? key,this.pagecontroller,required this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
 
   @override
   State<PersonalDetailsPage> createState() => _PersonalDetailsPageState();
@@ -42,14 +41,14 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
 
   String changeName = "";
   bool changename = false;
-  File cNameFile;
+  File? cNameFile;
 
   final piBirthDate = TextEditingController();
   final piPassportNo = TextEditingController();
   final piPassportExpiryDate = TextEditingController();
   final piFirstLanguage = TextEditingController();
 
-  String _piCountryOfCitizenShip;
+  String? _piCountryOfCitizenShip;
   var contry;
   List<String> piCountryCitizenShip = ['India', 'Other Country'];
 
@@ -65,35 +64,35 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
 
   final piPAAddress = TextEditingController();
   var _piPACountry;
-  String _piPAState;
-  String _piPACity;
+  String? _piPAState;
+  String? _piPACity;
   final piPAPostCode = TextEditingController();
 
   bool piCABox = false;
 
   final piCAAddress = TextEditingController();
   var _piCACountry;
-  String _piCAState;
-  String _piCACity;
+  String? _piCAState;
+  String? _piCACity;
   final piCAPostCode = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     getAccessToken.checkAuthentication(context, setState);
-    piFName.text = widget.editDetails.user.firstName;
-    piMName.text = widget.editDetails.user.middleName;
-    piLName.text = widget.editDetails.user.lastName;
-    piEmail.text = widget.editDetails.user.emailId;
-    piMobile.text = widget.editDetails.user.mobileNo;
-    piBirthDate.text = widget.editDetails.user.dob;
-    piPassportNo.text = widget.editDetails.user.passportNo;
-    piPassportExpiryDate.text = widget.editDetails.user.passportExpDate;
-    piFirstLanguage.text = widget.editDetails.user.firstLanguage;
-    piPAAddress.text = widget.editDetails.user.communicationAddress;
-    piPAPostCode.text = widget.editDetails.user.communicationZipCode;
-    piCAAddress.text = widget.editDetails.user.currentAddress;
-    piCAPostCode.text = widget.editDetails.user.currentZipCode;
+    piFName.text = widget.editDetails.user!.firstName!;
+    piMName.text = widget.editDetails.user!.middleName!;
+    piLName.text = widget.editDetails.user!.lastName!;
+    piEmail.text = widget.editDetails.user!.emailId!;
+    piMobile.text = widget.editDetails.user!.mobileNo!;
+    piBirthDate.text = widget.editDetails.user!.dob;
+    piPassportNo.text = widget.editDetails.user!.passportNo;
+    piPassportExpiryDate.text = widget.editDetails.user!.passportExpDate;
+    piFirstLanguage.text = widget.editDetails.user!.firstLanguage;
+    piPAAddress.text = widget.editDetails.user!.communicationAddress;
+    piPAPostCode.text = widget.editDetails.user!.communicationZipCode;
+    piCAAddress.text = widget.editDetails.user!.currentAddress;
+    piCAPostCode.text = widget.editDetails.user!.currentZipCode;
   }
 
   @override
@@ -320,10 +319,10 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                         ),
                                         onPressed: ()async {
                                           try{
-                                            FilePickerResult pickedfile = await FilePicker.platform.pickFiles(type: FileType.any);
+                                            FilePickerResult? pickedfile = await FilePicker.platform.pickFiles(type: FileType.any);
                                             if(pickedfile != null){
                                               setState((){
-                                                cNameFile = File(pickedfile.files.single.path);
+                                                cNameFile = File(pickedfile.files.single.path!);
                                               });
                                             }
                                           }
@@ -338,7 +337,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                   ),
                                   Padding(
                                       padding: const EdgeInsets.all(5),
-                                      child: cNameFile == null ? const Text("No File Chosen",style: TextStyle(fontSize: 12),) : Expanded(child: Text(cNameFile.path.split('/').last,style: const TextStyle(fontSize: 9),))
+                                      child: cNameFile == null ? const Text("No File Chosen",style: TextStyle(fontSize: 12),) : Expanded(child: Text(cNameFile!.path.split('/').last,style: const TextStyle(fontSize: 9),))
                                   )
                                 ],
                               ),
@@ -408,8 +407,8 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                     contry = _piCountryOfCitizenShip == 'India' ? 101 : 247;
                                   });
                                 },
-                                validator: (String value) {
-                                  if (value.isEmpty) {
+                                validator: (String? value) {
+                                  if (value == null) {
                                     return "can't empty";
                                   } else {
                                     return null;
@@ -437,7 +436,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                   ),
                                   readOnly: true,
                                   onTap: () async {
-                                    DateTime pickedDate = await showDatePicker(
+                                    DateTime? pickedDate = await showDatePicker(
                                         context: context,
                                         initialDate: DateTime.now(),
                                         firstDate: DateTime(2000),
@@ -477,7 +476,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                   ),
                                   readOnly: true,
                                   onTap: () async {
-                                    DateTime pickedDate = await showDatePicker(
+                                    DateTime? pickedDate = await showDatePicker(
                                         context: context,
                                         initialDate: DateTime.now(),
                                         firstDate: DateTime(2000),
@@ -793,8 +792,8 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                     //getCurrentCities(getAccessToken.access_token);
                                   }
                                   else{
-                                    pStatesList.clear();
-                                    pCitiesList.clear();
+                                    pStatesList!.clear();
+                                    pCitiesList!.clear();
                                   }
                                 });
                               },
@@ -809,7 +808,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                 });
                               },
                               validator: (value) {
-                                if (value.isEmpty) {
+                                if (value == null) {
                                   return "can't empty";
                                 } else {
                                   return null;
@@ -855,7 +854,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                             onChanged: (state) {
                               if(_piPACity == null){
                                 setState(() {
-                                  _piPAState = state;
+                                  _piPAState = state as String?;
                                   getCurrentCities(getAccessToken.access_token);
                                 });
                               }
@@ -866,13 +865,13 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                 });
                               }
                             },
-                            items: cStatesList?.map((item) {
+                            items: cStatesList!.map((item) {
                               return DropdownMenuItem(
                                 key: UniqueKey(),
                                 value: item['id'].toString(),
                                 child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
                               );
-                            })?.toList() ?? [],
+                            }).toList() ?? [],
                           )
                         ),
                       ),
@@ -890,16 +889,16 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                             isExpanded: true,
                             onChanged: (city) {
                               setState(() {
-                                _piPACity = city;
+                                _piPACity = city as String?;
                               });
                             },
-                            items: cCitiesList?.map((item) {
+                            items: cCitiesList!.map((item) {
                               return DropdownMenuItem(
                                 key: UniqueKey(),
                                 value: item['id'].toString(),
                                 child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10),),
                               );
-                            })?.toList() ?? [],
+                            }).toList() ?? [],
                           )
                         ),
                       ),
@@ -931,9 +930,9 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                               child: Checkbox(
                                 checkColor: Colors.white,
                                 value: piCABox,
-                                onChanged: (bool value) {
+                                onChanged: (bool? value) {
                                   setState(() {
-                                    piCABox = value;
+                                    piCABox = value!;
                                   });
                                 },
                               ),
@@ -978,8 +977,8 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                     //getCurrentCities(getAccessToken.access_token);
                                   }
                                   else{
-                                    cStatesList.clear();
-                                    cCitiesList.clear();
+                                    cStatesList!.clear();
+                                    cCitiesList!.clear();
                                   }
                                 });
                               },
@@ -992,13 +991,13 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                     //getCurrentCities(getAccessToken.access_token);
                                   }
                                   else{
-                                    cStatesList.clear();
-                                    cCitiesList.clear();
+                                    cStatesList!.clear();
+                                    cCitiesList!.clear();
                                   }
                                 });
                               },
                               validator: (value) {
-                                if (value.isEmpty) {
+                                if (value == null) {
                                   return "can't empty";
                                 } else {
                                   return null;
@@ -1042,7 +1041,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                             onChanged: (state) {
                               if(_piCACity == null){
                                 setState(() {
-                                  _piCAState = state;
+                                  _piCAState = state as String?;
                                   getCurrentCities(getAccessToken.access_token);
                                 });
                               }
@@ -1053,12 +1052,12 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                 });
                               }
                             },
-                            items: cStatesList?.map((item) {
+                            items: cStatesList!.map((item) {
                               return DropdownMenuItem(
                                 value: item['id'].toString(),
                                 child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
                               );
-                            })?.toList() ?? [],
+                            }).toList() ?? [],
                           ),
                         ),
                       ),
@@ -1077,15 +1076,15 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                             isExpanded: true,
                             onChanged: (city) {
                               setState(() {
-                                _piCACity = city;
+                                _piCACity = city as String?;
                               });
                             },
-                            items: cCitiesList?.map((item) {
+                            items: cCitiesList!.map((item) {
                               return DropdownMenuItem(
                                 value: item['id'].toString(),
                                 child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10),),
                               );
-                            })?.toList() ?? [],
+                            }).toList() ?? [],
                           ),
                         ),
                       ),
@@ -1141,9 +1140,9 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
     );
   }
 
-  List cStatesList;
-  List pStatesList;
-  Future<String> getCurrentStates(var accesstoken) async {
+  List? cStatesList;
+  List? pStatesList;
+  Future<String?> getCurrentStates(var accesstoken) async {
     print("States Calling");
     await http.post(
         Uri.parse(ApiConstants.getOVFEdit),
@@ -1165,9 +1164,9 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
     });
   }
 
-  List cCitiesList;
-  List pCitiesList;
-  Future<String> getCurrentCities(var accesstoken) async {
+  List? cCitiesList;
+  List? pCitiesList;
+  Future<String?> getCurrentCities(var accesstoken) async {
     print("Cities Calling");
     await http.post(
         Uri.parse(ApiConstants.getOVFEdit),
@@ -1226,7 +1225,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
         'user[other_name]': piOtherName.text,
         'user[changed_name_status]': changeNm.toString(),
 
-        'user[changed_name]': cNameFile == null ? '' : await MultipartFile.fromFile(cNameFile.path),
+        'user[changed_name]': cNameFile == null ? '' : await MultipartFile.fromFile(cNameFile!.path),
 
         'user[dob]': piBirthDate.text,
         'user[passport_no]': piPassportNo.text,

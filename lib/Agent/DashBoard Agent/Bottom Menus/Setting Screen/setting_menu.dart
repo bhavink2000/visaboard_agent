@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
@@ -20,7 +19,7 @@ import '../../../App Helper/Ui Helper/ui_helper.dart';
 import '../../../Authentication Pages/OnBoarding/constants/constants.dart';
 
 class SettingPage extends StatefulWidget {
-  const SettingPage({Key key}) : super(key: key);
+  const SettingPage({Key? key}) : super(key: key);
 
   @override
   State<SettingPage> createState() => _SettingPageState();
@@ -61,8 +60,8 @@ class _SettingPageState extends State<SettingPage> {
   TextEditingController websitenurl = TextEditingController();
 
   bool yesNo = true;
-  File profileFile;
-  File businessFile;
+  File? profileFile;
+  File? businessFile;
   String statusPPD = "";
 
 
@@ -97,11 +96,28 @@ class _SettingPageState extends State<SettingPage> {
                 style: TextStyle(fontFamily: Constants.OPEN_SANS,fontWeight: FontWeight.bold),textAlign: TextAlign.center,
               ),
             ),
-            formShowData('First Name', firstnm),
+            formShowData('First Name', firstnm!),
             formShowData('Middle Name', middlenm),
             formShowData('Last Name', lastnm),
             formShowData('Email', email),
             formShowData('Alternate Email', alternateemail),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+              child: Row(
+                children: [
+                  Checkbox(
+                    checkColor: Colors.white,
+                    value: yesNo,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        yesNo = value!;
+                      });
+                    },
+                  ),
+                  Expanded(child: Text("Send Email Notification to your alternate email",style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.red.withOpacity(0.8)),))
+                ],
+              ),
+            ),
             formShowData('Mobile', mobile),
             formShowData('Land Line No', landlinemobile),
 
@@ -125,10 +141,10 @@ class _SettingPageState extends State<SettingPage> {
                               ),
                               onPressed: ()async {
                                 try{
-                                  FilePickerResult pickedfile = await FilePicker.platform.pickFiles(type: FileType.any);
+                                  FilePickerResult? pickedfile = await FilePicker.platform.pickFiles(type: FileType.any);
                                   if(pickedfile != null){
                                     setState((){
-                                      businessFile = File(pickedfile.files.single.path);
+                                      businessFile = File(pickedfile.files.single.path!);
                                     });
                                   }
                                 }
@@ -144,7 +160,7 @@ class _SettingPageState extends State<SettingPage> {
                         Expanded(
                           child: Padding(
                               padding: const EdgeInsets.all(5),
-                              child: businessFile == null ? const Text("No File Chosen",style: TextStyle(fontSize: 12),) : Text(businessFile.path.split('/').last,style: const TextStyle(fontSize: 9),)
+                              child: businessFile == null ? const Text("No File Chosen",style: TextStyle(fontSize: 12),) : Text(businessFile!.path.split('/').last,style: const TextStyle(fontSize: 9),)
                           ),
                         )
                       ],
@@ -158,24 +174,6 @@ class _SettingPageState extends State<SettingPage> {
             formShowData('Post Code', postcode),
             formShowData('Company Name', companyname),
             formShowData('Company Address', companyaddress),
-
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
-              child: Row(
-                children: [
-                  Checkbox(
-                    checkColor: Colors.white,
-                    value: yesNo,
-                    onChanged: (bool value) {
-                      setState(() {
-                        yesNo = value;
-                      });
-                    },
-                  ),
-                  Expanded(child: Text("Send Email Notification to your alternate email",style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.red.withOpacity(0.8)),))
-                ],
-              ),
-            ),
 
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -197,10 +195,10 @@ class _SettingPageState extends State<SettingPage> {
                               ),
                               onPressed: ()async {
                                 try{
-                                  FilePickerResult pickedfile = await FilePicker.platform.pickFiles(type: FileType.any);
+                                  FilePickerResult? pickedfile = await FilePicker.platform.pickFiles(type: FileType.any);
                                   if(pickedfile != null){
                                     setState((){
-                                      profileFile = File(pickedfile.files.single.path);
+                                      profileFile = File(pickedfile.files.single.path!);
                                     });
                                   }
                                 }
@@ -216,7 +214,7 @@ class _SettingPageState extends State<SettingPage> {
                         Expanded(
                           child: Padding(
                               padding: const EdgeInsets.all(5),
-                              child: profileFile == null ? const Text("No File Chosen",style: TextStyle(fontSize: 12),) : Text(profileFile.path.split('/').last,style: const TextStyle(fontSize: 9),)
+                              child: profileFile == null ? const Text("No File Chosen",style: TextStyle(fontSize: 12),) : Text(profileFile!.path.split('/').last,style: const TextStyle(fontSize: 9),)
                           ),
                         )
                       ],
@@ -331,7 +329,7 @@ class _SettingPageState extends State<SettingPage> {
                   onChanged: (country) {
                     if(_selectedState == null && _selectedCity == null){
                       setState(() {
-                        _selectedCountry = country;
+                        _selectedCountry = country as String?;
                         _getStateList(_selectedCountry);
                       });
                     }
@@ -384,7 +382,7 @@ class _SettingPageState extends State<SettingPage> {
                   onChanged: (state) {
                     if(_selectedCity == null){
                       setState(() {
-                        _selectedState = state;
+                        _selectedState = state as String?;
                         _getCityList(_selectedCountry,_selectedState);
                       });
                     }
@@ -422,7 +420,7 @@ class _SettingPageState extends State<SettingPage> {
                   isExpanded: true,
                   onChanged: (city) {
                     setState(() {
-                      _selectedCity = city;
+                      _selectedCity = city as String?;
                     });
                   },
                   items: cityList?.map((item) {
@@ -430,7 +428,7 @@ class _SettingPageState extends State<SettingPage> {
                       value: item['id'].toString(),
                       child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10),),
                     );
-                  })?.toList() ?? [],
+                  }).toList() ?? [],
                 ),
               ),
             ),
@@ -455,11 +453,11 @@ class _SettingPageState extends State<SettingPage> {
                         child: InkWell(
                           onTap: (){
                             businessFile = null;
-                            firstnm.text = null;
-                            middlenm.text = null;
-                            lastnm.text = null;
-                            email.text = null;
-                            mobile.text = null;
+                            firstnm!.text = '';
+                            middlenm.text = '';
+                            lastnm.text = '';
+                            email.text = '';
+                            mobile.text = '';
                             Navigator.pop(context);
                           },
                           child: Text(
@@ -474,16 +472,18 @@ class _SettingPageState extends State<SettingPage> {
                         padding: const EdgeInsets.all(10),
                         child: InkWell(
                           onTap: (){
-                            if(firstnm.text.isEmpty || middlenm.text.isEmpty || lastnm.text.isEmpty || email.text.isEmpty || mobile.text.isEmpty){
-                              SnackBarMessageShow.warningMSG('Fill All Field', context);
-                            }else{
-                              if(businessFile == null || profileFile == null){
-                                SnackBarMessageShow.warningMSG('Please Select File ', context);
-                              }
-                              else{
-                                updateProfile();
-                              }
-                            }
+                            updateProfile();
+
+                            // if(firstnm.text.isEmpty || middlenm.text.isEmpty || lastnm.text.isEmpty || email.text.isEmpty || mobile.text.isEmpty){
+                            //   SnackBarMessageShow.warningMSG('Fill All Field', context);
+                            // }else{
+                            //   if(businessFile == null || profileFile == null){
+                            //     SnackBarMessageShow.warningMSG('Please Select File ', context);
+                            //   }
+                            //   else{
+                            //     updateProfile();
+                            //   }
+                            // }
                           },
                           child: Text(
                             "Submit",
@@ -507,19 +507,20 @@ class _SettingPageState extends State<SettingPage> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
       child: SizedBox(
-        height: MediaQuery.of(context).size.width / 7,
+        //height: MediaQuery.of(context).size.width / 7,
         child: TextField(
           controller: controller,
           style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 15),
           decoration: InputDecoration(
-              helperText: '$label',
-              helperStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              labelText: '$label',
+              labelStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10),
           ),
         ),
       ),
     );
   }
-  Future<ProfileModel> profileOBJ;
+  late Future<ProfileModel?> profileOBJ;
   List<ProfileData> profileData = [];
   getProfile() async {
     setState(() {
@@ -528,35 +529,64 @@ class _SettingPageState extends State<SettingPage> {
     try {
       profileOBJ = ApiFuture().getMe(ApiConstants.getProfile,getAccessToken.id,getAccessToken.access_token);
       await profileOBJ.then((value) async {
-        profileData.add(value.data);
+        profileData.add(value!.data!);
       });
-      id = profileData[0].id;
-      firstnm.text = profileData[0].firstName;
-      middlenm.text = profileData[0].middleName;
-      lastnm.text = profileData[0].lastName;
-      mobile.text = profileData[0].mobileNo;
-      landlinemobile.text = profileData[0].altMobileNo;
-      email.text = profileData[0].emailId;
-      alternateemail.text = profileData[0].altEmailId;
+      id = profileData[0].id!;
+      firstnm.text = profileData[0].firstName!;
+      middlenm.text = profileData[0].middleName!;
+      lastnm.text = profileData[0].lastName!;
+      mobile.text = profileData[0].mobileNo!;
+      landlinemobile.text = profileData[0].altMobileNo!;
+      email.text = profileData[0].emailId!;
+      alternateemail.text = profileData[0].altEmailId!;
 
-      companyname.text = profileData[0].companyName;
-      companyaddress.text = profileData[0].companyAddress;
-      postcode.text = profileData[0].postCode;
-      address.text = profileData[0].address;
+      companyname.text = profileData[0].companyName!;
+      companyaddress.text = profileData[0].companyAddress!;
+      postcode.text = profileData[0].postCode!;
+      address.text = profileData[0].address!;
 
-      bankname.text = profileData[0].bankName;
-      accountname.text = profileData[0].accountName;
-      accountno.text = profileData[0].accountNo;
-      ifscno.text = profileData[0].ifscNo;
-      bankaddress.text = profileData[0].bankAddress;
-      gstno.text = profileData[0].gstNo;
+      bankname.text = profileData[0].bankName!;
+      accountname.text = profileData[0].accountName!;
+      accountno.text = profileData[0].accountNo!;
+      ifscno.text = profileData[0].ifscNo!;
+      bankaddress.text = profileData[0].bankAddress!;
+      gstno.text = profileData[0].gstNo!;
 
-      linkedinurl.text = profileData[0].linkedinLink;
-      facebookurl.text = profileData[0].facebookLink;
-      twitterurl.text = profileData[0].twitterLink;
-      instagramurl.text = profileData[0].instagramLink;
-      youtubenurl.text = profileData[0].youtubeLink;
-      websitenurl.text = profileData[0].websiteLink;
+      if (profileData[0].linkedinLink != null) {
+        linkedinurl.text = profileData[0].linkedinLink;
+      } else {
+        linkedinurl.text = ''; // or any default value you prefer
+      }
+
+      if (profileData[0].facebookLink != null) {
+        facebookurl.text = profileData[0].facebookLink;
+      } else {
+        facebookurl.text = ''; // or any default value you prefer
+      }
+
+      if (profileData[0].twitterLink != null) {
+        twitterurl.text = profileData[0].twitterLink;
+      } else {
+        twitterurl.text = ''; // or any default value you prefer
+      }
+
+      if (profileData[0].instagramLink != null) {
+        instagramurl.text = profileData[0].instagramLink;
+      } else {
+        instagramurl.text = ''; // or any default value you prefer
+      }
+
+      if (profileData[0].youtubeLink != null) {
+        youtubenurl.text = profileData[0].youtubeLink;
+      } else {
+        youtubenurl.text = ''; // or any default value you prefer
+      }
+
+      if (profileData[0].websiteLink != null) {
+        websitenurl.text = profileData[0].websiteLink;
+      } else {
+        websitenurl.text = ''; // or any default value you prefer
+      }
 
       setState(() {
         isLoading = false;
@@ -571,7 +601,7 @@ class _SettingPageState extends State<SettingPage> {
         isLoading = false;
       });
       SnackBarMessageShow.errorMSG('Data Fetching Error', context);
-      print(e);
+      print('error -> $e');
     }
   }
 
@@ -585,7 +615,7 @@ class _SettingPageState extends State<SettingPage> {
 
     FormData formData = FormData.fromMap({
       'id': '${getAccessToken.id}',
-      'first_name': firstnm.text,
+      'first_name': firstnm!.text,
       'middle_name' : middlenm.text,
       'last_name': lastnm.text,
       'opd_status': '0',
@@ -614,18 +644,16 @@ class _SettingPageState extends State<SettingPage> {
       'twitter_link' : twitterurl.text,
       'youtube_link' : youtubenurl.text,
       'website_link' : websitenurl.text,
-      'image': await MultipartFile.fromFile(profileFile.path).then((value){
-        print("File Uploads");
-      }).onError((error, stackTrace){
-        print("error $error");
-      }),
-      'business_registration_proof': await MultipartFile.fromFile(businessFile.path).then((value){
-        print("File Uploads");
-      }).onError((error, stackTrace){
-        print("error $error");
-      }),
     });
 
+    if (profileFile != null) {
+      formData.files.add(MapEntry(
+          'image', await MultipartFile.fromFile(profileFile!.path)));
+    }
+    if (businessFile != null) {
+      formData.files.add(MapEntry(
+          'business_registration_proof', await MultipartFile.fromFile(businessFile!.path)));
+    }
     await dio.post(
         ApiConstants.getProfile,
         options: Options(validateStatus: (_)=> true),
@@ -682,9 +710,9 @@ class _SettingPageState extends State<SettingPage> {
     });
   }
 
-  String _selectedCountry;
-  List countryList;
-  Future<String> _getCountryList() async {
+  String? _selectedCountry;
+  List? countryList;
+  Future<String?> _getCountryList() async {
     await http.get(
         Uri.parse(ApiUrls.getCountry),
         headers: {
@@ -700,9 +728,9 @@ class _SettingPageState extends State<SettingPage> {
     });
   }
 
-  String _selectedState;
-  List stateList;
-  Future<String> _getStateList(var selectCountry) async {
+  String? _selectedState;
+  List? stateList;
+  Future<String?> _getStateList(var selectCountry) async {
     await http.post(
         Uri.parse(ApiUrls.getState),
         headers: {
@@ -719,9 +747,9 @@ class _SettingPageState extends State<SettingPage> {
     });
   }
 
-  String _selectedCity;
-  List cityList;
-  Future<String> _getCityList(var selectCountry,var selectState) async {
+  String? _selectedCity;
+  List? cityList;
+  Future<String?> _getCityList(var selectCountry,var selectState) async {
     await http.post(
         Uri.parse(ApiUrls.getCity),
         headers: {

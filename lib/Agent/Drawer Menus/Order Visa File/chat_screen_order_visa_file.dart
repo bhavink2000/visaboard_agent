@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: use_build_context_synchronously, missing_return
 
 import 'dart:io';
@@ -23,7 +22,7 @@ import '../../Authentication Pages/OnBoarding/constants/constants.dart';
 
 class ChatScreenOrderVisaFile extends StatefulWidget {
   var client_id, c_id,client_fnm, client_lnm,service_nm, letter_nm, country_nm, order_p,user_sop_id;
-  ChatScreenOrderVisaFile({Key key,this.client_id,this.c_id,this.client_fnm,this.client_lnm,this.service_nm,this.letter_nm,this.country_nm,this.order_p,this.user_sop_id}) : super(key: key);
+  ChatScreenOrderVisaFile({Key? key,this.client_id,this.c_id,this.client_fnm,this.client_lnm,this.service_nm,this.letter_nm,this.country_nm,this.order_p,this.user_sop_id}) : super(key: key);
 
   @override
   State<ChatScreenOrderVisaFile> createState() => _ChatScreenOrderVisaFile();
@@ -49,7 +48,7 @@ class _ChatScreenOrderVisaFile extends State<ChatScreenOrderVisaFile> {
     });
   }
 
-  File file;
+  File? file;
   @override
   Widget build(BuildContext context) {
     var clientName = "${widget.client_fnm} ${widget.client_lnm}";
@@ -120,96 +119,102 @@ class _ChatScreenOrderVisaFile extends State<ChatScreenOrderVisaFile> {
                   create: (BuildContext context)=>agentDrawerMenuProvider,
                   child: Consumer<AgentDrawerMenuProvider>(
                     builder: (context, value, __){
-                      switch(value.oVFChatData.status){
+                      switch(value.oVFChatData.status!){
                         case Status.loading:
                           return const Center(child: CircularProgressIndicator(color: Colors.white));
                         case Status.error:
                           return const ErrorHelper();
                         case Status.completed:
-                          return value.oVFChatData.data.chatData.userInboxes.isNotEmpty
+                          return value.oVFChatData.data!.chatData!.userInboxes!.isNotEmpty
                             ? ListView.builder(
                             padding: const EdgeInsets.fromLTRB(5, 10, 5, 5),
-                            itemCount: value.oVFChatData.data.chatData.userInboxes.length,
+                            itemCount: value.oVFChatData.data!.chatData!.userInboxes!.length,
                             itemBuilder: (context, index){
-                              var chatData = value.oVFChatData.data.chatData.userInboxes;
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        chatData[index].sendByAdmin == 0 ? Column(
-                                          children: [
-                                            CircleAvatar(child: Icon(Icons.person,color: Colors.white70,),backgroundColor: Colors.black54,radius: 20,),
-                                            Text("Client",style: TextStyle(fontFamily: Constants.OPEN_SANS),textAlign: TextAlign.center)
-                                          ],
-                                        ) : Container(),
-                                        SizedBox(width: 5),
-                                        Column(
-                                          children: [
-                                            Container(
-                                              width: chatData[index].sendByAdmin == 1 ? MediaQuery.of(context).size.width / 1.4 : MediaQuery.of(context).size.width / 1.25,
-                                              decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(10),
-                                                  color: chatData[index].sendByAdmin == 1 ? Color(0xff0a6fb8) : Colors.green
-                                              ),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.fromLTRB(5, 5, 0, 5),
-                                                    child: Row(
-                                                      children: [
-                                                        Text(
-                                                          "${chatData[index].firstName} ${chatData[index].middleName} ${chatData[index].lastName}",
-                                                          style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.white,fontSize: 12),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
-                                                    child: Text(chatData[index].createAt,style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.white70,fontSize: 10),),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            Container(
-                                              width: chatData[index].sendByAdmin == 1 ? MediaQuery.of(context).size.width / 1.4 : MediaQuery.of(context).size.width / 1.25,
-                                              child: Padding(
-                                                padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                              var chatData = value.oVFChatData.data!.chatData!.userInboxes;
+                              return Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey,width: 0.5)
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          chatData![index].sendByAdmin == 0 ?
+                                          Column(
+                                            children: [
+                                              CircleAvatar(child: Icon(Icons.person,color: Colors.white70,),backgroundColor: Colors.black54,radius: 20,),
+                                              Text("Client",style: TextStyle(fontFamily: Constants.OPEN_SANS),textAlign: TextAlign.center)
+                                            ],
+                                          ) : Container(),
+                                          SizedBox(width: 5),
+                                          Column(
+                                            children: [
+                                              Container(
+                                                width: chatData[index].sendByAdmin == 1 ? MediaQuery.of(context).size.width / 1.4 : MediaQuery.of(context).size.width / 1.25,
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(10),
+                                                    color: chatData[index].sendByAdmin == 1 ? Color(0xff0a6fb8) : Colors.green
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
-                                                    chatData[index].subject != null ? Text(
-                                                        chatData[index].subject.toString(),
-                                                        style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.black,fontWeight: FontWeight.bold,fontSize: 14)
-                                                    ) : Container(),
-                                                    chatData[index].subject != null ? const SizedBox(height: 10) : Container(),
-                                                    HtmlWidget(
-                                                      chatData[index].message ?? "",
-                                                      textStyle: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.black87,fontSize: 12),
-                                                      onErrorBuilder: (context, element, error) => Text('$element error: $error'),
-                                                      onLoadingBuilder: (context, element, loadingProgress) => const Center(child: CircularProgressIndicator(color: Colors.red,)),
+                                                    Padding(
+                                                      padding: const EdgeInsets.fromLTRB(5, 5, 0, 5),
+                                                      child: Row(
+                                                        children: [
+                                                          Text(
+                                                            "${chatData[index].firstName} ${chatData[index].middleName} ${chatData[index].lastName}",
+                                                            style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.white,fontSize: 12),
+                                                          )
+                                                        ],
+                                                      ),
                                                     ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
+                                                      child: Text(chatData[index].createAt!,style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.white70,fontSize: 10),),
+                                                    )
                                                   ],
                                                 ),
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                        SizedBox(width: 5),
-                                        chatData[index].sendByAdmin == 1 ? Column(
-                                          children: const [
-                                            Image(image: AssetImage("assets/image/icon.png"),width: 20,),
-                                            Text("Visaboard \nTems",textAlign: TextAlign.center,)
-                                          ],
-                                        ) : Container()
-                                      ],
-                                    ),
-                                    const Divider(color: Colors.white70),
-                                  ],
+                                              Container(
+                                                width: chatData[index].sendByAdmin == 1 ? MediaQuery.of(context).size.width / 1.4 : MediaQuery.of(context).size.width / 1.25,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      chatData[index].subject != null ? Text(
+                                                          chatData[index].subject.toString(),
+                                                          style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.black,fontWeight: FontWeight.bold,fontSize: 14)
+                                                      ) : Container(),
+                                                      chatData[index].subject != null ? const SizedBox(height: 10) : Container(),
+                                                      HtmlWidget(
+                                                        chatData[index].message ?? "",
+                                                        textStyle: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.black87,fontSize: 12),
+                                                        onErrorBuilder: (context, element, error) => Text('$element error: $error'),
+                                                        onLoadingBuilder: (context, element, loadingProgress) => const Center(child: CircularProgressIndicator(color: Colors.red,)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(width: 5),
+                                          chatData[index].sendByAdmin == 1 ? Column(
+                                            children: const [
+                                              Image(image: AssetImage("assets/image/icon.png"),width: 20,),
+                                              Text("Visaboard \nTeam",textAlign: TextAlign.center,)
+                                            ],
+                                          ) : Container()
+                                        ],
+                                      ),
+                                      //const Divider(color: Colors.grey),
+                                    ],
+                                  ),
                                 ),
                               );
                             },
@@ -325,8 +330,8 @@ class _ChatScreenOrderVisaFile extends State<ChatScreenOrderVisaFile> {
                           child: TextField(
                             controller: descrption,
                             style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12),
-                            maxLines: 8,
-                            decoration: InputDecoration.collapsed(
+                            //maxLines: 7,
+                            decoration: InputDecoration(
                               border: OutlineInputBorder(),
                                 hintText: 'Description',
                                 hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12),
@@ -351,10 +356,10 @@ class _ChatScreenOrderVisaFile extends State<ChatScreenOrderVisaFile> {
                                     ),
                                     onPressed: ()async {
                                       try{
-                                        FilePickerResult pickedfile = await FilePicker.platform.pickFiles(type: FileType.any);
+                                        FilePickerResult? pickedfile = await FilePicker.platform.pickFiles(type: FileType.any);
                                         if(pickedfile != null){
                                           setState((){
-                                            file = File(pickedfile.files.single.path);
+                                            file = File(pickedfile.files.single.path!);
                                           });
                                         }
                                       }
@@ -369,7 +374,7 @@ class _ChatScreenOrderVisaFile extends State<ChatScreenOrderVisaFile> {
                               ),
                               Padding(
                                   padding: const EdgeInsets.all(5),
-                                  child: file == null ? const Text("No File Chosen",style: TextStyle(fontSize: 12),) : Expanded(child: Text(file.path.split('/').last,style: const TextStyle(fontSize: 9),))
+                                  child: file == null ? const Text("No File Chosen",style: TextStyle(fontSize: 12),) : Expanded(child: Text(file!.path.split('/').last,style: const TextStyle(fontSize: 9),))
                               )
                             ],
                           ),
@@ -444,12 +449,17 @@ class _ChatScreenOrderVisaFile extends State<ChatScreenOrderVisaFile> {
       'user_sop_id': widget.client_id,
       'user_inbox[subject]' : subject.text,
       'user_inbox[message]': descrption.text,
-      'user_inbox_file[file][]': await MultipartFile.fromFile(file.path).then((value){
-        print("File Uploads");
-      }).onError((error, stackTrace){
-        print("error $error");
-      }),
+      // 'user_inbox_file[file][]': await MultipartFile.fromFile(file.path).then((value){
+      //   print("File Uploads");
+      // }).onError((error, stackTrace){
+      //   print("error $error");
+      // }),
     });
+
+    if (file != null) {
+      formData.files.add(MapEntry(
+          'user_inbox_file[file][]', await MultipartFile.fromFile(file!.path)));
+    }
 
     var response = await dio.post(
         ApiConstants.SendMessage,

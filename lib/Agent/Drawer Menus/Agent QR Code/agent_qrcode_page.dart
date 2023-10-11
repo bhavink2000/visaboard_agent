@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: non_constant_identifier_names, missing_return, use_build_context_synchronously
 
 import 'dart:convert';
@@ -24,7 +23,7 @@ import '../../App Helper/Ui Helper/ui_helper.dart';
 import '../drawer_menus.dart';
 
 class AgentQRCodePage extends StatefulWidget{
-  const AgentQRCodePage({Key key}) : super(key: key);
+  const AgentQRCodePage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -88,7 +87,7 @@ class _AgentQRCodePage extends State<AgentQRCodePage>{
                   create: (BuildContext context)=>agentDrawerMenuProvider,
                   child: Consumer<AgentDrawerMenuProvider>(
                     builder: (context, value, __){
-                      switch(value.agentQRDataList.status){
+                      switch(value.agentQRDataList.status!){
                         case Status.loading:
                           return const CenterLoading();
                         case Status.error:
@@ -124,7 +123,7 @@ class _AgentQRCodePage extends State<AgentQRCodePage>{
                                               borderRadius: BorderRadius.circular(5),
                                             ),
                                             child: Image(
-                                              image: NetworkImage("$imageURL${value.agentQRDataList.data.data.qrCode.split('/').last}"),
+                                              image: NetworkImage("$imageURL${value.agentQRDataList.data!.data!.qrCode!.split('/').last}"),
                                             ),
                                           ),
                                         ),
@@ -180,7 +179,7 @@ class _AgentQRCodePage extends State<AgentQRCodePage>{
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-                                          child: Text(value.agentQRDataList.data.data.firstName,style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 20,fontWeight: FontWeight.bold)),
+                                          child: Text(value.agentQRDataList.data!.data!.firstName!,style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 20,fontWeight: FontWeight.bold)),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.fromLTRB(10, 10, 10, 15),
@@ -197,7 +196,7 @@ class _AgentQRCodePage extends State<AgentQRCodePage>{
                                               borderRadius: BorderRadius.circular(5),
                                             ),
                                             child: Image(
-                                              image: NetworkImage("$imageURL${value.agentQRDataList.data.data.qrCode.split('/').last}"),
+                                              image: NetworkImage("$imageURL${value.agentQRDataList.data!.data!.qrCode!.split('/').last}"),
                                             ),
                                           ),
                                         ),
@@ -268,14 +267,14 @@ class _AgentQRCodePage extends State<AgentQRCodePage>{
                                         Card(
                                           elevation: 10,
                                           child: Image(
-                                            image: NetworkImage("$imageURL${value.agentQRDataList.data.data.qrCode.split('/').last}"),
+                                            image: NetworkImage("$imageURL${value.agentQRDataList.data!.data!.qrCode!.split('/').last}"),
                                           ),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
                                           child: InkWell(
                                             onTap: (){
-                                              _downloadImage("$imageURL${value.agentQRDataList.data.data.qrCode.split('/').last}", 'Third');
+                                              _downloadImage("$imageURL${value.agentQRDataList.data!.data!.qrCode!.split('/').last}", 'Third');
                                               //launch("$imageURL${value.agentQRDataList.data.data.qrCode.split('/').last}");
                                             },
                                             child: Container(
@@ -316,7 +315,7 @@ class _AgentQRCodePage extends State<AgentQRCodePage>{
     });
     var response = await http.get(Uri.parse(imageUrl));
     final documentDirectory = await getExternalStorageDirectory();
-    final file = File("${documentDirectory.path}/qr_code.png");
+    final file = File("${documentDirectory!.path}/qr_code.png");
     file.writeAsBytesSync(response.bodyBytes);
     setState(() {
       _downloading = false;
@@ -324,7 +323,7 @@ class _AgentQRCodePage extends State<AgentQRCodePage>{
     });
   }
 
-  Future<Uint8List> getQRCode(type) async {
+  Future<Uint8List?> getQRCode(type) async {
     final response = await http.get(
         Uri.parse(type == 'Sticker' ? ApiConstants.getQRSticker : ApiConstants.getQRDownload),
         headers: {
@@ -336,7 +335,7 @@ class _AgentQRCodePage extends State<AgentQRCodePage>{
     if (response.statusCode == 200) {
       final bytes = response.bodyBytes;
       final externalDir = await getExternalStorageDirectory();
-      final downloadsDir = Directory('${externalDir.path}/Download');
+      final downloadsDir = Directory('${externalDir!.path}/Download');
       await downloadsDir.create(recursive: true);
       final file = File('${downloadsDir.path}/visaboard.pdf');
       await file.writeAsBytes(bytes);

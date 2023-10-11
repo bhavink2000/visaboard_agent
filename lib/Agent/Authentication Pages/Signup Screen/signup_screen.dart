@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: library_private_types_in_public_api, missing_return, non_constant_identifier_names, use_build_context_synchronously
 
 import 'dart:convert';
@@ -15,7 +14,7 @@ import '../Login Screen/login_screen.dart';
 
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key key}) : super(key: key);
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
   _SignUpScreen createState() => _SignUpScreen();
@@ -219,7 +218,7 @@ class _SignUpScreen extends State<SignUpScreen> {
                             onChanged: (country) {
                               if(_selectedState == null && _selectedCity == null){
                                 setState(() {
-                                  _selectedCountry = country;
+                                  _selectedCountry = country as String?;
                                   _getStateList(_selectedCountry);
                                 });
                               }
@@ -236,7 +235,7 @@ class _SignUpScreen extends State<SignUpScreen> {
                                 value: item['id'].toString(),
                                 child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.black87,letterSpacing: 1),),
                               );
-                            })?.toList() ?? [],
+                            }).toList() ?? [],
                           ),
                         ),
                       ),
@@ -604,9 +603,9 @@ class _SignUpScreen extends State<SignUpScreen> {
     }
   }
 
-  String _selectedCountry;
-  List countryList;
-  Future<String> _getCountryList() async {
+  String? _selectedCountry;
+  List? countryList;
+  Future<String?> _getCountryList() async {
     await http.get(
         Uri.parse(ApiUrls.getCountry),
         headers: {
@@ -622,9 +621,9 @@ class _SignUpScreen extends State<SignUpScreen> {
     });
   }
 
-  String _selectedState;
-  List stateList;
-  Future<String> _getStateList(var selectCountry) async {
+  String? _selectedState;
+  List? stateList;
+  Future<String?> _getStateList(var selectCountry) async {
     await http.post(
         Uri.parse(ApiUrls.getState),
         headers: {
@@ -641,9 +640,9 @@ class _SignUpScreen extends State<SignUpScreen> {
     });
   }
 
-  String _selectedCity;
-  List cityList;
-  Future<String> _getCityList(var selectCountry,var selectState) async {
+  String? _selectedCity;
+  List? cityList;
+  Future<String?> _getCityList(var selectCountry,var selectState) async {
     await http.post(
         Uri.parse(ApiUrls.getCity),
         headers: {
@@ -664,13 +663,13 @@ class _SignUpScreen extends State<SignUpScreen> {
 }
 
 class AnimatedTextField extends StatelessWidget {
-  final int position;
-  final String labelText;
-  final TextEditingController controller;
-  final String Function(String) validator;
-  final IconData icons;
+  final int? position;
+  final String? labelText;
+  final TextEditingController? controller;
+  final String? Function(String)? validator;
+  final IconData? icons;
 
-  const AnimatedTextField({Key key,
+  const AnimatedTextField({Key? key,
     this.position,
     this.labelText,
     this.controller,
@@ -684,7 +683,7 @@ class AnimatedTextField extends StatelessWidget {
       padding: const EdgeInsets.only(top: 0, left: 30, right: 30),
       child: AnimationLimiter(
         child: AnimationConfiguration.staggeredList(
-          position: position,
+          position: position!,
           duration: const Duration(milliseconds: 1000),
           child: SlideAnimation(
             verticalOffset: 30.0,

@@ -1,5 +1,3 @@
-//@dart=2.9
-// ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
 import 'package:dio/dio.dart';
@@ -19,7 +17,7 @@ import '../../../../Drawer Menus/drawer_menus.dart';
 
 class ApplyForms extends StatefulWidget {
   var name;
-  ApplyForms({Key key,this.name}) : super(key: key);
+  ApplyForms({Key? key,this.name}) : super(key: key);
 
   @override
   State<ApplyForms> createState() => _ApplyFormsState();
@@ -139,6 +137,8 @@ class _ApplyFormsState extends State<ApplyForms> {
                                     isExpanded: true,
                                     onTap: (){
                                       setState(() {
+                                        countryList!.clear();
+                                        letterList!.clear();
                                         _selectedService = null;
                                         _selectedCountry = null;
                                         _selectedLetter = null;
@@ -149,7 +149,7 @@ class _ApplyFormsState extends State<ApplyForms> {
                                     },
                                     onChanged: (value) {
                                       setState(() {
-                                        _selectedService = value;
+                                        _selectedService = value as String?;
                                         _selectedCountry = null;
                                         _selectedLetter = null;
                                         _selectedLetterPrice = null;
@@ -160,11 +160,11 @@ class _ApplyFormsState extends State<ApplyForms> {
                                     },
                                     onSaved: (value) {
                                       setState(() {
-                                        _selectedService = value;
+                                        _selectedService = value as String?;
                                       });
                                     },
                                     validator: (value) {
-                                      if (value.isEmpty) {
+                                      if (value == null) {
                                         return "can't empty";
                                       } else {
                                         return null;
@@ -173,9 +173,9 @@ class _ApplyFormsState extends State<ApplyForms> {
                                     items: serviceList?.map((item) {
                                       return DropdownMenuItem(
                                         value: item['id'].toString(),
-                                        child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 13),),
+                                        child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10),),
                                       );
-                                    })?.toList() ?? [],
+                                    }).toList() ?? [],
                                   ),
                                 ),
                               ],
@@ -211,6 +211,7 @@ class _ApplyFormsState extends State<ApplyForms> {
                                     onTap: (){
                                       if(_selectedLetter == null){
                                         setState(() {
+                                          letterList!.clear();
                                           _selectedLetter == null ;
                                           //_getCountryList(getAccessToken.access_token);
                                           //_getletterList(getAccessToken.access_token, _selectedService, _selectedCountry);
@@ -226,9 +227,10 @@ class _ApplyFormsState extends State<ApplyForms> {
                                     onChanged: (country) {
                                       if(_selectedLetter == null){
                                         setState(() {
-                                          _selectedCountry = country;
+                                          _selectedCountry = country as String?;
                                           _selectedLetter == null;
                                           _getletterList(getAccessToken.access_token, _selectedService, _selectedCountry);
+                                          print("country ->$_selectedCountry}");
                                         });
                                       }
                                       else{
@@ -241,9 +243,9 @@ class _ApplyFormsState extends State<ApplyForms> {
                                     items: countryList?.map((item) {
                                       return DropdownMenuItem(
                                         value: item['id'].toString(),
-                                        child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 13),),
+                                        child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10),),
                                       );
-                                    })?.toList() ?? [],
+                                    }).toList() ?? [],
                                   ),
                                 ),
                               ],
@@ -277,9 +279,9 @@ class _ApplyFormsState extends State<ApplyForms> {
                                     value: _selectedLetter,
                                     isExpanded: true,
                                     onChanged: (value) {
-                                      if(letterList.isNotEmpty){
+                                      if(letterList!.isNotEmpty){
                                         setState(() {
-                                          _selectedLetter = value;
+                                          _selectedLetter = value as String?;
                                           checkShowData();
                                         });
                                       }
@@ -289,11 +291,11 @@ class _ApplyFormsState extends State<ApplyForms> {
                                     },
                                     onSaved: (value) {
                                       setState(() {
-                                        _selectedLetter = value;
+                                        _selectedLetter = value as String?;
                                       });
                                     },
                                     validator: (value) {
-                                      if (value.isEmpty) {
+                                      if (value == null) {
                                         return "can't empty";
                                       } else {
                                         return null;
@@ -302,15 +304,13 @@ class _ApplyFormsState extends State<ApplyForms> {
                                     items: letterList?.map((item) {
                                       return DropdownMenuItem(
                                         value: item['id'].toString(),
-                                        child: Row(
-                                          children: [
-                                            Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12)),
-                                            const SizedBox(width: 5),
-                                            Text("(Price :- ${item['price']})",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
-                                          ],
-                                        ),
+                                        child: Text("${item['name']}\n(Price :- "
+                                            '${getAccessToken.countryId == 101 ? '\u{20B9}' : '\$'}'
+                                            "${getAccessToken.countryId == 101
+                                            ? item['price'] == null ? 0 : item['price']
+                                            : item['usd_price'] == null ? 0 : item['usd_price']})",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 9)),
                                       );
-                                    })?.toSet()?.toList() ?? [],
+                                    }).toSet().toList() ?? [],
                                   ),
                                 ),
                               ],
@@ -344,15 +344,15 @@ class _ApplyFormsState extends State<ApplyForms> {
                                     value: _clientId,
                                     isExpanded: true,
                                     onChanged: (value) {
-                                      _clientId = value;
+                                      _clientId = value as String?;
                                     },
                                     onSaved: (value) {
                                       setState(() {
-                                        _clientId = value;
+                                        _clientId = value as String?;
                                       });
                                     },
                                     validator: (value) {
-                                      if (value.isEmpty) {
+                                      if (value == null) {
                                         return "can't empty";
                                       } else {
                                         return null;
@@ -369,7 +369,7 @@ class _ApplyFormsState extends State<ApplyForms> {
                                           ],
                                         ),
                                       );
-                                    })?.toSet()?.toList() ?? [],
+                                    }).toSet().toList() ?? [],
                                   ),
                                 ),
                               ],
@@ -474,9 +474,9 @@ class _ApplyFormsState extends State<ApplyForms> {
                               Checkbox(
                                 checkColor: Colors.white,
                                 value: wallet,
-                                onChanged: (bool value) {
+                                onChanged: (bool? value) {
                                   setState(() {
-                                    wallet = value;
+                                    wallet = value!;
                                   });
                                 },
                               ),
@@ -566,9 +566,9 @@ class _ApplyFormsState extends State<ApplyForms> {
     );
   }
 
-  String _selectedService;
-  List serviceList;
-  Future<String> _getserviceList(var accesstoken) async {
+  String? _selectedService = '';
+  List? serviceList;
+  Future<String?> _getserviceList(var accesstoken) async {
     print("calling");
     await http.get(
         Uri.parse(ApiUrls.getServiceType),
@@ -586,9 +586,9 @@ class _ApplyFormsState extends State<ApplyForms> {
     });
   }
 
-  String _selectedCountry;
-  List countryList;
-  Future<String> _getCountryList(var accesstoken) async {
+  String? _selectedCountry = '';
+  List? countryList;
+  Future<String?> _getCountryList(var accesstoken) async {
     await http.get(
         Uri.parse(ApiUrls.getCountry),
         headers: {
@@ -605,10 +605,10 @@ class _ApplyFormsState extends State<ApplyForms> {
     });
   }
 
-  String _selectedLetter;
+  String? _selectedLetter = '';
   var _selectedLetterPrice;
-  List letterList;
-  Future<String> _getletterList(var accesstoken,var selectService,var selectcountry) async {
+  List? letterList;
+  Future<String?> _getletterList(var accesstoken,var selectService,var selectcountry) async {
     await http.post(
         Uri.parse(ApiUrls.getLetterType),
         headers: {
@@ -626,9 +626,9 @@ class _ApplyFormsState extends State<ApplyForms> {
     });
   }
 
-  String _clientId;
-  List clientSList;
-  Future<String> _getClientsList(var accesstoken) async {
+  String? _clientId;
+  List? clientSList;
+  Future<String?> _getClientsList(var accesstoken) async {
     print("calling");
     await http.post(
         Uri.parse(ApiConstants.getClientList),

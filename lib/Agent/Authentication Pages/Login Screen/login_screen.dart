@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
@@ -20,7 +19,7 @@ import 'package:provider/provider.dart';
 
 
 class LoginPage extends StatefulWidget{
-  const LoginPage({Key key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -37,7 +36,7 @@ class _LoginPage extends State<LoginPage>{
   bool loading = false;
   //Future<UserLogin> obj;
 
-  SharedPreferences logindata;
+  SharedPreferences? logindata;
   @override
   void initState(){
     super.initState();

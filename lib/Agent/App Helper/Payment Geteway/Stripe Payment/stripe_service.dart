@@ -1,18 +1,17 @@
-//@dart=2.9
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
 class StripePaymentService{
-  Map<String, dynamic> paymentIntent;
+  Map<String, dynamic>? paymentIntent;
 
   Future<void> makePayment()async{
     try{
       paymentIntent = await createPaymentIntent('10', 'USD');
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
-          paymentIntentClientSecret: paymentIntent['client_secret'],
+          paymentIntentClientSecret: paymentIntent!['client_secret'],
           style: ThemeMode.dark,
           merchantDisplayName: 'Visaboard'
         )

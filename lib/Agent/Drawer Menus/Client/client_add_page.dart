@@ -1,6 +1,3 @@
-//@dart=2.9
-// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, use_build_context_synchronously, missing_return
-
 
 import 'dart:convert';
 
@@ -24,7 +21,7 @@ import '../drawer_menus.dart';
 
 
 class ClientAddPage extends StatefulWidget {
-  const ClientAddPage({Key key}) : super(key: key);
+  const ClientAddPage({Key? key}) : super(key: key);
 
   @override
   State<ClientAddPage> createState() => _ClientAddPageState();
@@ -33,7 +30,7 @@ class ClientAddPage extends StatefulWidget {
 class _ClientAddPageState extends State<ClientAddPage> {
 
   GetAccessToken getAccessToken = GetAccessToken();
-  Map<String, dynamic> paymentIntent;
+  Map<String, dynamic>? paymentIntent;
 
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   final _advancedDrawerController = AdvancedDrawerController();
@@ -163,7 +160,7 @@ class _ClientAddPageState extends State<ClientAddPage> {
                                   },
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedService = value;
+                                      _selectedService = value as String?;
                                       _selectedCountry = null;
                                       _selectedLetter = null;
                                       _getCountryList(getAccessToken.access_token);
@@ -171,11 +168,11 @@ class _ClientAddPageState extends State<ClientAddPage> {
                                   },
                                   onSaved: (value) {
                                     setState(() {
-                                      _selectedService = value;
+                                      _selectedService = value as String?;
                                     });
                                   },
                                   validator: (value) {
-                                    if (value.isEmpty) {
+                                    if (value == null) {
                                       return "can't empty";
                                     } else {
                                       return null;
@@ -186,7 +183,7 @@ class _ClientAddPageState extends State<ClientAddPage> {
                                       value: item['id'].toString(),
                                       child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 13),),
                                     );
-                                  })?.toList() ?? [],
+                                  }).toList() ?? [],
                                 ),
                               ),
                             ],
@@ -237,7 +234,7 @@ class _ClientAddPageState extends State<ClientAddPage> {
                                   onChanged: (country) {
                                     if(_selectedLetter == null){
                                       setState(() {
-                                        _selectedCountry = country;
+                                        _selectedCountry = country as String?;
                                         _selectedLetter == null;
                                         _getletterList(getAccessToken.access_token, _selectedService, _selectedCountry);
                                       });
@@ -254,7 +251,7 @@ class _ClientAddPageState extends State<ClientAddPage> {
                                       value: item['id'].toString(),
                                       child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 13),),
                                     );
-                                  })?.toList() ?? [],
+                                  }).toList() ?? [],
                                 ),
                               ),
                             ],
@@ -288,9 +285,9 @@ class _ClientAddPageState extends State<ClientAddPage> {
                                   value: _selectedLetter,
                                   isExpanded: true,
                                   onChanged: (value) {
-                                    if(letterList.isNotEmpty){
+                                    if(letterList != null){
                                       setState(() {
-                                        _selectedLetter = value;
+                                        _selectedLetter = value as String?;
                                         sopCalculation();
                                         /*_selectedLetterPrice = double.parse(letterList.firstWhere((item) =>
                                     item['id'].toString() == _selectedLetter)['price'].toString()).toString();
@@ -307,11 +304,11 @@ class _ClientAddPageState extends State<ClientAddPage> {
                                   },
                                   onSaved: (value) {
                                     setState(() {
-                                      _selectedLetter = value;
+                                      _selectedLetter = value as String?;
                                     });
                                   },
                                   validator: (value) {
-                                    if (value.isEmpty) {
+                                    if (value == null) {
                                       return "can't empty";
                                     } else {
                                       return null;
@@ -322,21 +319,25 @@ class _ClientAddPageState extends State<ClientAddPage> {
                                       value: item['id'].toString(),
                                       child: Row(
                                         children: [
-                                          Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12)),
-                                          const SizedBox(width: 5),
-                                          Expanded(
-                                            child: Text(
-                                                "(Price :- "
-                                                    '${getAccessToken.countryId == 101 ? '\u{20B9}' : '\$'}'
-                                                    "${getAccessToken.countryId == 101
-                                                    ? item['price'] == null ? 0 : item['price']
-                                                    : item['usd_price'] == null ? 0 : item['usd_price']})",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                                            ),
-                                          ),
+                                          Text("${item['name']} \n(Price :- "
+                                              '${getAccessToken.countryId == 101 ? '\u{20B9}' : '\$'}'
+                                              "${getAccessToken.countryId == 101
+                                              ? item['price'] == null ? 0 : item['price']
+                                              : item['usd_price'] == null ? 0 : item['usd_price']})",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12)),
+                                          // const SizedBox(width: 5),
+                                          // Expanded(
+                                          //   child: Text(
+                                          //       "(Price :- "
+                                          //           '${getAccessToken.countryId == 101 ? '\u{20B9}' : '\$'}'
+                                          //           "${getAccessToken.countryId == 101
+                                          //           ? item['price'] == null ? 0 : item['price']
+                                          //           : item['usd_price'] == null ? 0 : item['usd_price']})",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                     );
-                                  })?.toSet()?.toList() ?? [],
+                                  }).toSet().toList() ?? [],
                                 ),
                               ),
                             ],
@@ -444,9 +445,9 @@ class _ClientAddPageState extends State<ClientAddPage> {
                                     Checkbox(
                                       checkColor: Colors.white,
                                       value: walletCheck,
-                                      onChanged: (bool value) {
+                                      onChanged: (bool? value) {
                                         setState(() {
-                                          walletCheck = value;
+                                          walletCheck = value!;
                                           onePaymentSelected = true;
                                         });
                                       },
@@ -459,10 +460,10 @@ class _ClientAddPageState extends State<ClientAddPage> {
                                     Checkbox(
                                       checkColor: Colors.white,
                                       value: razorpayCheck,
-                                      onChanged: (bool value) {
+                                      onChanged: (bool? value) {
                                         if(paytmCheck == false){
                                           setState(() {
-                                            razorpayCheck = value;
+                                            razorpayCheck = value!;
                                             onePaymentSelected = true;
                                           });
                                         }
@@ -481,10 +482,10 @@ class _ClientAddPageState extends State<ClientAddPage> {
                                     Checkbox(
                                       checkColor: Colors.white,
                                       value: paytmCheck,
-                                      onChanged: (bool value) {
+                                      onChanged: (bool? value) {
                                         if(razorpayCheck == false){
                                           setState(() {
-                                            paytmCheck = value;
+                                            paytmCheck = value!;
                                             onePaymentSelected = true;
                                           });
                                         }
@@ -503,10 +504,10 @@ class _ClientAddPageState extends State<ClientAddPage> {
                                     Checkbox(
                                       checkColor: Colors.white,
                                       value: stripeCheck,
-                                      onChanged: (bool value) {
+                                      onChanged: (bool? value) {
                                         if(razorpayCheck == false){
                                           setState(() {
-                                            stripeCheck = value;
+                                            stripeCheck = value!;
                                             onePaymentSelected = true;
                                           });
                                         }
@@ -630,9 +631,9 @@ class _ClientAddPageState extends State<ClientAddPage> {
     );
   }
 
-  String _selectedService;
-  List serviceList;
-  Future<String> _getserviceList(var accesstoken) async {
+  String? _selectedService;
+  List? serviceList;
+  Future<String?> _getserviceList(var accesstoken) async {
     print("calling");
     await http.get(
         Uri.parse(ApiUrls.getServiceType),
@@ -650,9 +651,9 @@ class _ClientAddPageState extends State<ClientAddPage> {
     });
   }
 
-  String _selectedCountry;
-  List countryList;
-  Future<String> _getCountryList(var accesstoken) async {
+  String? _selectedCountry;
+  List? countryList;
+  Future<String?> _getCountryList(var accesstoken) async {
     await http.get(
         Uri.parse(ApiUrls.getCountry),
         headers: {
@@ -669,9 +670,9 @@ class _ClientAddPageState extends State<ClientAddPage> {
     });
   }
 
-  String _selectedLetter;
-  List letterList;
-  Future<String> _getletterList(var accesstoken,var selectService,var selectcountry) async {
+  String? _selectedLetter;
+  List? letterList;
+  Future<String?> _getletterList(var accesstoken,var selectService,var selectcountry) async {
     await http.post(
         Uri.parse(ApiUrls.getLetterType),
         headers: {

@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -8,7 +7,7 @@ import '../../Authentication Pages/OnBoarding/constants/constants.dart';
 
 
 class LeadManageAddNew extends StatefulWidget {
-  const LeadManageAddNew({Key key}) : super(key: key);
+  const LeadManageAddNew({Key? key}) : super(key: key);
 
   @override
   State<LeadManageAddNew> createState() => _LeadManageAddNewState();
@@ -22,7 +21,7 @@ class _LeadManageAddNewState extends State<LeadManageAddNew> {
   String _selectedValue = 'Other';
   List<String> listOfValue = ['Student', 'Visitor', 'Dependent','Stuper Visa','Other'];
 
-  String _selectedlevelstudy;
+  String? _selectedlevelstudy;
   List<String> listOflevelstudy = [
     'Secondary School Certificate', 'High School Certificate',
     'Diploma','Bachelor Degree(UnderGraduate)','Master Degree(PostGraduate)',
@@ -184,16 +183,16 @@ class _LeadManageAddNewState extends State<LeadManageAddNew> {
                                     isExpanded: true,
                                     onChanged: (value) {
                                       setState(() {
-                                        _selectedValue = value;
+                                        _selectedValue = value!;
                                       });
                                     },
                                     onSaved: (value) {
                                       setState(() {
-                                        _selectedValue = value;
+                                        _selectedValue = value!;
                                       });
                                     },
-                                    validator: (String value) {
-                                      if (value.isEmpty) {
+                                    validator: (String? value) {
+                                      if (value == null) {
                                         return "can't empty";
                                       } else {
                                         return null;
@@ -415,8 +414,8 @@ class _LeadManageAddNewState extends State<LeadManageAddNew> {
                                         _selectedlevelstudy = value;
                                       });
                                     },
-                                    validator: (String value) {
-                                      if (value.isEmpty) {
+                                    validator: (String? value) {
+                                      if (value == null) {
                                         return "can't empty";
                                       } else {
                                         return null;
@@ -502,7 +501,7 @@ class _LeadManageAddNewState extends State<LeadManageAddNew> {
                                           ),
                                           readOnly: true,
                                           onTap: () async {
-                                            DateTime pickedDate = await showDatePicker(
+                                            DateTime? pickedDate = await showDatePicker(
                                                 context: context,
                                                 initialDate: DateTime.now(),
                                                 firstDate: DateTime(2000),
@@ -534,7 +533,7 @@ class _LeadManageAddNewState extends State<LeadManageAddNew> {
                                           ),
                                           readOnly: true,
                                           onTap: () async {
-                                            DateTime pickedDate = await showDatePicker(
+                                            DateTime? pickedDate = await showDatePicker(
                                               context: context,
                                               initialDate: DateTime.now(),
                                               firstDate: DateTime(2000),
@@ -623,7 +622,7 @@ class _LeadManageAddNewState extends State<LeadManageAddNew> {
                         ),
                         InkWell(
                           onTap: (){
-                            if (_formKey.currentState.validate()) {
+                            if (_formKey.currentState!.validate()) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('Processing Data')),
                               );

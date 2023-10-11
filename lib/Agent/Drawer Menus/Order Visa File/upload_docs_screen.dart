@@ -1,9 +1,9 @@
-//@dart=2.9
 // ignore_for_file: missing_return, use_build_context_synchronously
 
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 //import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ import '../../Authentication Pages/OnBoarding/constants/constants.dart';
 
 class UploadDocs extends StatefulWidget {
   var user_sop_id,user_id;
-  UploadDocs({Key key,this.user_sop_id,this.user_id}) : super(key: key);
+  UploadDocs({Key? key,this.user_sop_id,this.user_id}) : super(key: key);
 
   @override
   State<UploadDocs> createState() => _UploadDocsState();
@@ -33,7 +33,7 @@ class UploadDocs extends StatefulWidget {
 
 class _UploadDocsState extends State<UploadDocs> {
 
-  File documents;
+  File? documents;
   Map<Docs, List<File>> selectedDocumentsMap = {};
 
   GetAccessToken getAccessToken = GetAccessToken();
@@ -53,8 +53,6 @@ class _UploadDocsState extends State<UploadDocs> {
       });
     });
   }
-
-  final _advancedDrawerController = AdvancedDrawerController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,19 +80,19 @@ class _UploadDocsState extends State<UploadDocs> {
                 create: (BuildContext context)=>agentDrawerMenuProvider,
                 child: Consumer<AgentDrawerMenuProvider>(
                   builder: (context, value, __){
-                    switch(value.uploadDOcsData.status){
+                    switch(value.uploadDOcsData.status!){
                       case Status.loading:
                         return CenterLoading();
                       case Status.error:
                         return const ErrorHelper();
                       case Status.completed:
                         return ListView.builder(
-                          itemCount: value.uploadDOcsData.data.data.docs.length,
+                          itemCount: value.uploadDOcsData.data!.data.docs.length,
                           itemBuilder: (context, index){
-                            String key = value.uploadDOcsData.data.data.docs.keys.elementAt(index);
-                            List<Docs> docsList = value.uploadDOcsData.data.data.docs[key];
-                            var sID = value.uploadDOcsData.data.data.serviceTypeId;
-                            var lID = value.uploadDOcsData.data.data.letterTypeId;
+                            String key = value.uploadDOcsData.data!.data.docs.keys.elementAt(index);
+                            List<Docs>? docsList = value.uploadDOcsData.data!.data.docs[key];
+                            var sID = value.uploadDOcsData.data!.data.serviceTypeId;
+                            var lID = value.uploadDOcsData.data!.data.letterTypeId;
                             return Column(
                               children: [
                                 Padding(
@@ -103,38 +101,43 @@ class _UploadDocsState extends State<UploadDocs> {
                                     title: Text(key,style: TextStyle(fontFamily: Constants.OPEN_SANS)),
                                     backgroundColor: Colors.white,
                                     collapsedBackgroundColor: PrimaryColorOne,
+                                    collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                     collapsedIconColor: Colors.white,
                                     collapsedTextColor: Colors.white,
-                                    children: docsList.map((Docs docs) {
+                                    children: docsList!.map((Docs docs) {
                                       return Padding(
                                         padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                                         child: ExpansionTile(
                                           title: Text(docs.documentTitle,style: TextStyle(fontFamily: Constants.OPEN_SANS)),
-                                          backgroundColor: PrimaryColorOne,
+                                          collapsedBackgroundColor: PrimaryColorOne,
+                                          collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                          collapsedIconColor: Colors.white,
+                                          collapsedTextColor: Colors.white,
+                                          backgroundColor: Colors.white,
                                           trailing: InkWell(
                                             onTap: ()async{
-                                              // try {
-                                              //   FilePickerResult pickedfile = await FilePicker.platform.pickFiles(type: FileType.any);
-                                              //   if (pickedfile != null) {
-                                              //     setState(() {
-                                              //       documents = File(pickedfile.files.single.path);
-                                              //       if (selectedDocumentsMap.containsKey(docs)) {
-                                              //         selectedDocumentsMap[docs].add(documents);
-                                              //       } else {
-                                              //         selectedDocumentsMap[docs] = [documents];
-                                              //       }
-                                              //     });
-                                              //   }
-                                              // } on PlatformException catch (e) {
-                                              //   print("e -> $e");
-                                              //   print("File not Picked");
-                                              // }
+                                              try {
+                                                FilePickerResult? pickedfile = await FilePicker.platform.pickFiles(type: FileType.any);
+                                                if (pickedfile != null) {
+                                                  setState(() {
+                                                    documents = File(pickedfile.files.single.path!);
+                                                    if (selectedDocumentsMap.containsKey(docs)) {
+                                                      selectedDocumentsMap[docs]!.add(documents!);
+                                                    } else {
+                                                      selectedDocumentsMap[docs] = [documents!];
+                                                    }
+                                                  });
+                                                }
+                                              } on PlatformException catch (e) {
+                                                print("e -> $e");
+                                                print("File not Picked");
+                                              }
                                             },
                                             child: const Icon(Icons.add_circle_rounded),
                                           ),
                                           subtitle: selectedDocumentsMap.containsKey(docs)
                                               ? Column(
-                                            children: selectedDocumentsMap[docs].map((file) {
+                                            children: selectedDocumentsMap[docs]!.map((file) {
                                               return Row(
                                                 children: [
                                                   Container(
@@ -184,7 +187,7 @@ class _UploadDocsState extends State<UploadDocs> {
                                     }).toList(),
                                   ),
                                 ),
-                                index + 1 == value.uploadDOcsData.data.data.docs.length ? Padding(
+                                index + 1 == value.uploadDOcsData.data!.data.docs.length ? Padding(
                                   padding: const EdgeInsets.fromLTRB(0, 20, 20, 10),
                                   child: InkWell(
                                     onTap: (){

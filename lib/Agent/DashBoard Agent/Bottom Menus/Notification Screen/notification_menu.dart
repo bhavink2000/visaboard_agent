@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: non_constant_identifier_names, missing_return
 
 import 'package:flutter/src/material/badge.dart' show Badge;
@@ -23,7 +22,7 @@ import '../../../Drawer Menus/Order Visa File/edit_screen_order_visa_file.dart';
 import '../../../Drawer Menus/Order Visa File/upload_docs_screen.dart';
 
 class NotificationPage extends StatefulWidget {
-  const NotificationPage({Key key}) : super(key: key);
+  const NotificationPage({Key? key}) : super(key: key);
 
   @override
   State<NotificationPage> createState() => _NotificationPageState();
@@ -117,18 +116,18 @@ class _NotificationPageState extends State<NotificationPage> {
               create: (BuildContext context)=>dashboardDataProvider,
               child: Consumer<DashboardDataProvider>(
                 builder: (context, value, __){
-                  switch(value.notificationData.status){
+                  switch(value.notificationData.status!){
                     case Status.loading:
                       return const CenterLoading();
                     case Status.error:
                       return const ErrorHelper();
                     case Status.completed:
                       return AnimationLimiter(
-                        child: value.notificationData.data.notifiData.data.isEmpty ? Center(child: Text('No notification',style: TextStyle(fontFamily: Constants.OPEN_SANS),),): ListView.builder(
+                        child: value.notificationData.data!.notifiData!.data!.isEmpty ? Center(child: Text('No notification',style: TextStyle(fontFamily: Constants.OPEN_SANS),),): ListView.builder(
                           physics: const BouncingScrollPhysics(),
-                          itemCount: value.notificationData.data.notifiData.data.length,
+                          itemCount: value.notificationData.data!.notifiData!.data!.length,
                           itemBuilder: (context, index){
-                            var notifiData = value.notificationData.data.notifiData.data;
+                            var notifiData = value.notificationData.data!.notifiData!.data;
                             return AnimationConfiguration.staggeredList(
                               position: index,
                               duration: const Duration(milliseconds: 1000),
@@ -146,7 +145,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                                   var controller = ExpandableController.of(context, required: true);
                                                   return InkWell(
                                                     onTap: (){
-                                                      controller.toggle();
+                                                      controller!.toggle();
                                                     },
                                                     child: Card(
                                                       elevation: 5,
@@ -156,7 +155,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                                         children: <Widget>[
                                                           Expandable(
                                                             collapsed: buildCollapsed1(
-                                                              notifiData[index].userId,
+                                                              notifiData![index].userId,
                                                               notifiData[index].firstName,
                                                               notifiData[index].middleName,
                                                               notifiData[index].lastName,
@@ -169,10 +168,10 @@ class _NotificationPageState extends State<NotificationPage> {
                                                           Expandable(
                                                             collapsed: buildCollapsed3(
                                                                 notifiData[index].userSopStatus,
-                                                                notifiData[index].action.editStatus ?? 0,
-                                                                notifiData[index].action.uploadDocsStatus ?? 0,
-                                                                notifiData[index].action.chatStatus ?? 0,
-                                                                notifiData[index].action.paynowStatus ?? 0,
+                                                                notifiData[index].action!.editStatus ?? 0,
+                                                                notifiData[index].action!.uploadDocsStatus ?? 0,
+                                                                notifiData[index].action!.chatStatus ?? 0,
+                                                                notifiData[index].action!.paynowStatus ?? 0,
                                                                 notifiData[index].invoicePdf,
                                                                 notifiData[index].agentUnreadCount,
                                                                 notifiData[index].userId,
@@ -204,14 +203,14 @@ class _NotificationPageState extends State<NotificationPage> {
                                     ),
 
 
-                                    if (notifiData.length == 10 || index + 1 != notifiData.length)
+                                    if (notifiData!.length == 10 || index + 1 != notifiData!.length)
                                       Container()
                                     else
                                       SizedBox(height: MediaQuery.of(context).size.height / 1.75),
 
                                     index + 1 == notifiData.length ? CustomPaginationWidget(
                                       currentPage: curentindex,
-                                      lastPage: dashboardDataProvider.notificationData.data.notifiData.lastPage,
+                                      lastPage: dashboardDataProvider.notificationData.data!.notifiData!.lastPage!,
                                       onPageChange: (page) {
                                         setState(() {
                                           curentindex = page - 1;

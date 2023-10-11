@@ -1,5 +1,4 @@
-//@dart=2.9
-// ignore_for_file: use_build_context_synchronously
+
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -11,7 +10,7 @@ import '../../App Helper/Ui Helper/ui_helper.dart';
 import '../OnBoarding/constants/constants.dart';
 
 class SplashScreen extends StatefulWidget{
-  const SplashScreen({Key key}) : super(key: key);
+  const SplashScreen({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return _SplashScreen();

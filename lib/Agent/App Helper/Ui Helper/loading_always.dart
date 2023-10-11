@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
@@ -6,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../Authentication Pages/OnBoarding/constants/constants.dart';
 
 class LoadingLogin extends StatelessWidget {
-  const LoadingLogin({Key key}) : super(key: key);
+  const LoadingLogin({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class LoadingLogin extends StatelessWidget {
 }
 
 class LoadingOnly extends StatelessWidget {
-  const LoadingOnly({Key key}) : super(key: key);
+  const LoadingOnly({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +47,7 @@ class LoadingOnly extends StatelessWidget {
 }
 
 class CenterLoading extends StatelessWidget {
-  const CenterLoading({Key key}) : super(key: key);
+  const CenterLoading({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

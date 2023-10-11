@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
@@ -21,7 +20,7 @@ class FamilyInfoPage extends StatefulWidget {
   OVFEditData editDetails;
   var user_id, user_sop_id;
   var tabStatus,tabName;
-  FamilyInfoPage({Key key,this.pagecontroller,this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
+  FamilyInfoPage({Key? key,this.pagecontroller,required this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
 
   @override
   State<FamilyInfoPage> createState() => _FamilyInfoPageState();
@@ -35,9 +34,9 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
   List<TextEditingController> fiOccupation = [TextEditingController()];
   List<TextEditingController> fiRemark = [TextEditingController()];
 
-  List<String> fiRelation = [null];
-  List<String> fiResidence = [null];
-  List<String> fiMarital = [null];
+  List<String?> fiRelation = [];
+  List<String?> fiResidence = [];
+  List<String?> fiMarital = [];
 
   int numberofitems = 1;
 
@@ -122,9 +121,9 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
                   fiOccupation.add(TextEditingController());
                   fiBirthPlace.add(TextEditingController());
                   fiBirthDate.add(TextEditingController());
-                  fiRelation.add(null);
-                  fiMarital.add(null);
-                  fiResidence.add(null);
+                  fiRelation.add('');
+                  fiMarital.add('');
+                  fiResidence.add('');
                   numberofitems++;
                   setState(() {});
                 },
@@ -178,16 +177,16 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
                               isExpanded: true,
                               onChanged: (value) {
                                 setState(() {
-                                  fiRelation[index] = value;
+                                  fiRelation[index] = value as String?;
                                 });
                               },
                               onSaved: (value) {
                                 setState(() {
-                                  fiRelation[index] = value;
+                                  fiRelation[index] = value as String?;
                                 });
                               },
                               validator: (value) {
-                                if (value.isEmpty) {
+                                if (value == null) {
                                   return "can't empty";
                                 } else {
                                   return null;
@@ -198,7 +197,7 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
                                   value: item['id'].toString(),
                                   child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
                                 );
-                              })?.toList() ?? [],
+                              }).toList() ?? [],
                             )
                         ),
                       ),
@@ -232,16 +231,16 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
                               isExpanded: true,
                               onChanged: (value) {
                                 setState(() {
-                                  fiResidence[index] = value;
+                                  fiResidence[index] = value as String?;
                                 });
                               },
                               onSaved: (value) {
                                 setState(() {
-                                  fiResidence[index] = value;
+                                  fiResidence[index] = value as String?;
                                 });
                               },
                               validator: (value) {
-                                if (value.isEmpty) {
+                                if (value == null) {
                                   return "can't empty";
                                 } else {
                                   return null;
@@ -252,7 +251,7 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
                                   value: item['id'].toString(),
                                   child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
                                 );
-                              })?.toList() ?? [],
+                              }).toList() ?? [],
                             )
                         ),
                       ),
@@ -333,7 +332,7 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
                                     ),
                                     readOnly: true,
                                     onTap: () async {
-                                      DateTime pickedDate = await showDatePicker(
+                                      DateTime? pickedDate = await showDatePicker(
                                           context: context,
                                           initialDate: DateTime.now(),
                                           firstDate: DateTime(2000),
@@ -434,8 +433,8 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
     );
   }
 
-  List relationTypes;
-  Future<String> getRelationType(var accesstoken) async {
+  List? relationTypes;
+  Future<String?> getRelationType(var accesstoken) async {
     print("States Calling");
     await http.post(
         Uri.parse(ApiConstants.getOVFEdit),
@@ -456,8 +455,8 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
     });
   }
 
-  List countryType;
-  Future<String> getCountryType(var accesstoken) async {
+  List? countryType;
+  Future<String?> getCountryType(var accesstoken) async {
     print("States Calling");
     await http.post(
         Uri.parse(ApiConstants.getOVFEdit),

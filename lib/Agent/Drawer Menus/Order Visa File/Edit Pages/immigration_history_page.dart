@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
@@ -21,7 +20,7 @@ class ImmigrationHistoryPage extends StatefulWidget {
   OVFEditData editDetails;
   var user_id, user_sop_id;
   var tabStatus,tabName;
-  ImmigrationHistoryPage({Key key,this.pagecontroller,this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
+  ImmigrationHistoryPage({Key? key,this.pagecontroller,required this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
 
   @override
   State<ImmigrationHistoryPage> createState() => _ImmigrationHistoryPageState();
@@ -31,20 +30,20 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
 
   String applyvisaforanycountry = '';
 
-  String _country;
-  String _pApplication;
+  String? _country;
+  String? _pApplication;
 
   int dItems = 1;
   String dTravelled = '';
-  List<String> dCountry = [null];
-  List<String> dTravel = [null];
+  List<String?> dCountry = [];
+  List<String?> dTravel = [];
   List<TextEditingController> dDate = [TextEditingController()];
   List<TextEditingController> aDate = [TextEditingController()];
 
   int rItems = 1;
   String visaRefused = '';
-  List<String> rCountry = [null];
-  List<String> rPTravel = [null];
+  List<String?> rCountry = [];
+  List<String?> rPTravel = [];
   List<TextEditingController> rDate = [TextEditingController()];
   List<TextEditingController> rNumber = [TextEditingController()];
 
@@ -175,16 +174,16 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                               isExpanded: true,
                               onChanged: (value) {
                                 setState(() {
-                                  _country = value;
+                                  _country = value as String?;
                                 });
                               },
                               onSaved: (value) {
                                 setState(() {
-                                  _country = value;
+                                  _country = value as String?;
                                 });
                               },
                               validator: (value) {
-                                if (value.isEmpty) {
+                                if (value == null) {
                                   return "can't empty";
                                 } else {
                                   return null;
@@ -195,7 +194,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                   value: item['id'].toString(),
                                   child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
                                 );
-                              })?.toList() ?? [],
+                              }).toList() ?? [],
                             )
                         ),
                       ),
@@ -216,16 +215,16 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                               isExpanded: true,
                               onChanged: (value) {
                                 setState(() {
-                                  _pApplication = value;
+                                  _pApplication = value as String?;
                                 });
                               },
                               onSaved: (value) {
                                 setState(() {
-                                  _pApplication = value;
+                                  _pApplication = value as String?;
                                 });
                               },
                               validator: (value) {
-                                if (value.isEmpty) {
+                                if (value == null) {
                                   return "can't empty";
                                 } else {
                                   return null;
@@ -236,7 +235,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                   value: item['id'].toString(),
                                   child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
                                 );
-                              })?.toList() ?? [],
+                              }).toList() ?? [],
                             )
                         ),
                       ),
@@ -332,16 +331,16 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                         isExpanded: true,
                                         onChanged: (value) {
                                           setState(() {
-                                            dCountry[index] = value;
+                                            dCountry[index] = value as String?;
                                           });
                                         },
                                         onSaved: (value) {
                                           setState(() {
-                                            dCountry[index] = value;
+                                            dCountry[index] = value as String?;
                                           });
                                         },
                                         validator: (value) {
-                                          if (value == null || value.isEmpty) {
+                                          if (value == null) {
                                             return "Can't be empty";
                                           } else {
                                             return null;
@@ -379,16 +378,16 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                         isExpanded: true,
                                         onChanged: (value) {
                                           setState(() {
-                                            dTravel[index] = value;
+                                            dTravel[index] = value as String?;
                                           });
                                         },
                                         onSaved: (value) {
                                           setState(() {
-                                            dTravel[index] = value;
+                                            dTravel[index] = value as String?;
                                           });
                                         },
                                         validator: (value) {
-                                          if (value.isEmpty) {
+                                          if (value == null) {
                                             return "can't empty";
                                           } else {
                                             return null;
@@ -405,7 +404,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                               ),
                                             ),
                                           );
-                                        })?.toSet()?.toList() ?? [],
+                                        }).toSet().toList() ?? [],
                                       )
                                   ),
                                 ),
@@ -424,7 +423,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                           ),
                                           readOnly: true,
                                           onTap: () async {
-                                            DateTime pickedDate = await showDatePicker(
+                                            DateTime? pickedDate = await showDatePicker(
                                                 context: context,
                                                 initialDate: DateTime.now(),
                                                 firstDate: DateTime(2000),
@@ -455,7 +454,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                           ),
                                           readOnly: true,
                                           onTap: () async {
-                                            DateTime pickedDate = await showDatePicker(
+                                            DateTime? pickedDate = await showDatePicker(
                                                 context: context,
                                                 initialDate: DateTime.now(),
                                                 firstDate: DateTime(2000),
@@ -569,16 +568,16 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                         isExpanded: true,
                                         onChanged: (value) {
                                           setState(() {
-                                            rCountry[index] = value;
+                                            rCountry[index] = value as String?;
                                           });
                                         },
                                         onSaved: (value) {
                                           setState(() {
-                                            rCountry[index] = value;
+                                            rCountry[index] = value as String?;
                                           });
                                         },
                                         validator: (value) {
-                                          if (value.isEmpty) {
+                                          if (value == null) {
                                             return "can't empty";
                                           } else {
                                             return null;
@@ -616,16 +615,16 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                         isExpanded: true,
                                         onChanged: (value) {
                                           setState(() {
-                                            rPTravel[index] = value;
+                                            rPTravel[index] = value as String?;
                                           });
                                         },
                                         onSaved: (value) {
                                           setState(() {
-                                            rPTravel[index] = value;
+                                            rPTravel[index] = value as String?;
                                           });
                                         },
                                         validator: (value) {
-                                          if (value.isEmpty) {
+                                          if (value == null) {
                                             return "can't empty";
                                           } else {
                                             return null;
@@ -642,7 +641,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                               ),
                                             ),
                                           );
-                                        })?.toSet()?.toList() ?? [],
+                                        }).toSet().toList() ?? [],
                                       )
                                   ),
                                 ),
@@ -661,7 +660,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                           ),
                                           readOnly: true,
                                           onTap: () async {
-                                            DateTime pickedDate = await showDatePicker(
+                                            DateTime? pickedDate = await showDatePicker(
                                                 context: context,
                                                 initialDate: DateTime.now(),
                                                 firstDate: DateTime(2000),
@@ -989,9 +988,9 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
     );
   }
 
-  List countryType;
-  List application;
-  Future<String> getCountryType(var accesstoken) async {
+  List? countryType;
+  List? application;
+  Future<String?> getCountryType(var accesstoken) async {
     print("States Calling");
     await http.post(
         Uri.parse(ApiConstants.getOVFEdit),

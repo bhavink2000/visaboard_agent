@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -8,7 +7,7 @@ import '../../Authentication Pages/OnBoarding/constants/constants.dart';
 import '../drawer_menus.dart';
 
 class HelpDeskPage extends StatefulWidget {
-  const HelpDeskPage({Key key}) : super(key: key);
+  const HelpDeskPage({Key? key}) : super(key: key);
 
   @override
   State<HelpDeskPage> createState() => _HelpDeskPageState();

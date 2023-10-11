@@ -1,5 +1,3 @@
-//@dart=2.9
-// ignore_for_file: missing_return
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -25,7 +23,7 @@ import 'Edit Pages/work_experince_page.dart';
 
 class EditOrderVisaFile extends StatefulWidget {
   var user_id, user_sop_id;
-  EditOrderVisaFile({Key key,this.user_id,this.user_sop_id}) : super(key: key);
+  EditOrderVisaFile({Key? key,this.user_id,this.user_sop_id}) : super(key: key);
 
   @override
   State<EditOrderVisaFile> createState() => _EditOrderVisaFileState();
@@ -56,9 +54,9 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
         agentDrawerMenuProvider.fetchOVFEdit(1, getAccessToken.access_token, body);
       });
     });
-    Future.delayed(const Duration(seconds: 5),(){
-      openServiceRBox();
-    });
+    // Future.delayed(const Duration(seconds: 5),(){
+    //   openServiceRBox();
+    // });
   }
 
   @override
@@ -80,7 +78,7 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
         create: (BuildContext context)=>agentDrawerMenuProvider,
         child: Consumer<AgentDrawerMenuProvider>(
           builder: (context, value, __){
-            switch(value.oVFEditData.status){
+            switch(value.oVFEditData.status!){
               case Status.loading:
                 return CenterLoading();
               case Status.error:
@@ -88,18 +86,18 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
               case Status.completed:
                 return SafeArea(
                   child: Expanded(
-                    child: PageView.builder(
+                    child: value.oVFEditData.data!.tabs!.isNotEmpty ? PageView.builder(
                       controller: _pageController,
                       onPageChanged: _onPageChanged,
-                      itemCount: value.oVFEditData.data.tabs.length,
+                      itemCount: value.oVFEditData.data!.tabs!.length,
                       itemBuilder: (context, index){
-                        var tab = value.oVFEditData.data.tabs;
-                        var item = value.oVFEditData.data.data;
-                        switch (tab[index].tab) {
+                        var tab = value.oVFEditData.data!.tabs;
+                        var item = value.oVFEditData.data!.data;
+                        switch (tab![index].tab) {
                           case 'Personal Details':
                             return PersonalDetailsPage(
                               pagecontroller: _pageController,
-                              editDetails: item,
+                              editDetails: item!,
                               tabStatus: tab[index].status,
                               tabName: tab[index].tab,
                               user_id: widget.user_id,
@@ -108,7 +106,7 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
                           case 'Academics':
                             return AcademicsPage(
                               pagecontroller: _pageController,
-                              editDetails: item,
+                              editDetails: item!,
                               tabStatus: tab[index].status,
                               tabName: tab[index].tab,
                               user_id: widget.user_id,
@@ -117,7 +115,7 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
                           case 'Language Tests':
                             return LanguageTestPage(
                               pagecontroller: _pageController,
-                              editDetails: item,
+                              editDetails: item!,
                               tabStatus: tab[index].status,
                               tabName: tab[index].tab,
                               user_id: widget.user_id,
@@ -126,7 +124,7 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
                           case 'Work Experience':
                             return WorkExperincePage(
                               pagecontroller: _pageController,
-                              editDetails: item,
+                              editDetails: item!,
                               tabStatus: tab[index].status,
                               tabName: tab[index].tab,
                               user_id: widget.user_id,
@@ -135,7 +133,7 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
                           case 'Spouse Details':
                             return SpouseDetailsPage(
                               pagecontroller: _pageController,
-                              editDetails: item,
+                              editDetails: item!,
                               tabStatus: tab[index].status,
                               tabName: tab[index].tab,
                               user_id: widget.user_id,
@@ -144,7 +142,7 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
                           case 'Proposed Studies':
                             return ProposedStudiesPage(
                               pagecontroller: _pageController,
-                              editDetails: item,
+                              editDetails: item!,
                               tabStatus: tab[index].status,
                               tabName: tab[index].tab,
                               user_id: widget.user_id,
@@ -153,7 +151,7 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
                           case 'Funding / Sponsor':
                             return FundingSponsorPage(
                               pagecontroller: _pageController,
-                              editDetails: item,
+                              editDetails: item!,
                               tabStatus: tab[index].status,
                               tabName: tab[index].tab,
                               user_id: widget.user_id,
@@ -162,7 +160,7 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
                           case 'Immigration History':
                             return ImmigrationHistoryPage(
                               pagecontroller: _pageController,
-                              editDetails: item,
+                              editDetails: item!,
                               tabStatus: tab[index].status,
                               tabName: tab[index].tab,
                               user_id: widget.user_id,
@@ -171,7 +169,7 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
                           case 'Family Information':
                             return FamilyInfoPage(
                               pagecontroller: _pageController,
-                              editDetails: item,
+                              editDetails: item!,
                               tabStatus: tab[index].status,
                               tabName: tab[index].tab,
                               user_id: widget.user_id,
@@ -181,7 +179,7 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
                             return SizedBox.shrink();
                         }
                       },
-                    ),
+                    ) : Center(child: Text('No Forms Available'),),
                   ),
                 );
             }
@@ -191,64 +189,64 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
     );
   }
 
-  Future openServiceRBox(){
-    return showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-            child: AlertDialog(
-              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
-              content: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    CircleAvatar(
-                      maxRadius: 40.0,
-                      backgroundColor: Colors.white,
-                      child: Image.asset("assets/image/icon.png",width: 50,),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                          onTap: (){},
-                          child: Text("VISABOARD", style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 18),)
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Text(
-                        "You Can Show Requested to Click on View",
-                        style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        TextButton(
-                          child: Text("Close",style: TextStyle(fontFamily: Constants.OPEN_SANS,letterSpacing: 2),),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                        TextButton(
-                          child: Text("View",style: TextStyle(fontFamily: Constants.OPEN_SANS,letterSpacing: 2),),
-                          onPressed: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>ServiceRequested(u_sop_id: widget.user_sop_id)));
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }
-    );
-  }
+  // Future openServiceRBox(){
+  //   return showDialog(
+  //       context: context,
+  //       barrierDismissible: false,
+  //       builder: (BuildContext context) {
+  //         return BackdropFilter(
+  //           filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+  //           child: AlertDialog(
+  //             shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+  //             content: Container(
+  //               decoration: BoxDecoration(
+  //                 color: Colors.white,
+  //                 borderRadius: BorderRadius.circular(30),
+  //               ),
+  //               child: Column(
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 children: <Widget>[
+  //                   CircleAvatar(
+  //                     maxRadius: 40.0,
+  //                     backgroundColor: Colors.white,
+  //                     child: Image.asset("assets/image/icon.png",width: 50,),
+  //                   ),
+  //                   Padding(
+  //                     padding: const EdgeInsets.all(8.0),
+  //                     child: InkWell(
+  //                         onTap: (){},
+  //                         child: Text("VISABOARD", style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 18),)
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: const EdgeInsets.all(5),
+  //                     child: Text(
+  //                       "You Can Show Requested to Click on View",
+  //                       style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12),
+  //                       textAlign: TextAlign.center,
+  //                     ),
+  //                   ),
+  //                   Row(
+  //                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //                     children: <Widget>[
+  //                       TextButton(
+  //                         child: Text("Close",style: TextStyle(fontFamily: Constants.OPEN_SANS,letterSpacing: 2),),
+  //                         onPressed: () => Navigator.of(context).pop(),
+  //                       ),
+  //                       TextButton(
+  //                         child: Text("View",style: TextStyle(fontFamily: Constants.OPEN_SANS,letterSpacing: 2),),
+  //                         onPressed: (){
+  //                           Navigator.push(context, MaterialPageRoute(builder: (context)=>ServiceRequested(u_sop_id: widget.user_sop_id)));
+  //                         },
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         );
+  //       }
+  //   );
+  // }
 }

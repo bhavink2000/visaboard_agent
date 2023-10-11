@@ -1,11 +1,16 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names
 class ApiConstants {
+/*
+Demo
+Username :- noreply@visaboard.in
+Password :- supreme@123
+ */
 
-
-  //static String URL = "https://demo.visaboard.in/api/vb-agent/";
-  static String URL = "https://www.visaboard.in/api/vb-agent/";
+  static String URL = "https://demo.visaboard.in/api/vb-agent/"; // demo
+  //static String URL = "https://www.visaboard.in/api/vb-agent/"; // live
 
   static String Login = "${URL}login";
+  static String deactiveUser = "${URL}user/in-active";
 
   static String SignUp = "${URL}signup";
 
@@ -54,6 +59,8 @@ class ApiConstants {
   static String getServiceRequestedAdd = "${URL}user/apply-sop";
   static String getServiceRequested = URL;
 
+  static String getLeadManagement = "${URL}get-lead-management-list";
+  static String getLeadFollowUp = "${URL}get-lead-followup-list";
 }
 
 class ApiUrls{

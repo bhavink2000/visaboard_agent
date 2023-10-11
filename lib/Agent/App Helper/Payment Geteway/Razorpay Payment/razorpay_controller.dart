@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -7,13 +6,13 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../Api Repository/api_urls.dart';
 
 class RazorpayService {
-  static Razorpay _razorpay;
+  static Razorpay? _razorpay;
 
   static void initialize() {
     _razorpay = Razorpay();
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
+    _razorpay!.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
+    _razorpay!.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
+    _razorpay!.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
   }
 
   static void handlePaymentError(PaymentFailureResponse response) {
@@ -44,7 +43,7 @@ class RazorpayService {
         'external': {'wallets': ['paytm']}
       };
 
-      _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, (PaymentSuccessResponse response) {
+      _razorpay!.on(Razorpay.EVENT_PAYMENT_SUCCESS, (PaymentSuccessResponse response) {
         print("on caliing");
         var paymentId = response.paymentId;
         completer.complete(paymentId);
@@ -52,7 +51,7 @@ class RazorpayService {
       });
 
       try {
-        _razorpay.open(options);
+        _razorpay!.open(options);
       } catch (e) {
         print('Error: $e');
         completer.completeError(e);
@@ -66,7 +65,7 @@ class RazorpayService {
   }
 
   static void dispose() {
-    _razorpay.clear();
+    _razorpay!.clear();
   }
 
 }

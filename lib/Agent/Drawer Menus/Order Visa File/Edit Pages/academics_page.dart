@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: use_build_context_synchronously, unrelated_type_equality_checks, must_be_immutable, non_constant_identifier_names, prefer_typing_uninitialized_variables
 
 import 'dart:convert';
@@ -19,7 +18,7 @@ class AcademicsPage extends StatefulWidget {
   OVFEditData editDetails;
   var user_id, user_sop_id;
   var tabStatus, tabName;
-  AcademicsPage({Key key,this.pagecontroller,this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
+  AcademicsPage({Key? key,this.pagecontroller,required this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
 
   @override
   State<AcademicsPage> createState() => _AcademicsPageState();
@@ -42,7 +41,7 @@ class _AcademicsPageState extends State<AcademicsPage> {
   List<TextEditingController> language = [TextEditingController()];
 
   int numberofitems = 1;
-  List<String> selectedLevelOfStudy = [null];
+  List<String?> selectedLevelOfStudy = [];
 
   GetAccessToken getAccessToken = GetAccessToken();
   @override
@@ -119,7 +118,7 @@ class _AcademicsPageState extends State<AcademicsPage> {
                     toDate.add(TextEditingController());
                     percentage.add(TextEditingController());
                     language.add(TextEditingController());
-                    selectedLevelOfStudy.add(null);
+                    selectedLevelOfStudy.add('');
                     numberofitems++;
                     setState(() {});
                   },
@@ -186,7 +185,7 @@ class _AcademicsPageState extends State<AcademicsPage> {
                                         labelText: "Start Date"
                                     ),
                                     onTap: () async {
-                                      DateTime pickedDate = await showDatePicker(
+                                      DateTime? pickedDate = await showDatePicker(
                                           context: context,
                                           initialDate: DateTime.now(),
                                           firstDate: DateTime(2000),
@@ -218,7 +217,7 @@ class _AcademicsPageState extends State<AcademicsPage> {
                                         labelText: "End Date"
                                     ),
                                     onTap: () async {
-                                      DateTime pickedDate = await showDatePicker(
+                                      DateTime? pickedDate = await showDatePicker(
                                         context: context,
                                         initialDate: DateTime.now(),
                                         firstDate: DateTime(2000),
@@ -283,16 +282,16 @@ class _AcademicsPageState extends State<AcademicsPage> {
                                 isExpanded: true,
                                 onChanged: (value) {
                                   setState(() {
-                                    selectedLevelOfStudy[index] = value;
+                                    selectedLevelOfStudy[index] = value as String?;
                                   });
                                 },
                                 onSaved: (value) {
                                   setState(() {
-                                    selectedLevelOfStudy[index] = value;
+                                    selectedLevelOfStudy[index] = value as String?;
                                   });
                                 },
                                 validator: (value) {
-                                  if (value.isEmpty) {
+                                  if (value == null) {
                                     return "can't empty";
                                   } else {
                                     return null;
@@ -367,8 +366,8 @@ class _AcademicsPageState extends State<AcademicsPage> {
     );
   }
 
-  List educationTypes;
-  Future<String> getEducationtype(var accesstoken) async {
+  List? educationTypes;
+  Future<String?> getEducationtype(var accesstoken) async {
     print("States Calling");
     await http.post(
         Uri.parse(ApiConstants.getOVFEdit),

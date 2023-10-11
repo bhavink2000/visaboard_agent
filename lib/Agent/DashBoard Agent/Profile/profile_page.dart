@@ -1,5 +1,4 @@
-//@dart=2.9
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'dart:convert';
 import 'dart:ui';
@@ -19,7 +18,7 @@ import '../../App Helper/Ui Helper/ui_helper.dart';
 import '../../Authentication Pages/OnBoarding/constants/constants.dart';
 
 class ProfilePage extends StatefulWidget{
-  const ProfilePage({Key key}) : super(key: key);
+  const ProfilePage({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return _ProfilePage();
@@ -162,7 +161,6 @@ class _ProfilePage extends State<ProfilePage>{
                           fontFamily: Constants.OPEN_SANS,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          
                       ),
                     ),
                   ),
@@ -283,6 +281,130 @@ class _ProfilePage extends State<ProfilePage>{
                       const Padding(
                         padding: EdgeInsets.all(10),
                         child: Icon(Icons.phone_iphone,color: Colors.white,),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 20, 15, 5),
+            child: InkWell(
+              onTap: (){
+                print("calling delete account");
+                showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                        child: AlertDialog(
+                          contentPadding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+                          content: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                CircleAvatar(
+                                  maxRadius: 40.0,
+                                  backgroundColor: Colors.white,
+                                  child: Image.asset("assets/image/icon.png",width: 50,),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
+                                  child: InkWell(
+                                      onTap: (){},
+                                      child: Text("VISABOARD", style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 18,fontWeight: FontWeight.bold),)
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  child: Text(
+                                    "Do you really want to delete your account?",
+                                    style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 15,fontWeight: FontWeight.w500),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                  child: ListTile(
+                                    title: Text('If you delete your account,',style: TextStyle(fontFamily: Constants.OPEN_SANS),),
+                                    contentPadding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                    subtitle: Column(
+                                      children: [
+                                        const SizedBox(height: 5),
+                                        Text('1. It will automatically logout from visaboard app.',style: TextStyle(fontFamily: Constants.OPEN_SANS),),
+                                        Text("2. You won't be able to login back again.",style: TextStyle(fontFamily: Constants.OPEN_SANS),),
+                                        Text("3. If you want to login back, you have to contact support team.",style: TextStyle(fontFamily: Constants.OPEN_SANS),),
+                                      ],
+                                    ),
+                                  )
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(),
+                                      style: TextButton.styleFrom(backgroundColor: PrimaryColorOne),
+                                      child: Text("Cancel",style: TextStyle(fontFamily: Constants.OPEN_SANS,letterSpacing: 2,color: Colors.white)),
+                                    ),
+                                    TextButton(
+                                      onPressed: (){
+                                        deleteAccount().then((value){
+                                          if(value == 200){
+                                            userDataSession.removeUserData();
+                                            Navigator.pushNamed(context, AppRoutesName.login);
+                                          }
+                                          else{
+                                            Navigator.pop(context);
+                                          }
+                                        });
+                                      },
+                                      style: TextButton.styleFrom(backgroundColor: PrimaryColorOne),
+                                      child: Text("Delete",
+                                        style: TextStyle(fontFamily: Constants.OPEN_SANS,letterSpacing: 2,color: Colors.white)
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                );
+              },
+              child: Card(
+                elevation: 8,
+                shadowColor: PrimaryColorOne.withOpacity(0.5),
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: PrimaryColorOne,
+                      borderRadius: const BorderRadius.all(Radius.circular(30))
+                  ),
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Container(
+                            decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(Radius.circular(30))
+                            ),
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.all(15),
+                            child: Text("Delete account",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,letterSpacing: 1.5),)
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Icon(Icons.delete_forever_rounded,color: Colors.white,),
                       ),
                     ],
                   ),
@@ -460,5 +582,31 @@ class _ProfilePage extends State<ProfilePage>{
         SnackBarMessageShow.errorMSG('Something Get Wrong', context);
       }
     });
+  }
+  
+  Future<dynamic> deleteAccount()async{
+    try{
+      var headers = {
+        'Authorization': 'Bearer ${getAccessToken.access_token}'
+      };
+      
+      var response = await http.get(
+          Uri.parse(ApiConstants.deactiveUser),
+        headers: headers,
+      );
+      print("response ->${response.body}");
+      var jsonResponse = json.decode(response.body);
+      if (response.statusCode == 200) {
+        SnackBarMessageShow.successsMSG('${jsonResponse['message']}', context);
+        return jsonResponse['status'];
+      }
+      else {
+        print(response.reasonPhrase);
+        SnackBarMessageShow.warningMSG('${jsonResponse['error']}', context);
+        return jsonResponse['status'];
+      }
+    }catch(e){
+      print("error -> $e");
+    }
   }
 }

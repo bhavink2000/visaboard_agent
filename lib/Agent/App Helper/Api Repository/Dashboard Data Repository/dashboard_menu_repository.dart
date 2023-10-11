@@ -14,8 +14,8 @@ class DashboardDataRepository{
     try{return response = DashBoardCounterModel.fromJson(response);}catch(e){throw e;}
   }
 
-  Future<WalletDashModel> walletDashboard(var index,var access_token)async{
-    dynamic response = await apiServicesTypePostGet.afterpostApiResponse("${ApiConstants.getWalletDashBoard}?page=$index", access_token, '');
+  Future<WalletDashModel> walletDashboard(var index,var access_token, var data)async{
+    dynamic response = await apiServicesTypePostGet.afterpostApiResponse("${ApiConstants.getWalletDashBoard}?page=$index", access_token, data);
     try{return response = WalletDashModel.fromJson(response);}catch(e){throw e;}
   }
   Future<NotificationModel> notificationData(var index,var access_token)async{

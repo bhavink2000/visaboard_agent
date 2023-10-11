@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
@@ -13,7 +12,7 @@ import '../widgets/slide_items/slide_item.dart';
 
 
 class SliderLayoutView extends StatefulWidget {
-  SliderLayoutView({Key key}) : super(key: key);
+  SliderLayoutView({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _SliderLayoutViewState();
 }

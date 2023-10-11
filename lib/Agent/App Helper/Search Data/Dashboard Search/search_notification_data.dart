@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables
 
 import 'dart:convert';
@@ -25,7 +24,7 @@ import '../../custom_pagination_widget.dart';
 class NotificationSearch extends SearchDelegate{
   var access_token;
   BuildContext context;
-  NotificationSearch({Key key,this.access_token,this.context});
+  NotificationSearch({Key? key,this.access_token,required this.context});
 
   var jsonData;
   int curentindex = 0;
@@ -89,7 +88,7 @@ class NotificationSearch extends SearchDelegate{
           final items = snapshot.data;
           return ListView.builder(
             padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-            itemCount: items.length,
+            itemCount: items!.length,
             itemBuilder: (BuildContext context, int index) {
               final item = items[index];
               return Column(
@@ -103,7 +102,7 @@ class NotificationSearch extends SearchDelegate{
                               var controller = ExpandableController.of(context, required: true);
                               return InkWell(
                                 onTap: (){
-                                  controller.toggle();
+                                  controller!.toggle();
                                 },
                                 child: Card(
                                   elevation: 5,

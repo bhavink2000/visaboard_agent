@@ -1,6 +1,8 @@
 import 'package:visaboard_agent/Agent/App%20Helper/Api%20Repository/api_urls.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Api%20Service/api_service_post_get.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Api%20Service/api_service_type_post_get.dart';
+import 'package:visaboard_agent/Agent/App%20Helper/Models/Drawer%20Menus%20Model/lead_followup_model.dart';
+import 'package:visaboard_agent/Agent/App%20Helper/Models/Drawer%20Menus%20Model/lead_management_model.dart';
 
 import '../../Models/App Model/service_requested_model.dart';
 import '../../Models/Drawer Menus Model/agent_qr_code_model.dart';
@@ -21,14 +23,14 @@ class DrawerMenuRepository{
     try{return response = TemplateModel.fromJson(response);}catch(e){throw e;}
   }
 
-  Future<ClientModel> clients(var index,var access_token)async{
-    dynamic response = await apiServicesTypePostGet.afterpostApiResponse("${ApiConstants.getClient}?page=$index", access_token, '');
+  Future<ClientModel> clients(var index,var access_token, var cData)async{
+    dynamic response = await apiServicesTypePostGet.afterpostApiResponse("${ApiConstants.getClient}?page=$index", access_token, cData);
     try{return response = ClientModel.fromJson(response);}catch(e){throw e;}
   }
 
-  Future<TransactionModel> transaction(var index,var access_token)async{
+  Future<TransactionModel> transaction(var index,var access_token, var data)async{
     print("in transaction url ->${"${ApiConstants.getTransaction}?page=$index"}");
-    dynamic response = await apiServicesTypePostGet.afterpostApiResponse("${ApiConstants.getTransaction}?page=$index", access_token, '');
+    dynamic response = await apiServicesTypePostGet.afterpostApiResponse("${ApiConstants.getTransaction}?page=$index", access_token, data);
     print("transaction response->$response");
     try{return response = TransactionModel.fromJson(response);}catch(e){throw e;}
   }
@@ -44,13 +46,14 @@ class DrawerMenuRepository{
   }
 
   Future<OVFChatModel> oVFChat(var index,var access_token, var uSId)async{
+    print("user SOP Id ->$uSId");
     var url = "${ApiConstants.getOVFChat}$uSId/inbox";
     dynamic response = await apiServicesTypePostGet.aftergetApiResponse(url, access_token);
     try{return response = OVFChatModel.fromJson(response);}catch(e){throw e;}
   }
 
-  Future<WalletTransactionModel> walletTransaction(var index,var access_token)async{
-    dynamic response = await apiServicesTypePostGet.afterpostApiResponse("${ApiConstants.getWalletTransaction}?page=$index", access_token, '');
+  Future<WalletTransactionModel> walletTransaction(var index,var access_token, var data)async{
+    dynamic response = await apiServicesTypePostGet.afterpostApiResponse("${ApiConstants.getWalletTransaction}?page=$index", access_token, data);
     try{return response = WalletTransactionModel.fromJson(response);}catch(e){throw e;}
   }
 
@@ -69,5 +72,16 @@ class DrawerMenuRepository{
     var url = "${ApiConstants.getServiceRequested}$id/apply-sop";
     dynamic response = await apiServicesTypePostGet.aftergetApiResponse(url, access_token);
     try{return response = ServiceRequestedModel.fromJson(response);}catch(e){throw e;}
+  }
+
+  Future<LeadManagementModel> leadManagementData(var index,var access_token, var data)async{
+    dynamic response = await apiServicesTypePostGet.afterpostApiResponse("${ApiConstants.getLeadManagement}?page=$index", access_token, data);
+    try{return response = LeadManagementModel.fromJson(response);}catch(e){throw e;}
+  }
+
+  Future<LeadFollowUpModel> leadFollowUpData(var index,var access_token, var data)async{
+    print('accessToken ->$access_token');
+    dynamic response = await apiServicesTypePostGet.afterpostApiResponse("${ApiConstants.getLeadFollowUp}?page=$index", access_token, data);
+    try{return response = LeadFollowUpModel.fromJson(response);}catch(e){throw e;}
   }
 }

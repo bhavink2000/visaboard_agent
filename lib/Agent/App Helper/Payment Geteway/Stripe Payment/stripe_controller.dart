@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,14 +9,14 @@ import '../../Api Repository/api_urls.dart';
 import '../../Routes/App Routes/drawer_menus_routes_names.dart';
 
 class PaymentController {
-  Map<String, dynamic> paymentIntentData;
+  Map<String, dynamic>? paymentIntentData;
 
   Future<void> makePayment(var amount, var uSId, var accessToken,context) async {
     try {
       paymentIntentData = await createPaymentIntent('$amount', 'INR');
 
       if (paymentIntentData != null) {
-        await initPaymentSheet(paymentIntentData);
+        await initPaymentSheet(paymentIntentData!);
         await displayPaymentSheet(uSId,accessToken,context);
       }
     } catch (e, s) {
@@ -48,10 +47,10 @@ class PaymentController {
     try {
       await Stripe.instance.presentPaymentSheet();
 
-      var intentId = paymentIntentData['id'];
-      print('payment intent${paymentIntentData['id']}');
-      print('payment intent${paymentIntentData['client_secret']}');
-      print('payment intent${paymentIntentData['amount']}');
+      var intentId = paymentIntentData!['id'];
+      print('payment intent${paymentIntentData!['id']}');
+      print('payment intent${paymentIntentData!['client_secret']}');
+      print('payment intent${paymentIntentData!['amount']}');
       print('payment intent$paymentIntentData');
 
       print("Payment sheet completed successfully.");

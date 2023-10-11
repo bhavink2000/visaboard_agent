@@ -68,17 +68,24 @@ class AuthProvider with ChangeNotifier{
           SnackBarMessageShow.warningMSG('${errorData['error']}', context);
         }
         if (errorObject != null) {
-          var errorMessage = errorObject['email_id'] != null ? errorObject['email_id'][0] : null;
-          var passwordError = errorObject['password'] != null ? errorObject['password'][0] : null;
-
-          if (errorMessage != null) {
-            print("in errorMessage if");
-            SnackBarMessageShow.warningMSG('$errorMessage', context);
-          } else if (passwordError != null) {
-            print("in passwordError if");
-            SnackBarMessageShow.warningMSG('$passwordError', context);
-          } else {
-            print("in else");
+          if(errorObject == 'This user is inactive.'){
+            print('in if');
+            var userError = errorObject != null ? errorObject : null;
+            SnackBarMessageShow.warningMSG('$userError', context);
+          }
+          else{
+            var errorMessage = errorObject['email_id'] != null ? errorObject['email_id'][0] : null;
+            var passwordError = errorObject['password'] != null ? errorObject['password'][0] : null;
+            if (errorMessage != null) {
+              print("in errorMessage if");
+              SnackBarMessageShow.warningMSG('$errorMessage', context);
+            } else if (passwordError != null) {
+              print("in passwordError if");
+              SnackBarMessageShow.warningMSG('$passwordError', context);
+            } else {
+              SnackBarMessageShow.warningMSG('$errorObject', context);
+              print("in else");
+            }
           }
         } else {
           print("No 'error' key found in the response.");

@@ -1,5 +1,4 @@
-//@dart=2.9
-// ignore_for_file: non_constant_identifier_names, missing_return
+
 import 'dart:convert';
 import 'package:expandable/expandable.dart';
 import 'package:http/http.dart' as http;
@@ -23,7 +22,7 @@ import '../drawer_menus.dart';
 import 'client_add_page.dart';
 
 class ClientPage extends StatefulWidget {
-  const ClientPage({Key key}) : super(key: key);
+  const ClientPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -36,7 +35,7 @@ class _ClientPage extends State<ClientPage> {
   AgentDrawerMenuProvider agentDrawerMenuProvider = AgentDrawerMenuProvider();
 
   final GlobalKey<ScaffoldState> key = GlobalKey();
-  String search = '';
+  final  clientSearch = TextEditingController();
   int curentindex = 0;
 
   @override
@@ -45,7 +44,7 @@ class _ClientPage extends State<ClientPage> {
     getAccessToken.checkAuthentication(context, setState);
     Future.delayed(const Duration(seconds: 2),(){
       setState(() {
-        agentDrawerMenuProvider.fetchClient(1, getAccessToken.access_token);
+        agentDrawerMenuProvider.fetchClient(1, getAccessToken.access_token, '');
       });
     });
   }
@@ -53,6 +52,9 @@ class _ClientPage extends State<ClientPage> {
   final _advancedDrawerController = AdvancedDrawerController();
   @override
   Widget build(BuildContext context) {
+    Map clientData = {
+      'search_text': clientSearch.text,
+    };
     return AdvancedDrawer(
       key: key,
       drawer: CustomDrawer(
@@ -107,23 +109,38 @@ class _ClientPage extends State<ClientPage> {
                                 ),
                                 padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                                 child: TextFormField(
+                                  controller: clientSearch,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Search',
                                       hintStyle: TextStyle(fontSize: 15,fontFamily: Constants.OPEN_SANS),
-                                      suffixIcon: const Icon(Icons.search)
+                                    suffixIcon: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          clientSearch.clear();
+                                          clientSearch.text = '';
+                                        });
+                                        Map clientData = {
+                                          'search_text': '',
+                                        };
+                                        agentDrawerMenuProvider.fetchClient(1, getAccessToken.access_token, clientData);
+                                        //homeMenusProvider.fetchTest(1, getAccessToken.access_token, testData);
+                                      },
+                                      child: const Icon(Icons.close),
+                                    ),
                                   ),
                                   onChanged: (value) {
-                                    setState(() {
-                                      search = value;
-                                    });
+                                    Map clientData = {
+                                      'search_text': clientSearch.text,
+                                    };
+                                    agentDrawerMenuProvider.fetchClient(1, getAccessToken.access_token, clientData);
                                   },
-                                  onTap: (){
-                                    showSearch(
-                                      context: context,
-                                      delegate: ClientSearch(context: context,access_token: getAccessToken.access_token)
-                                    );
-                                  },
+                                  // onTap: (){
+                                  //   showSearch(
+                                  //     context: context,
+                                  //     delegate: ClientSearch(context: context,access_token: getAccessToken.access_token)
+                                  //   );
+                                  // },
                                 ),
                               ),
                             ),
@@ -155,7 +172,7 @@ class _ClientPage extends State<ClientPage> {
                   create: (BuildContext context)=>agentDrawerMenuProvider,
                   child: Consumer<AgentDrawerMenuProvider>(
                     builder: (context, value, __){
-                      switch(value.clientDataList.status){
+                      switch(value.clientDataList.status!){
                         case Status.loading:
                           return const CenterLoading();
                         case Status.error:
@@ -164,9 +181,9 @@ class _ClientPage extends State<ClientPage> {
                           return AnimationLimiter(
                             child: ListView.builder(
                               physics: const BouncingScrollPhysics(),
-                              itemCount: value.clientDataList.data.clientData.data.length,
+                              itemCount: value.clientDataList.data!.clientData!.data!.length,
                               itemBuilder: (context, index) {
-                                var client = value.clientDataList.data.clientData.data;
+                                var client = value.clientDataList.data!.clientData!.data;
                                 return AnimationConfiguration.staggeredList(
                                   position: index,
                                   duration: const Duration(milliseconds: 1000),
@@ -184,7 +201,7 @@ class _ClientPage extends State<ClientPage> {
                                                       var controller = ExpandableController.of(context, required: true);
                                                       return InkWell(
                                                         onTap: (){
-                                                          controller.toggle();
+                                                          controller!.toggle();
                                                         },
                                                         child: Card(
                                                           elevation: 5,
@@ -194,7 +211,7 @@ class _ClientPage extends State<ClientPage> {
                                                             children: <Widget>[
                                                               Expandable(
                                                                 collapsed: buildCollapsed1(
-                                                                  client[index].id,
+                                                                  client![index].id,
                                                                   client[index].firstName,
                                                                   client[index].middleName,
                                                                   client[index].lastName
@@ -224,22 +241,21 @@ class _ClientPage extends State<ClientPage> {
                                           ),
                                         ),
 
-                                        if (client.length == 10 || index + 1 != client.length)
+                                        if (client!.length == 10 || index + 1 != client!.length)
                                           Container()
                                         else
                                           SizedBox(height: MediaQuery.of(context).size.height / 4),
 
                                         index + 1 == client.length ? CustomPaginationWidget(
                                           currentPage: curentindex,
-                                          lastPage: agentDrawerMenuProvider.clientDataList.data.clientData.lastPage,
+                                          lastPage: agentDrawerMenuProvider.clientDataList.data!.clientData!.lastPage!,
                                           onPageChange: (page) {
                                             setState(() {
                                               curentindex = page - 1;
                                             });
-                                            agentDrawerMenuProvider.fetchClient(curentindex + 1, getAccessToken.access_token);
+                                            agentDrawerMenuProvider.fetchClient(curentindex + 1, getAccessToken.access_token, clientData);
                                           },
                                         ) : Container(),
-
                                       ],
                                     ),
                                   ),

@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -7,7 +6,7 @@ import '../../App Helper/Ui Helper/ui_helper.dart';
 import '../../Authentication Pages/OnBoarding/constants/constants.dart';
 
 class LeadManageEdit extends StatefulWidget {
-  const LeadManageEdit({Key key}) : super(key: key);
+  const LeadManageEdit({Key? key}) : super(key: key);
 
   @override
   State<LeadManageEdit> createState() => _LeadManageEditState();
@@ -416,7 +415,7 @@ class _LeadManageEditState extends State<LeadManageEdit> {
                                         ),
                                         readOnly: true,
                                         onTap: () async {
-                                          DateTime pickedDate = await showDatePicker(
+                                          DateTime? pickedDate = await showDatePicker(
                                               context: context,
                                               initialDate: DateTime.now(),
                                               firstDate: DateTime(2000),
@@ -448,7 +447,7 @@ class _LeadManageEditState extends State<LeadManageEdit> {
                                         ),
                                         readOnly: true,
                                         onTap: () async {
-                                          DateTime pickedDate = await showDatePicker(
+                                          DateTime? pickedDate = await showDatePicker(
                                             context: context,
                                             initialDate: DateTime.now(),
                                             firstDate: DateTime(2000),

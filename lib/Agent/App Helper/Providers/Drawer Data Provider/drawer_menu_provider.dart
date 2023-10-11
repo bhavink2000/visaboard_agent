@@ -1,7 +1,8 @@
-//@dart=2.9
 import 'package:flutter/cupertino.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Api%20Repository/Drawer%20Data%20Repository/drawer_menu_repository.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Enums/api_response_type.dart';
+import 'package:visaboard_agent/Agent/App%20Helper/Models/Drawer%20Menus%20Model/lead_followup_model.dart';
+import 'package:visaboard_agent/Agent/App%20Helper/Models/Drawer%20Menus%20Model/lead_management_model.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Models/Drawer%20Menus%20Model/order_visa_file_model.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Models/Drawer%20Menus%20Model/template_model.dart';
 import '../../Models/App Model/service_requested_model.dart';
@@ -37,9 +38,9 @@ class AgentDrawerMenuProvider with ChangeNotifier{
     clientDataList = clientResponse;
     notifyListeners();
   }
-  Future<void> fetchClient(var index,var access_token)async{
+  Future<void> fetchClient(var index,var access_token, var cData)async{
     setClientResponse(ApiResponseType.loading());
-    drawerRepo.clients(index,access_token).then((value){
+    drawerRepo.clients(index,access_token, cData).then((value){
       setClientResponse(ApiResponseType.complate(value));
     }).onError((error, stackTrace){
       setClientResponse(ApiResponseType.error(error.toString()));
@@ -52,10 +53,10 @@ class AgentDrawerMenuProvider with ChangeNotifier{
     transactionDataList = transactionResponse;
     notifyListeners();
   }
-  Future<void> fetchTransaction(var index,var access_token)async{
+  Future<void> fetchTransaction(var index,var access_token, var data)async{
     print("in fetchTransaction");
     setTransactionResponse(ApiResponseType.loading());
-    drawerRepo.transaction(index,access_token).then((value){
+    drawerRepo.transaction(index,access_token, data).then((value){
       setTransactionResponse(ApiResponseType.complate(value));
     }).onError((error, stackTrace){
       setTransactionResponse(ApiResponseType.error(error.toString()));
@@ -113,9 +114,9 @@ class AgentDrawerMenuProvider with ChangeNotifier{
     walletTDataList = walletTResponse;
     notifyListeners();
   }
-  Future<void> fetchWalletTransaction(var index,var access_token)async{
+  Future<void> fetchWalletTransaction(var index,var access_token, var data)async{
     setWalletTResponse(ApiResponseType.loading());
-    drawerRepo.walletTransaction(index,access_token).then((value){
+    drawerRepo.walletTransaction(index,access_token, data).then((value){
       setWalletTResponse(ApiResponseType.complate(value));
     }).onError((error, stackTrace){
       setWalletTResponse(ApiResponseType.error(error.toString()));
@@ -167,4 +168,35 @@ class AgentDrawerMenuProvider with ChangeNotifier{
       print(error.toString());
     });
   }
+
+  ApiResponseType<LeadManagementModel> leadManageDataList = ApiResponseType.loading();
+  setLeadMResponse(ApiResponseType<LeadManagementModel> LeadMResponse){
+    leadManageDataList = LeadMResponse;
+    notifyListeners();
+  }
+  Future<void> fetchLeadManagement(var index,var access_token, var data)async{
+    setLeadMResponse(ApiResponseType.loading());
+    drawerRepo.leadManagementData(index,access_token, data).then((value){
+      setLeadMResponse(ApiResponseType.complate(value));
+    }).onError((error, stackTrace){
+      setLeadMResponse(ApiResponseType.error(error.toString()));
+      print(error.toString());
+    });
+  }
+
+  ApiResponseType<LeadFollowUpModel> leadFollowUpList = ApiResponseType.loading();
+  setLeadFResponse(ApiResponseType<LeadFollowUpModel> LeadFResponse){
+    leadFollowUpList = LeadFResponse;
+    notifyListeners();
+  }
+  Future<void> fetchLeadFollowUp(var index,var access_token, var data)async{
+    setLeadFResponse(ApiResponseType.loading());
+    drawerRepo.leadFollowUpData(index,access_token, data).then((value){
+      setLeadFResponse(ApiResponseType.complate(value));
+    }).onError((error, stackTrace){
+      setLeadFResponse(ApiResponseType.error(error.toString()));
+      print(error.toString());
+    });
+  }
+
 }

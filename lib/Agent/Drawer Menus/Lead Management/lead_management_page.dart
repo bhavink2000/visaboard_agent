@@ -1,11 +1,14 @@
-//@dart=2.9
-// ignore_for_file: non_constant_identifier_names
 
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../App Helper/Enums/enums_status.dart';
+import '../../App Helper/Get Access Token/get_access_token.dart';
+import '../../App Helper/Providers/Drawer Data Provider/drawer_menu_provider.dart';
+import '../../App Helper/Ui Helper/error_helper.dart';
 import '../../App Helper/Ui Helper/loading_always.dart';
 import '../../App Helper/Ui Helper/ui_helper.dart';
 import '../../Authentication Pages/OnBoarding/constants/constants.dart';
@@ -14,7 +17,7 @@ import 'lead_management_edit.dart';
 import 'lead_management_new_add.dart';
 
 class LeadManagementPage extends StatefulWidget{
-  const LeadManagementPage({Key key}) : super(key: key);
+  const LeadManagementPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -23,24 +26,31 @@ class LeadManagementPage extends StatefulWidget{
 }
 
 class _LeadManagementPage extends State<LeadManagementPage>{
+  GetAccessToken getAccessToken = GetAccessToken();
+  AgentDrawerMenuProvider agentDrawerMenuProvider = AgentDrawerMenuProvider();
 
-  bool isLoading;
   final GlobalKey<ScaffoldState> key = GlobalKey();
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   String access_token = "",token_type = "";
+  final leadSearch = TextEditingController();
+
+
   @override
   void initState() {
-    isLoading = true;
+    getAccessToken.checkAuthentication(context, setState);
     Future.delayed(const Duration(seconds: 2),(){
       setState(() {
-        isLoading = false;
+        agentDrawerMenuProvider.fetchLeadManagement(1, getAccessToken.access_token, '');
       });
     });
     super.initState();
   }
-  List<String> selectedItemValue = List<String>();
+
+
+  List<String> dropList = [];
+  List<String> selectedItemValue = [];
   List<DropdownMenuItem<String>> _dropDownItem() {
-    List<String> prvsvac = ['Pending', 'Registered Client', 'VisaFile Submitted','Successful Client','Visa Rejected','Non-Active Client'];
+    List<String> prvsvac = dropList;
     return prvsvac.map((value) => DropdownMenuItem(
       value: value,
       child: Text(value),
@@ -51,6 +61,9 @@ class _LeadManagementPage extends State<LeadManagementPage>{
   String search = "";
   @override
   Widget build(BuildContext context) {
+    Map leadData = {
+      'search_text': leadSearch.text,
+    };
     return AdvancedDrawer(
       key: _key,
       drawer: CustomDrawer(controller: _advancedDrawerController,),
@@ -96,6 +109,7 @@ class _LeadManagementPage extends State<LeadManagementPage>{
                                 ),
                                 padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                                 child: TextFormField(
+                                  controller: leadSearch,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Search',
@@ -129,75 +143,83 @@ class _LeadManagementPage extends State<LeadManagementPage>{
             ),
             Expanded(
               child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ),color: Colors.white,
-                ),
-                padding: MainWhiteContinerTopPadding,
-                child: isLoading == false
-                  ? AnimationLimiter(
-                  child: ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: 10,
-                    itemBuilder: (context, index){
-                      for (int i = 0; i < 10; i++) {
-                        selectedItemValue.add("Pending");
-                      }
-                      return AnimationConfiguration.staggeredList(
-                        position: index,
-                        duration: const Duration(milliseconds: 1000),
-                        child: SlideAnimation(
-                          horizontalOffset: 50.0,
-                          child: Column(
-                            children: [
-                              FadeInAnimation(
-                                child: ExpandableNotifier(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                                      child: ScrollOnExpand(
-                                        child: Builder(
-                                          builder: (context){
-                                            var controller = ExpandableController.of(context, required: true);
-                                            return InkWell(
-                                              onTap: (){
-                                                controller.toggle();
-                                              },
-                                              child: Card(
-                                                elevation: 5,
-                                                clipBehavior: Clip.antiAlias,
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Expandable(
-                                                      collapsed: buildCollapsed1(index),
-                                                      expanded: buildExpanded1(index),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  decoration: MainWhiteContainerDecoration,
+                  padding: MainWhiteContinerTopPadding,
+                  child: ChangeNotifierProvider<AgentDrawerMenuProvider>(
+                    create: (BuildContext context)=>agentDrawerMenuProvider,
+                    child: Consumer<AgentDrawerMenuProvider>(
+                      builder: (context, value, __){
+                        switch(value.leadManageDataList.status!){
+                          case Status.loading:
+                            return const CenterLoading();
+                          case Status.error:
+                            return const ErrorHelper();
+                          case Status.completed:
+                            return AnimationLimiter(
+                              child: ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: value.leadManageDataList.data!.lmData!.data!.length,
+                                itemBuilder: (context, index){
+                                  dropList = value.leadManageDataList.data!.statusList!;
+                                  for (int i = 0; i < value.leadManageDataList.data!.lmData!.data!.length; i++) {
+                                    selectedItemValue.add("Pending");
+                                  }
+                                  return AnimationConfiguration.staggeredList(
+                                    position: index,
+                                    duration: const Duration(milliseconds: 1000),
+                                    child: SlideAnimation(
+                                      horizontalOffset: 50.0,
+                                      child: Column(
+                                        children: [
+                                          FadeInAnimation(
+                                            child: ExpandableNotifier(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                                                  child: ScrollOnExpand(
+                                                    child: Builder(
+                                                      builder: (context){
+                                                        var controller = ExpandableController.of(context, required: true);
+                                                        return InkWell(
+                                                          onTap: (){
+                                                            controller!.toggle();
+                                                          },
+                                                          child: Card(
+                                                            elevation: 5,
+                                                            clipBehavior: Clip.antiAlias,
+                                                            child: Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: <Widget>[
+                                                                Expandable(
+                                                                  collapsed: buildCollapsed1(index),
+                                                                  expanded: buildExpanded1(index),
+                                                                ),
+                                                                Expandable(
+                                                                  collapsed: buildCollapsed3(),
+                                                                  expanded: buildExpanded3(),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
                                                     ),
-                                                    Expandable(
-                                                      collapsed: buildCollapsed3(),
-                                                      expanded: buildExpanded3(),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
+                                                  ),
+                                                )
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    )
-                                ),
+                                    ),
+                                  );
+                                },
                               ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                )
-                  : CenterLoading(),
+                            );
+                        }
+                      },
+                    ),
+                  )
               ),
             )
           ],
@@ -300,16 +322,16 @@ class _LeadManagementPage extends State<LeadManagementPage>{
                       isExpanded: true,
                       onChanged: (value) {
                         setState(() {
-                          selectedItemValue[index] = value;
+                          selectedItemValue[index] = value!;
                         });
                       },
                       onSaved: (value) {
                         setState(() {
-                          selectedItemValue[index] = value;
+                          selectedItemValue[index] = value!;
                         });
                       },
-                      validator: (String value) {
-                        if (value.isEmpty) {
+                      validator: (String? value) {
+                        if (value == null) {
                           return "can't empty";
                         } else {
                           return null;

@@ -1,5 +1,3 @@
-//@dart=2.9
-// ignore_for_file: missing_return
 
 import 'dart:io';
 import 'dart:ui';
@@ -17,7 +15,7 @@ import 'Bottom Menus/Wallet Screen/wallet_menu.dart';
 
 
 class Dashboard extends StatefulWidget{
-  const Dashboard({Key key}) : super(key: key);
+  const Dashboard({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return _Dashboard();
@@ -55,10 +53,10 @@ class _Dashboard extends State<Dashboard>{
       childDecoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(16)),),
       child: WillPopScope(
         onWillPop: (){
-          openExitBox();
+          return openExitBox();
         },
         child: Scaffold(
-          resizeToAvoidBottomInset: false,
+          //resizeToAvoidBottomInset: false,
           appBar: AppBar(
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(

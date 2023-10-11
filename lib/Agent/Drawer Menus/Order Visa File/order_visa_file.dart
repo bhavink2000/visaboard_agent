@@ -1,4 +1,3 @@
-//@dart=2.9
 // ignore_for_file: missing_return, must_be_immutable, prefer_typing_uninitialized_variables
 
 import 'dart:convert';
@@ -32,7 +31,7 @@ import 'upload_docs_screen.dart';
 
 class OrderVisaFile extends StatefulWidget{
   var id;
-  OrderVisaFile({Key key,this.id}) : super(key: key);
+  OrderVisaFile({Key? key,this.id}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -46,7 +45,7 @@ class _OrderVisaFile extends State<OrderVisaFile>{
   AgentDrawerMenuProvider agentDrawerMenuProvider = AgentDrawerMenuProvider();
 
   final GlobalKey<ScaffoldState> key = GlobalKey();
-  String search = '';
+  final Ovfsearch = TextEditingController();
   int curentindex = 0;
 
   @override
@@ -67,8 +66,8 @@ class _OrderVisaFile extends State<OrderVisaFile>{
   final _advancedDrawerController = AdvancedDrawerController();
   @override
   Widget build(BuildContext context) {
-    Map body = {
-      'status_as': ''
+    Map ovfData = {
+      'search_text': Ovfsearch.text,
     };
     return AdvancedDrawer(
       key: key,
@@ -113,23 +112,38 @@ class _OrderVisaFile extends State<OrderVisaFile>{
                                 ),
                                 padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                                 child: TextFormField(
+                                  controller: Ovfsearch,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Search',
                                       hintStyle: TextStyle(fontSize: 15,fontFamily: Constants.OPEN_SANS),
-                                      suffixIcon: const Icon(Icons.search)
+                                    suffixIcon: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          Ovfsearch.clear();
+                                          Ovfsearch.text = '';
+                                        });
+                                        Map OvfData = {
+                                          'search_text': '',
+                                        };
+                                        agentDrawerMenuProvider.fetchOrderVisaFile(1, getAccessToken.access_token, OvfData);
+                                        //homeMenusProvider.fetchTest(1, getAccessToken.access_token, testData);
+                                      },
+                                      child: const Icon(Icons.close),
+                                    ),
                                   ),
                                   onChanged: (value) {
-                                    setState(() {
-                                      search = value;
-                                    });
+                                    Map OvfData = {
+                                      'search_text': Ovfsearch.text,
+                                    };
+                                    agentDrawerMenuProvider.fetchOrderVisaFile(1, getAccessToken.access_token, OvfData);
                                   },
-                                  onTap: (){
-                                    showSearch(
-                                      context: context,
-                                      delegate: OrderVisaFileSearch(context: context,access_token: getAccessToken.access_token),
-                                    );
-                                  },
+                                  // onTap: (){
+                                  //   showSearch(
+                                  //     context: context,
+                                  //     delegate: OrderVisaFileSearch(context: context,access_token: getAccessToken.access_token),
+                                  //   );
+                                  // },
                                 ),
                               ),
                             ),
@@ -165,7 +179,7 @@ class _OrderVisaFile extends State<OrderVisaFile>{
                   create: (BuildContext context)=>agentDrawerMenuProvider,
                   child: Consumer<AgentDrawerMenuProvider>(
                     builder: (context, value, __){
-                      switch(value.orderVisaFileDataList.status){
+                      switch(value.orderVisaFileDataList.status!){
                         case Status.loading:
                           return const CenterLoading();
                         case Status.error:
@@ -174,9 +188,9 @@ class _OrderVisaFile extends State<OrderVisaFile>{
                           return AnimationLimiter(
                             child: ListView.builder(
                               physics: const BouncingScrollPhysics(),
-                              itemCount: value.orderVisaFileDataList.data.data.data.length,
+                              itemCount: value.orderVisaFileDataList.data!.data!.data!.length,
                               itemBuilder: (context, index){
-                                var orderVisaFile = value.orderVisaFileDataList.data.data.data;
+                                var orderVisaFile = value.orderVisaFileDataList.data!.data!.data;
                                 return AnimationConfiguration.staggeredList(
                                   position: index,
                                   duration: const Duration(milliseconds: 1000),
@@ -194,7 +208,7 @@ class _OrderVisaFile extends State<OrderVisaFile>{
                                                       var controller = ExpandableController.of(context, required: true);
                                                       return InkWell(
                                                         onTap: (){
-                                                          controller.toggle();
+                                                          controller!.toggle();
                                                         },
                                                         child: Card(
                                                           elevation: 5,
@@ -204,7 +218,7 @@ class _OrderVisaFile extends State<OrderVisaFile>{
                                                             children: <Widget>[
                                                               Expandable(
                                                                 collapsed: buildCollapsed1(
-                                                                  orderVisaFile[index].userId,
+                                                                  orderVisaFile![index].userId,
                                                                   orderVisaFile[index].firstName,
                                                                   orderVisaFile[index].middleName,
                                                                   orderVisaFile[index].lastName
@@ -214,10 +228,10 @@ class _OrderVisaFile extends State<OrderVisaFile>{
                                                               Expandable(
                                                                 collapsed: buildCollapsed3(
                                                                   orderVisaFile[index].userSopStatus,
-                                                                  orderVisaFile[index].action.editStatus ?? 0,
-                                                                  orderVisaFile[index].action.uploadDocsStatus ?? 0,
-                                                                  orderVisaFile[index].action.chatStatus ?? 0,
-                                                                  orderVisaFile[index].action.paynowStatus ?? 0,
+                                                                  orderVisaFile[index].action!.editStatus ?? 0,
+                                                                  orderVisaFile[index].action!.uploadDocsStatus ?? 0,
+                                                                  orderVisaFile[index].action!.chatStatus ?? 0,
+                                                                  orderVisaFile[index].action!.paynowStatus ?? 0,
                                                                   orderVisaFile[index].invoicePdf,
                                                                   orderVisaFile[index].userId,
                                                                   orderVisaFile[index].encId,
@@ -236,10 +250,10 @@ class _OrderVisaFile extends State<OrderVisaFile>{
                                                                   orderVisaFile[index].createAt,
                                                                   orderVisaFile[index].orderPrice,
                                                                     orderVisaFile[index].userSopStatus,
-                                                                    orderVisaFile[index].action.editStatus ?? 0,
-                                                                    orderVisaFile[index].action.uploadDocsStatus ?? 0,
-                                                                    orderVisaFile[index].action.chatStatus ?? 0,
-                                                                    orderVisaFile[index].action.paynowStatus ?? 0,
+                                                                    orderVisaFile[index].action!.editStatus ?? 0,
+                                                                    orderVisaFile[index].action!.uploadDocsStatus ?? 0,
+                                                                    orderVisaFile[index].action!.chatStatus ?? 0,
+                                                                    orderVisaFile[index].action!.paynowStatus ?? 0,
                                                                     orderVisaFile[index].invoicePdf,
                                                                     orderVisaFile[index].userId,
                                                                     orderVisaFile[index].encId,
@@ -264,19 +278,19 @@ class _OrderVisaFile extends State<OrderVisaFile>{
                                           ),
                                         ),
 
-                                        if (orderVisaFile.length == 10 || index + 1 != orderVisaFile.length)
+                                        if (orderVisaFile!.length == 10 || index + 1 != orderVisaFile!.length)
                                           Container()
                                         else
                                           SizedBox(height: MediaQuery.of(context).size.height / 1.7),
 
                                         index + 1 == orderVisaFile.length ? CustomPaginationWidget(
                                           currentPage: curentindex,
-                                          lastPage: agentDrawerMenuProvider.orderVisaFileDataList.data.data.lastPage,
+                                          lastPage: agentDrawerMenuProvider.orderVisaFileDataList.data!.data!.lastPage!,
                                           onPageChange: (page) {
                                             setState(() {
                                               curentindex = page - 1;
                                             });
-                                            agentDrawerMenuProvider.fetchOrderVisaFile(curentindex + 1, getAccessToken.access_token, '');
+                                            agentDrawerMenuProvider.fetchOrderVisaFile(curentindex + 1, getAccessToken.access_token, ovfData);
                                           },
                                         ) : Container(),
                                       ],
@@ -574,8 +588,8 @@ class _OrderVisaFile extends State<OrderVisaFile>{
 
   TextEditingController subject = TextEditingController();
   TextEditingController descrption = TextEditingController();
-  File file;
-  String _selectedValueemail;
+  File? file;
+  String? _selectedValueemail;
   List<String> listOfValueemail = ['Complete Email', 'Query Email'];
   openSendNewMessage() {
     return showDialog(
@@ -655,8 +669,8 @@ class _OrderVisaFile extends State<OrderVisaFile>{
                                   _selectedValueemail = value;
                                 });
                               },
-                              validator: (String value) {
-                                if (value.isEmpty) {
+                              validator: (String? value) {
+                                if (value == null) {
                                   return "can't empty";
                                 } else {
                                   return null;
@@ -684,10 +698,10 @@ class _OrderVisaFile extends State<OrderVisaFile>{
                                   style: ElevatedButton.styleFrom(backgroundColor: PrimaryColorOne),
                                   onPressed: ()async {
                                     try{
-                                      FilePickerResult pickedfile = await FilePicker.platform.pickFiles(type: FileType.any);
+                                      FilePickerResult? pickedfile = await FilePicker.platform.pickFiles(type: FileType.any);
                                       if(pickedfile != null){
                                         setState((){
-                                          file = File(pickedfile.files.single.path);
+                                          file = File(pickedfile.files.single.path!);
                                         });
                                       }
                                     }
@@ -702,7 +716,7 @@ class _OrderVisaFile extends State<OrderVisaFile>{
                             ),
                             Padding(
                                 padding: const EdgeInsets.all(5),
-                                child: file == null ? const Text("No File Chosen",style: TextStyle(fontSize: 12)) : Expanded(child: Text(file.path.split('/').last,style: const TextStyle(fontSize: 9),))
+                                child: file == null ? const Text("No File Chosen",style: TextStyle(fontSize: 12)) : Expanded(child: Text(file!.path.split('/').last,style: const TextStyle(fontSize: 9),))
                             )
                           ],
                         ),
