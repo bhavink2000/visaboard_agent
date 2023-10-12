@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
-
 import 'Agent/App Helper/Providers/Authentication Provider/authentication_provider.dart';
 import 'Agent/App Helper/Providers/Authentication Provider/user_data_auth_session.dart';
 import 'Agent/App Helper/Providers/Drawer Data Provider/drawer_menu_provider.dart';
@@ -15,7 +14,7 @@ Future<void> main() async {
     FlutterError.dumpErrorToConsole(details);
   };
 }
-// checking....
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
