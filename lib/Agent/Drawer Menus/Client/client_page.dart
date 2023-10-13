@@ -14,6 +14,7 @@ import '../../App Helper/Providers/Drawer Data Provider/drawer_menu_provider.dar
 import '../../App Helper/Ui Helper/error_helper.dart';
 import '../../App Helper/Ui Helper/icons_helper.dart';
 import '../../App Helper/Ui Helper/loading_always.dart';
+import '../../App Helper/Ui Helper/size_helper.dart';
 import '../../App Helper/Ui Helper/ui_helper.dart';
 import '../../App Helper/custom_pagination_widget.dart';
 import '../../Authentication Pages/OnBoarding/constants/constants.dart';
@@ -244,7 +245,7 @@ class _ClientPage extends State<ClientPage> {
                                         if (client!.length == 10 || index + 1 != client!.length)
                                           Container()
                                         else
-                                          SizedBox(height: MediaQuery.of(context).size.height / 4),
+                                          SizeHelper().getSize(context,client.length),
 
                                         index + 1 == client.length ? CustomPaginationWidget(
                                           currentPage: curentindex,

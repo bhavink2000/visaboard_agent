@@ -20,6 +20,7 @@ import '../../App Helper/Search Data/search_order_visafile.dart';
 import '../../App Helper/Ui Helper/error_helper.dart';
 import '../../App Helper/Ui Helper/icons_helper.dart';
 import '../../App Helper/Ui Helper/loading_always.dart';
+import '../../App Helper/Ui Helper/size_helper.dart';
 import '../../App Helper/Ui Helper/ui_helper.dart';
 import '../../App Helper/custom_pagination_widget.dart';
 import '../../Authentication Pages/OnBoarding/constants/constants.dart';
@@ -281,7 +282,7 @@ class _OrderVisaFile extends State<OrderVisaFile>{
                                         if (orderVisaFile!.length == 10 || index + 1 != orderVisaFile!.length)
                                           Container()
                                         else
-                                          SizedBox(height: MediaQuery.of(context).size.height / 1.7),
+                                          SizeHelper().getSize(context,orderVisaFile.length),
 
                                         index + 1 == orderVisaFile.length ? CustomPaginationWidget(
                                           currentPage: curentindex,

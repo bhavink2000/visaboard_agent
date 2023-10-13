@@ -15,6 +15,7 @@ import 'package:visaboard_agent/Agent/App%20Helper/Ui%20Helper/loading_always.da
 import '../../App Helper/Get Access Token/get_access_token.dart';
 import '../../App Helper/Providers/Drawer Data Provider/drawer_menu_provider.dart';
 import '../../App Helper/Ui Helper/divider_helper.dart';
+import '../../App Helper/Ui Helper/size_helper.dart';
 import '../../App Helper/Ui Helper/ui_helper.dart';
 import '../../App Helper/custom_pagination_widget.dart';
 import '../../Authentication Pages/OnBoarding/constants/constants.dart';
@@ -210,7 +211,7 @@ class _TemplatePageState extends State<TemplatePage> {
                                         if (tempData.length == 10 || index + 1 != tempData.length)
                                           Container()
                                         else
-                                          SizedBox(height: MediaQuery.of(context).size.height / 1.6),
+                                          SizeHelper().getSize(context,tempData.length),
 
                                         index + 1 == tempData.length ? CustomPaginationWidget(
                                           currentPage: curentindex,

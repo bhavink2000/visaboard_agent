@@ -3,6 +3,7 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
+import 'package:visaboard_agent/Agent/App%20Helper/Ui%20Helper/size_helper.dart';
 
 import '../../../App Helper/Enums/enums_status.dart';
 import '../../../App Helper/Get Access Token/get_access_token.dart';
@@ -201,7 +202,7 @@ class _WalletMenuPageState extends State<WalletMenuPage> {
                                         if (walletD!.length == 10 || index + 1 != walletD!.length)
                                           Container()
                                         else
-                                          SizedBox(height: MediaQuery.of(context).size.height / 4),
+                                          SizeHelper().getSize(context,walletD.length),
 
                                         index + 1 == walletD.length ? CustomPaginationWidget(
                                           currentPage: curentindex,

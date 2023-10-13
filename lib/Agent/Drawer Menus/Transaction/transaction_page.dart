@@ -16,6 +16,7 @@ import '../../App Helper/Providers/Drawer Data Provider/drawer_menu_provider.dar
 import '../../App Helper/Search Data/search_transaction_data.dart';
 import '../../App Helper/Ui Helper/error_helper.dart';
 import '../../App Helper/Ui Helper/loading_always.dart';
+import '../../App Helper/Ui Helper/size_helper.dart';
 import '../../App Helper/Ui Helper/ui_helper.dart';
 import '../../App Helper/custom_pagination_widget.dart';
 import '../../Authentication Pages/OnBoarding/constants/constants.dart';
@@ -242,7 +243,7 @@ class _TransactionPage extends State<TransactionPage>{
                                         if (transaction!.length == 10 || index + 1 != transaction!.length)
                                           Container()
                                         else
-                                          SizedBox(height: MediaQuery.of(context).size.height / 4),
+                                          SizeHelper().getSize(context,transaction!.length),
 
                                         index + 1 == transaction.length ? CustomPaginationWidget(
                                           currentPage: curentindex,

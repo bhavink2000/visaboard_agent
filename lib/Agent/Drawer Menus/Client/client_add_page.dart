@@ -134,8 +134,8 @@ class _ClientAddPageState extends State<ClientAddPage> {
                               ),
                               const Spacer(),
                               Container(
-                                width: MediaQuery.of(context).size.width / 1.3,
-                                height: MediaQuery.of(context).size.width / 7.5,
+                                width: MediaQuery.of(context).size.width / 1.25,
+                                // height: MediaQuery.of(context).size.width / 7.5,
                                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.white),
                                 padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                                 child: DropdownButtonFormField(
@@ -204,8 +204,8 @@ class _ClientAddPageState extends State<ClientAddPage> {
                               ),
                               const Spacer(),
                               Container(
-                                width: MediaQuery.of(context).size.width / 1.3,
-                                height: MediaQuery.of(context).size.width / 7.5,
+                                width: MediaQuery.of(context).size.width / 1.25,
+                                // height: MediaQuery.of(context).size.width / 7.5,
                                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.white),
                                 padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                                 child: DropdownButtonFormField(
@@ -272,11 +272,12 @@ class _ClientAddPageState extends State<ClientAddPage> {
                               ),
                               const Spacer(),
                               Container(
-                                width: MediaQuery.of(context).size.width / 1.3,
-                                height: MediaQuery.of(context).size.width / 7.5,
+                                width: MediaQuery.of(context).size.width / 1.25,
+                                // height: MediaQuery.of(context).size.width / 7.5,
                                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.white),
                                 padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                                 child: DropdownButtonFormField(
+                                  style: TextStyle(height: 1,color: Colors.black),
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Letter Type',
@@ -612,7 +613,7 @@ class _ClientAddPageState extends State<ClientAddPage> {
             ),
             const Spacer(),
             Container(
-              width: MediaQuery.of(context).size.width / 1.3,
+              width: MediaQuery.of(context).size.width / 1.25,
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.white),
               padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
               child: TextField(

@@ -24,6 +24,7 @@ import '../../App Helper/Ui Helper/Drawer Menus Helper/drawer_menus_datashow_hel
 import '../../App Helper/Ui Helper/divider_helper.dart';
 import '../../App Helper/Ui Helper/loading.dart';
 import '../../App Helper/Ui Helper/loading_always.dart';
+import '../../App Helper/Ui Helper/size_helper.dart';
 import '../../App Helper/Ui Helper/snackbar_msg_show.dart';
 import '../../App Helper/Ui Helper/ui_helper.dart';
 import '../../App Helper/custom_pagination_widget.dart';
@@ -251,7 +252,7 @@ class _WalletPageD extends State<WalletPageD>{
                                         if (walletTransaction!.length == 10 || index + 1 != walletTransaction!.length)
                                           Container()
                                         else
-                                          SizedBox(height: MediaQuery.of(context).size.height / 4),
+                                          SizeHelper().getSize(context,walletTransaction!.length),
 
                                         index + 1 == walletTransaction.length ? CustomPaginationWidget(
                                           currentPage: curentindex,
