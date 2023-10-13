@@ -128,10 +128,7 @@ class _ClientAddPageState extends State<ClientAddPage> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                           child: Row(
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-                                child: Icon(Icons.room_service,color: Colors.white),
-                              ),
+                              IconButton(onPressed: (){}, icon: Icon(Icons.room_service_rounded),color: Colors.white,),
                               const Spacer(),
                               Container(
                                 width: MediaQuery.of(context).size.width / 1.25,
@@ -198,10 +195,7 @@ class _ClientAddPageState extends State<ClientAddPage> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                           child: Row(
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-                                child: Icon(Icons.code,color: Colors.white),
-                              ),
+                              IconButton(onPressed: (){}, icon: Icon(Icons.code_rounded),color: Colors.white,),
                               const Spacer(),
                               Container(
                                 width: MediaQuery.of(context).size.width / 1.25,
@@ -266,10 +260,7 @@ class _ClientAddPageState extends State<ClientAddPage> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                           child: Row(
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-                                child: Icon(Icons.legend_toggle,color: Colors.white),
-                              ),
+                              IconButton(onPressed: (){}, icon: Icon(Icons.legend_toggle),color: Colors.white,),
                               const Spacer(),
                               Container(
                                 width: MediaQuery.of(context).size.width / 1.25,
@@ -321,8 +312,8 @@ class _ClientAddPageState extends State<ClientAddPage> {
                                       child: Row(
                                         children: [
                                           Text("${item['name']} \n(Price :- "
-                                              '${getAccessToken.countryId == 101 ? '\u{20B9}' : '\$'}'
-                                              "${getAccessToken.countryId == 101
+                                              '${getAccessToken.countryId == '101' ? '\u{20B9}' : '\$'}'
+                                              "${getAccessToken.countryId == '101'
                                               ? item['price'] == null ? 0 : item['price']
                                               : item['usd_price'] == null ? 0 : item['usd_price']})",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12)),
                                           // const SizedBox(width: 5),
@@ -607,10 +598,7 @@ class _ClientAddPageState extends State<ClientAddPage> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: Row(
           children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Icon(Icons.person_pin,color: Colors.white),
-            ),
+            IconButton(onPressed: (){}, icon: Icon(Icons.person_pin),color: Colors.white),
             const Spacer(),
             Container(
               width: MediaQuery.of(context).size.width / 1.25,

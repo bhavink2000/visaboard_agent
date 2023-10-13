@@ -172,8 +172,8 @@ class _ApplyFormsState extends State<ApplyForms> {
                                     },
                                     items: serviceList?.map((item) {
                                       return DropdownMenuItem(
-                                        value: item['id'].toString(),
-                                        child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10),),
+                                        value: item['id'], // Ensure this is a unique identifier
+                                        child: Text(item['name'], style: TextStyle(fontFamily: Constants.OPEN_SANS, fontSize: 10),),
                                       );
                                     }).toList() ?? [],
                                   ),
@@ -305,8 +305,8 @@ class _ApplyFormsState extends State<ApplyForms> {
                                       return DropdownMenuItem(
                                         value: item['id'].toString(),
                                         child: Text("${item['name']}\n(Price :- "
-                                            '${getAccessToken.countryId == 101 ? '\u{20B9}' : '\$'}'
-                                            "${getAccessToken.countryId == 101
+                                            '${getAccessToken.countryId == '101' ? '\u{20B9}' : '\$'}'
+                                            "${getAccessToken.countryId == '101'
                                             ? item['price'] == null ? 0 : item['price']
                                             : item['usd_price'] == null ? 0 : item['usd_price']})",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 9)),
                                       );
@@ -508,7 +508,29 @@ class _ApplyFormsState extends State<ApplyForms> {
                               ),
                               InkWell(
                                 onTap: (){
-                                  addApplicant();
+                                  if(_selectedService == null){
+                                    Fluttertoast.showToast(msg: 'Please select service');
+                                  }
+                                  else if(_selectedCountry == null || _selectedCountry == ''){
+                                    Fluttertoast.showToast(msg: 'Please select country');
+                                  }
+                                  else if(_selectedLetter == null || _selectedLetter == ''){
+                                    Fluttertoast.showToast(msg: 'Please select letter');
+                                  }
+                                  else if(_clientId == null){
+                                    Fluttertoast.showToast(msg: 'Please select client');
+                                  }
+                                  else if(_selectedService == '1'){
+                                    if(collage.text.isEmpty){
+                                      Fluttertoast.showToast(msg: 'Please enter collage');
+                                    }
+                                  }
+                                  else if(quntity.text.isEmpty){
+                                    Fluttertoast.showToast(msg: 'Please enter quantity');
+                                  }
+                                  else{
+                                    addApplicant();
+                                  }
                                 },
                                 child: Container(
                                   width: 100,
@@ -566,8 +588,8 @@ class _ApplyFormsState extends State<ApplyForms> {
     );
   }
 
-  String? _selectedService = '';
-  List? serviceList;
+  String? _selectedService;
+  List<Map<String, dynamic>> serviceList = [];
   Future<String?> _getserviceList(var accesstoken) async {
     print("calling");
     await http.get(
@@ -578,11 +600,16 @@ class _ApplyFormsState extends State<ApplyForms> {
           'Authorization': 'Bearer $accesstoken',
         }
     ).then((response) {
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body)['data'] as List<dynamic>;
+        setState(() {
+          serviceList = data.map((item) => {
+            'id': item['id'].toString(),
+            'name': item['name'],
+          }).toList();
+        });
+      }
       print(response.body);
-      var data = json.decode(response.body);
-      setState(() {
-        serviceList = data['data'];
-      });
     });
   }
 
@@ -661,14 +688,13 @@ class _ApplyFormsState extends State<ApplyForms> {
         'letter_type_id': _selectedLetter,
       }),
     );
+    print("res->>>>${response.body}");
     var status = jsonDecode(response.body)['status'];
     if(status == 200){
       setState(() {
         college_name_show = jsonDecode(response.body)['college_name_show'];
         _selectedLetterPrice = jsonDecode(response.body)['order_price'];
       });
-      print("college -> $college_name_show");
-      print("letter Price -> $_selectedLetterPrice");
     }
     else{
       Fluttertoast.showToast(msg: "Try Again");
@@ -699,8 +725,8 @@ class _ApplyFormsState extends State<ApplyForms> {
           print('$sent $total');
         }
     );
+    var jsonResponse = response.data;
     if (response.statusCode == 200) {
-      var jsonResponse = response.data;
       var status = jsonResponse['status'];
       if (status == 200) {
         Navigator.pushNamed(context, AppRoutesName.dashboard);

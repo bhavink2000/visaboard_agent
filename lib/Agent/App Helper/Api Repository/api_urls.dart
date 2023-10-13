@@ -6,8 +6,8 @@ Username :- noreply@visaboard.in
 Password :- supreme@123
  */
 
-  static String URL = "https://demo.visaboard.in/api/vb-agent/"; // demo
-  //static String URL = "https://www.visaboard.in/api/vb-agent/"; // live
+  //static String URL = "https://demo.visaboard.in/api/vb-agent/"; // demo
+  static String URL = "https://www.visaboard.in/api/vb-agent/"; // live
 
   static String Login = "${URL}login";
   static String deactiveUser = "${URL}user/in-active";

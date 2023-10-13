@@ -94,7 +94,7 @@ class _WorkExperincePageState extends State<WorkExperincePage> {
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("You have submitted request for Visa File SOP, Canada, on Date: December 7th, 2022 12:46 PM.",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
+              child: Text("${widget.editDetails.message}",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
             ),
           ),
         ),
@@ -139,7 +139,7 @@ class _WorkExperincePageState extends State<WorkExperincePage> {
               padding: EdgeInsets.all(10),
               child: InkWell(
                 onTap: (){
-                  occupationtype.add('');
+                  occupationtype.add(null);
                   position.add(TextEditingController());
                   oName.add(TextEditingController());
                   earning.add(TextEditingController());
@@ -205,7 +205,7 @@ class _WorkExperincePageState extends State<WorkExperincePage> {
                                   value: item['id'].toString(),
                                   child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
                                 );
-                              })?.toList() ?? [],
+                              }).toList() ?? [],
                             )
                         ),
                       ),

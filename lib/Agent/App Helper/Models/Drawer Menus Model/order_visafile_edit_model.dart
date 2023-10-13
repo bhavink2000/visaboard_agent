@@ -32,6 +32,7 @@ class OrderVisaFileEditM {
 class OVFEditData {
   int? id;
   int? userSopId;
+  String? message;
   User? user;
   List<dynamic>? userForeignInstituteDetails;
   List<dynamic>? userChildDetails;
@@ -58,6 +59,7 @@ class OVFEditData {
   OVFEditData(
       {this.id,
         this.userSopId,
+        this.message,
         this.user,
         this.userForeignInstituteDetails,
         this.userChildDetails,
@@ -84,6 +86,7 @@ class OVFEditData {
   factory OVFEditData.fromJson(Map<String, dynamic> json) => OVFEditData(
     id: json["id"],
     userSopId: json["user_sop_id"],
+    message: json["message"],
     user: User.fromJson(json["user"]),
     userForeignInstituteDetails: List<dynamic>.from(json["user_foreign_institute_details"].map((x) => x)),
     userChildDetails: List<dynamic>.from(json["user_child_details"].map((x) => x)),

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
   List<TextEditingController> listen = [TextEditingController()];
   List<TextEditingController> overA = [TextEditingController()];
   List<TextEditingController> tDate = [TextEditingController()];
-  List<String> yes_no = [];
+  List<String?> yes_no = [];
 
   int numberofitems = 1;
   List<String?> eType = [];
@@ -104,7 +105,7 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("You have submitted request for Visa File SOP, Canada, on Date: December 7th, 2022 12:46 PM.",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
+              child: Text("${widget.editDetails.message}",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
             ),
           ),
         ),
@@ -126,8 +127,8 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                   listen.add(TextEditingController());
                   overA.add(TextEditingController());
                   tDate.add(TextEditingController());
-                  eType.add('');
-                  yes_no.add('');
+                  eType.add(null);
+                  yes_no.add(null);
                   numberofitems++;
                   setState(() {});
                 },
@@ -289,29 +290,37 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                           ),
                         ],
                       ),
+
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                         child: SizedBox(
                             width: MediaQuery.of(context).size.width,
                             height: MediaQuery.of(context).size.width / 6.5,
-                            child: DropdownButtonFormField(
+                            child: DropdownButtonFormField<String>(
                               dropdownColor: Colors.white,
                               decoration: const InputDecoration(
                                 //border: InputBorder.none,
                                   hintText: 'English Test Type',
                                   hintStyle: TextStyle(fontSize: 10)
                               ),
-                              value: eType[index],
+                              //value: eType[index],
+                              value: eType.isNotEmpty ? eType[index] : null,
                               style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                               isExpanded: true,
                               onChanged: (value) {
                                 setState(() {
-                                  eType[index] = value as String?;
+                                  if(eType.length <= index){
+                                    eType.addAll(List.filled(index - eType.length + 1, null));
+                                  }
+                                  eType[index] = value;
                                 });
                               },
                               onSaved: (value) {
                                 setState(() {
-                                  eType[index] = value as String?;
+                                  if(eType.length <= index){
+                                    eType.addAll(List.filled(index - eType.length + 1, null));
+                                  }
+                                  eType[index] = value;
                                 });
                               },
                               validator: (value) {
@@ -321,8 +330,8 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                                   return null;
                                 }
                               },
-                              items: testTypes!.map((item) {
-                                return DropdownMenuItem(
+                              items: testTypes?.map((item) {
+                                return DropdownMenuItem<String>(
                                   value: item['id'].toString(),
                                   child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
                                 );
@@ -330,23 +339,24 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                             )
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                        child: Column(
-                          children: [
-                            Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("Have you taken any English Language Proficiency Test?",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10),)
-                            ),
-                            Row(
-                              children: [
-                                Expanded(child: _buildRadioListTile("Yes", index)),
-                                Expanded(child: _buildRadioListTile("No", index)),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+
+                      // Padding(
+                      //   padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      //   child: Column(
+                      //     children: [
+                      //       Align(
+                      //           alignment: Alignment.topLeft,
+                      //           child: Text("Have you taken any English Language Proficiency Test?",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10),)
+                      //       ),
+                      //       Row(
+                      //         children: [
+                      //           Expanded(child: _buildRadioListTile("Yes", index)),
+                      //           Expanded(child: _buildRadioListTile("No", index)),
+                      //         ],
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

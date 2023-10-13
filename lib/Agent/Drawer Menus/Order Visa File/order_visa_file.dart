@@ -407,6 +407,8 @@ class _OrderVisaFile extends State<OrderVisaFile>{
                 ) : Container(),
                 edit == 1 ? InkWell(
                   onTap: (){
+                    print("userId----->$user_id");
+                    print("userId----->$user_sop_id");
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>EditOrderVisaFile(user_id: user_id,user_sop_id: user_sop_id)));
                   },
                   child: Padding(

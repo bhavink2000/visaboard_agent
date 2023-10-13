@@ -93,11 +93,16 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
                       itemBuilder: (context, index){
                         var tab = value.oVFEditData.data!.tabs;
                         var item = value.oVFEditData.data!.data;
-                        switch (tab![index].tab) {
+                        print("---------------------");
+                        print("tab ->${tab![index].tab}");
+                        print("tab ->${tab![index].status}");
+                        print("----------------------");
+
+                        switch (tab[index].tab) {
                           case 'Personal Details':
                             return PersonalDetailsPage(
                               pagecontroller: _pageController,
-                              editDetails: item!,
+                              editDetails: item,
                               tabStatus: tab[index].status,
                               tabName: tab[index].tab,
                               user_id: widget.user_id,

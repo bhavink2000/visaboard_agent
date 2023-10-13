@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, unrelated_type_equality_checks, must_be_immutable, non_constant_identifier_names, prefer_typing_uninitialized_variables
 
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -98,7 +99,7 @@ class _AcademicsPageState extends State<AcademicsPage> {
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("You have submitted request for Visa File SOP, Canada, on Date: December 7th, 2022 12:46 PM.",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
+              child: Text("${widget.editDetails.message}",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
             ),
           ),
         ),
@@ -118,7 +119,7 @@ class _AcademicsPageState extends State<AcademicsPage> {
                     toDate.add(TextEditingController());
                     percentage.add(TextEditingController());
                     language.add(TextEditingController());
-                    selectedLevelOfStudy.add('');
+                    selectedLevelOfStudy.add(null);
                     numberofitems++;
                     setState(() {});
                   },
@@ -180,6 +181,7 @@ class _AcademicsPageState extends State<AcademicsPage> {
                                   height: MediaQuery.of(context).size.width / 8,
                                   child: TextField(
                                     controller: fromDate[index],
+                                    readOnly: true,
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                                         labelText: "Start Date"
@@ -244,6 +246,7 @@ class _AcademicsPageState extends State<AcademicsPage> {
                             height: MediaQuery.of(context).size.width / 8,
                             child: TextField(
                               controller: percentage[index],
+                              readOnly: true,
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
                                   hintText: 'Percentage/CGPA/GPA',
@@ -270,39 +273,45 @@ class _AcademicsPageState extends State<AcademicsPage> {
                           child: SizedBox(
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.width / 6.5,
-                              child: DropdownButtonFormField(
+                              child: DropdownButtonFormField<String>(
                                 dropdownColor: Colors.white,
                                 decoration: const InputDecoration(
-                                  //border: InputBorder.none,
-                                    hintText: 'Level Of Study',
-                                    hintStyle: TextStyle(fontSize: 10)
+                                  hintText: 'Level Of Study',
+                                  hintStyle: TextStyle(fontSize: 10),
                                 ),
-                                value: selectedLevelOfStudy[index],
-                                style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
+                                value: selectedLevelOfStudy.isNotEmpty ? selectedLevelOfStudy[index] : null,
+                                style: TextStyle(fontSize: 18, fontFamily: Constants.OPEN_SANS, color: Colors.black),
                                 isExpanded: true,
                                 onChanged: (value) {
                                   setState(() {
+                                    if (selectedLevelOfStudy.length <= index) {
+                                      // Ensure the list has enough elements
+                                      selectedLevelOfStudy.addAll(List.filled(index - selectedLevelOfStudy.length + 1, null));
+                                    }
                                     selectedLevelOfStudy[index] = value as String?;
                                   });
                                 },
                                 onSaved: (value) {
                                   setState(() {
+                                    if (selectedLevelOfStudy.length <= index) {
+                                      selectedLevelOfStudy.addAll(List.filled(index - selectedLevelOfStudy.length + 1, null));
+                                    }
                                     selectedLevelOfStudy[index] = value as String?;
                                   });
                                 },
                                 validator: (value) {
                                   if (value == null) {
-                                    return "can't empty";
+                                    return "can't be empty";
                                   } else {
                                     return null;
                                   }
                                 },
                                 items: educationTypes?.map((item) {
-                                  return DropdownMenuItem(
+                                  return DropdownMenuItem<String>(
                                     value: item['id'].toString(),
-                                    child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
+                                    child: Text(item['name'], style: TextStyle(fontFamily: Constants.OPEN_SANS, fontSize: 10)),
                                   );
-                                })?.toList() ?? [],
+                                }).toList() ?? [],
                               )
                           ),
                         ),
@@ -368,7 +377,6 @@ class _AcademicsPageState extends State<AcademicsPage> {
 
   List? educationTypes;
   Future<String?> getEducationtype(var accesstoken) async {
-    print("States Calling");
     await http.post(
         Uri.parse(ApiConstants.getOVFEdit),
         headers: {

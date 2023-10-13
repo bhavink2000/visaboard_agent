@@ -19,7 +19,7 @@ import '../../../Authentication Pages/OnBoarding/constants/constants.dart';
 
 class PersonalDetailsPage extends StatefulWidget {
   var pagecontroller;
-  OVFEditData editDetails;
+  OVFEditData? editDetails;
   var user_id, user_sop_id;
   var tabStatus, tabName;
   PersonalDetailsPage({Key? key,this.pagecontroller,required this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
@@ -80,19 +80,24 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
   void initState() {
     super.initState();
     getAccessToken.checkAuthentication(context, setState);
-    piFName.text = widget.editDetails.user!.firstName!;
-    piMName.text = widget.editDetails.user!.middleName!;
-    piLName.text = widget.editDetails.user!.lastName!;
-    piEmail.text = widget.editDetails.user!.emailId!;
-    piMobile.text = widget.editDetails.user!.mobileNo!;
-    piBirthDate.text = widget.editDetails.user!.dob;
-    piPassportNo.text = widget.editDetails.user!.passportNo;
-    piPassportExpiryDate.text = widget.editDetails.user!.passportExpDate;
-    piFirstLanguage.text = widget.editDetails.user!.firstLanguage;
-    piPAAddress.text = widget.editDetails.user!.communicationAddress;
-    piPAPostCode.text = widget.editDetails.user!.communicationZipCode;
-    piCAAddress.text = widget.editDetails.user!.currentAddress;
-    piCAPostCode.text = widget.editDetails.user!.currentZipCode;
+    if (widget.editDetails!.user != null) {
+      piFName.text = widget.editDetails!.user!.firstName ?? '';
+      piMName.text = widget.editDetails!.user!.middleName ?? '';
+      piLName.text = widget.editDetails!.user!.lastName ?? '';
+      piEmail.text = widget.editDetails!.user!.emailId ?? '';
+      piMobile.text = widget.editDetails!.user!.mobileNo ?? '';
+      piBirthDate.text = widget.editDetails!.user!.dob ?? '';
+      piPassportNo.text = widget.editDetails!.user!.passportNo ?? '';
+      piPassportExpiryDate.text = widget.editDetails!.user!.passportExpDate ?? '';
+      piFirstLanguage.text = widget.editDetails!.user!.firstLanguage ?? '';
+      piPAAddress.text = widget.editDetails!.user!.communicationAddress ?? '';
+      piPAPostCode.text = widget.editDetails!.user!.communicationZipCode ?? '';
+      piCAAddress.text = widget.editDetails!.user!.currentAddress ?? '';
+      piCAPostCode.text = widget.editDetails!.user!.currentZipCode ?? '';
+    } else {
+      // Handle the case where widget.editDetails!.user is null.
+      // You can set default values or handle it as needed.
+    }
   }
 
   @override
@@ -148,7 +153,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("You have submitted request for Visa File SOP, Canada, on Date: December 7th, 2022 12:46 PM.",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
+                child: Text("${widget.editDetails!.message}",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
               ),
             ),
           ),
@@ -865,11 +870,13 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                 });
                               }
                             },
-                            items: cStatesList!.map((item) {
+                            items: cStatesList?.map((item) {
                               return DropdownMenuItem(
-                                key: UniqueKey(),
                                 value: item['id'].toString(),
-                                child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
+                                child: Text(
+                                  item['name'],
+                                  style: TextStyle(fontFamily: Constants.OPEN_SANS, fontSize: 10),
+                                ),
                               );
                             }).toList() ?? [],
                           )
@@ -888,17 +895,20 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                             value: _piPACity,
                             isExpanded: true,
                             onChanged: (city) {
+
                               setState(() {
                                 _piPACity = city as String?;
                               });
                             },
-                            items: cCitiesList!.map((item) {
+                            items: (cCitiesList ?? []).map((item) {
                               return DropdownMenuItem(
-                                key: UniqueKey(),
                                 value: item['id'].toString(),
-                                child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10),),
+                                child: Text(
+                                  item['name'],
+                                  style: TextStyle(fontFamily: Constants.OPEN_SANS, fontSize: 10),
+                                ),
                               );
-                            }).toList() ?? [],
+                            }).toList(),
                           )
                         ),
                       ),
@@ -1017,21 +1027,19 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.width / 6.5,
-                          child: DropdownButtonFormField(
+                          child: DropdownButtonFormField<String>( // Specify the type for DropdownButtonFormField
                             decoration: const InputDecoration(
-                              //border: InputBorder.none,
-                                hintText: 'State',
-                                hintStyle: TextStyle(fontSize: 12)
+                              hintText: 'State',
+                              hintStyle: TextStyle(fontSize: 12),
                             ),
                             value: _piCAState,
                             isExpanded: true,
-                            onTap: (){
-                              if(_piCACity == null){
+                            onTap: () {
+                              if (_piCACity == null) {
                                 setState(() {
                                   getCurrentCities(getAccessToken.access_token);
                                 });
-                              }
-                              else{
+                              } else {
                                 setState(() {
                                   _piCACity = null;
                                   getCurrentStates(getAccessToken.access_token);
@@ -1039,23 +1047,25 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                               }
                             },
                             onChanged: (state) {
-                              if(_piCACity == null){
+                              if (_piCACity == null) {
                                 setState(() {
-                                  _piCAState = state as String?;
+                                  _piCAState = state;
                                   getCurrentCities(getAccessToken.access_token);
                                 });
-                              }
-                              else{
+                              } else {
                                 setState(() {
                                   _piCACity = null;
                                   getCurrentStates(getAccessToken.access_token);
                                 });
                               }
                             },
-                            items: cStatesList!.map((item) {
+                            items: cStatesList?.map((item) {
                               return DropdownMenuItem(
                                 value: item['id'].toString(),
-                                child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
+                                child: Text(
+                                  item['name'],
+                                  style: TextStyle(fontFamily: Constants.OPEN_SANS, fontSize: 10),
+                                ),
                               );
                             }).toList() ?? [],
                           ),
@@ -1069,8 +1079,8 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                           child: DropdownButtonFormField(
                             decoration: const InputDecoration(
                               //border: InputBorder.none,
-                                hintText: 'City',
-                                hintStyle: TextStyle(fontSize: 12)
+                              hintText: 'City',
+                              hintStyle: TextStyle(fontSize: 12),
                             ),
                             value: _piCACity,
                             isExpanded: true,
@@ -1079,12 +1089,15 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                 _piCACity = city as String?;
                               });
                             },
-                            items: cCitiesList!.map((item) {
+                            items: (cCitiesList ?? []).map((item) {
                               return DropdownMenuItem(
                                 value: item['id'].toString(),
-                                child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10),),
+                                child: Text(
+                                  item['name'],
+                                  style: TextStyle(fontFamily: Constants.OPEN_SANS, fontSize: 10),
+                                ),
                               );
-                            }).toList() ?? [],
+                            }).toList(),
                           ),
                         ),
                       ),
@@ -1140,28 +1153,32 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
     );
   }
 
-  List? cStatesList;
-  List? pStatesList;
-  Future<String?> getCurrentStates(var accesstoken) async {
-    print("States Calling");
-    await http.post(
-        Uri.parse(ApiConstants.getOVFEdit),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $accesstoken',
-        },
-        body: {
-          'user_id': widget.user_id,
-          'user_sop_id': widget.user_sop_id
-        }
-    ).then((response) {
-      var data = json.decode(response.body);
+  List<Map<String, dynamic>>? cStatesList;
+  List<Map<String, dynamic>>? pStatesList;
+
+  Future<void> getCurrentStates(String? accessToken) async {
+    final response = await http.post(
+      Uri.parse(ApiConstants.getOVFEdit),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: {
+        'user_id': widget.user_id,
+        'user_sop_id': widget.user_sop_id,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
       setState(() {
-        pStatesList = data['data']['current_states'];
-        cStatesList = pStatesList;
+        pStatesList = (data['data']['current_states'] as List<dynamic>?)?.cast<Map<String, dynamic>>();
+        cStatesList = pStatesList ?? [];
       });
       print("States List -> $cStatesList");
-    });
+    } else {
+
+    }
   }
 
   List? cCitiesList;
@@ -1169,15 +1186,15 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
   Future<String?> getCurrentCities(var accesstoken) async {
     print("Cities Calling");
     await http.post(
-        Uri.parse(ApiConstants.getOVFEdit),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $accesstoken',
-        },
-        body: {
-          'user_id': widget.user_id,
-          'user_sop_id': widget.user_sop_id
-        }
+      Uri.parse(ApiConstants.getOVFEdit),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $accesstoken',
+      },
+      body: {
+        'user_id': widget.user_id,
+        'user_sop_id': widget.user_sop_id
+      },
     ).then((response) {
       var data = json.decode(response.body);
       setState(() {
@@ -1185,6 +1202,9 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
         cCitiesList = pCitiesList;
       });
       print("Cities List -> $cCitiesList");
+    }).catchError((error) {
+      // Handle errors here
+      print("Error: $error");
     });
   }
 
