@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:visaboard_agent/Agent/App%20Helper/Ui%20Helper/text_helper.dart';
 
 import '../../../App Helper/Api Repository/api_urls.dart';
 import '../../../App Helper/Get Access Token/get_access_token.dart';
@@ -113,7 +114,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("You have submitted request for Visa File SOP, Canada, on Date: December 7th, 2022 12:46 PM.",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
+                child: Text("${widget.editDetails.message}",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
               ),
             ),
           ),
@@ -164,11 +165,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                             height: MediaQuery.of(context).size.width / 6.5,
                             child: DropdownButtonFormField(
                               dropdownColor: Colors.white,
-                              decoration: const InputDecoration(
-                                //border: InputBorder.none,
-                                  hintText: 'Name of the country',
-                                  hintStyle: TextStyle(fontSize: 10)
-                              ),
+                              decoration: editFormsInputDecoration('${ImmigrationTextHelper.firstText}'),
                               value: _country,
                               style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                               isExpanded: true,
@@ -205,11 +202,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                             height: MediaQuery.of(context).size.width / 6.5,
                             child: DropdownButtonFormField(
                               dropdownColor: Colors.white,
-                              decoration: const InputDecoration(
-                                //border: InputBorder.none,
-                                  hintText: 'Purpose of Application',
-                                  hintStyle: TextStyle(fontSize: 10)
-                              ),
+                              decoration: editFormsInputDecoration('${ImmigrationTextHelper.twoText}'),
                               value: _pApplication,
                               style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                               isExpanded: true,
@@ -312,17 +305,14 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                             return Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                   child: SizedBox(
                                       width: MediaQuery.of(context).size.width,
                                       height: MediaQuery.of(context).size.width / 6.5,
                                       child: DropdownButtonFormField(
                                         dropdownColor: Colors.white,
-                                        decoration: const InputDecoration(
-                                          hintText: 'Name of the country',
-                                          hintStyle: TextStyle(fontSize: 10),
-                                        ),
-                                        value: dCountry[index],
+                                        decoration: editFormsInputDecoration('${ImmigrationTextHelper.threeText}'),
+                                        value: dCountry.length > index ? dCountry[index] : null,
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontFamily: Constants.OPEN_SANS,
@@ -331,11 +321,17 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                         isExpanded: true,
                                         onChanged: (value) {
                                           setState(() {
+                                            if(dCountry.length <= index){
+                                              dCountry.addAll(List.filled(index - dCountry.length + 1, null));
+                                            }
                                             dCountry[index] = value as String?;
                                           });
                                         },
                                         onSaved: (value) {
                                           setState(() {
+                                            if(dCountry.length <= index){
+                                              dCountry.addAll(List.filled(index - dCountry.length + 1, null));
+                                            }
                                             dCountry[index] = value as String?;
                                           });
                                         },
@@ -357,32 +353,34 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                               ),
                                             ),
                                           );
-                                        })?.toSet()?.toList() ?? [],
+                                        }).toSet().toList() ?? [],
                                       )
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                   child: SizedBox(
                                       width: MediaQuery.of(context).size.width,
                                       height: MediaQuery.of(context).size.width / 6.5,
                                       child: DropdownButtonFormField(
                                         dropdownColor: Colors.white,
-                                        decoration: const InputDecoration(
-                                          //border: InputBorder.none,
-                                            hintText: 'Purpose of Application',
-                                            hintStyle: TextStyle(fontSize: 10)
-                                        ),
-                                        value: dTravel[index],
+                                        decoration: editFormsInputDecoration('${ImmigrationTextHelper.fourText}'),
+                                        value: dTravel.length > index ? dTravel[index] : null,
                                         style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                                         isExpanded: true,
                                         onChanged: (value) {
                                           setState(() {
+                                            if(dTravel.length <= index){
+                                              dTravel.addAll(List.filled(index - dTravel.length + 1, null));
+                                            }
                                             dTravel[index] = value as String?;
                                           });
                                         },
                                         onSaved: (value) {
                                           setState(() {
+                                            if(dTravel.length <= index){
+                                              dTravel.addAll(List.filled(index - dTravel.length + 1, null));
+                                            }
                                             dTravel[index] = value as String?;
                                           });
                                         },
@@ -411,16 +409,13 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                 Row(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.fromLTRB(15, 5, 15, 10),
+                                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
                                       child: SizedBox(
                                         width: MediaQuery.of(context).size.width / 2.8,
-                                        height: MediaQuery.of(context).size.width / 6,
+                                        height: MediaQuery.of(context).size.width / 8,
                                         child: TextField(
                                           controller: dDate[index],
-                                          decoration: InputDecoration(
-                                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                              labelText: "Departure Date"
-                                          ),
+                                          decoration: editFormsInputDecoration('${ImmigrationTextHelper.fiveText}'),
                                           readOnly: true,
                                           onTap: () async {
                                             DateTime? pickedDate = await showDatePicker(
@@ -442,16 +437,13 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.fromLTRB(15, 5, 15, 10),
+                                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
                                       child: SizedBox(
                                         width: MediaQuery.of(context).size.width / 2.8,
-                                        height: MediaQuery.of(context).size.width / 6,
+                                        height: MediaQuery.of(context).size.width / 8,
                                         child: TextField(
                                           controller: aDate[index],
-                                          decoration: InputDecoration(
-                                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                              labelText: "Arrival Date"
-                                          ),
+                                          decoration: editFormsInputDecoration('${ImmigrationTextHelper.sixText}'),
                                           readOnly: true,
                                           onTap: () async {
                                             DateTime? pickedDate = await showDatePicker(
@@ -474,6 +466,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                     ),
                                   ],
                                 ),
+                                Divider(color: Colors.grey,thickness: 1,endIndent: 20,indent: 20)
                               ],
                             );
                           },
@@ -558,21 +551,23 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                       height: MediaQuery.of(context).size.width / 6.5,
                                       child: DropdownButtonFormField(
                                         dropdownColor: Colors.white,
-                                        decoration: const InputDecoration(
-                                          //border: InputBorder.none,
-                                            hintText: 'Name of the country',
-                                            hintStyle: TextStyle(fontSize: 10)
-                                        ),
-                                        value: rCountry[index],
+                                        decoration: editFormsInputDecoration('${ImmigrationTextHelper.sevenText}'),
+                                        value: rCountry.length > index ? rCountry[index] : null,
                                         style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                                         isExpanded: true,
                                         onChanged: (value) {
                                           setState(() {
+                                            if(rCountry.length <= index){
+                                              rCountry.addAll(List.filled(index - rCountry.length + 1, null));
+                                            }
                                             rCountry[index] = value as String?;
                                           });
                                         },
                                         onSaved: (value) {
                                           setState(() {
+                                            if(rCountry.length <= index){
+                                              rCountry.addAll(List.filled(index - rCountry.length + 1, null));
+                                            }
                                             rCountry[index] = value as String?;
                                           });
                                         },
@@ -594,7 +589,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                               ),
                                             ),
                                           );
-                                        })?.toSet()?.toList() ?? [],
+                                        }).toSet().toList() ?? [],
                                       )
                                   ),
                                 ),
@@ -605,21 +600,23 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                       height: MediaQuery.of(context).size.width / 6.5,
                                       child: DropdownButtonFormField(
                                         dropdownColor: Colors.white,
-                                        decoration: const InputDecoration(
-                                          //border: InputBorder.none,
-                                            hintText: 'Purpose of Application',
-                                            hintStyle: TextStyle(fontSize: 10)
-                                        ),
-                                        value: rPTravel[index],
+                                        decoration: editFormsInputDecoration('${ImmigrationTextHelper.eightText}'),
+                                        value: rPTravel.length > index ? rPTravel[index] : null,
                                         style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                                         isExpanded: true,
                                         onChanged: (value) {
                                           setState(() {
+                                            if(rPTravel.length <= index){
+                                              rPTravel.addAll(List.filled(index - rPTravel.length + 1, null));
+                                            }
                                             rPTravel[index] = value as String?;
                                           });
                                         },
                                         onSaved: (value) {
                                           setState(() {
+                                            if(rPTravel.length <= index){
+                                              rPTravel.addAll(List.filled(index - rPTravel.length + 1, null));
+                                            }
                                             rPTravel[index] = value as String?;
                                           });
                                         },
@@ -654,10 +651,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                         height: MediaQuery.of(context).size.width / 8,
                                         child: TextField(
                                           controller: rDate[index],
-                                          decoration: InputDecoration(
-                                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                              labelText: "Refusal Date"
-                                          ),
+                                          decoration: editFormsInputDecoration('${ImmigrationTextHelper.nineText}'),
                                           readOnly: true,
                                           onTap: () async {
                                             DateTime? pickedDate = await showDatePicker(
@@ -685,15 +679,13 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                         height: MediaQuery.of(context).size.width / 8,
                                         child: TextField(
                                           controller: rNumber[index],
-                                          decoration: InputDecoration(
-                                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                              labelText: "Refusal Reference Number"
-                                          ),
+                                          decoration: editFormsInputDecoration('${ImmigrationTextHelper.tenText}'),
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
+                                Divider(color: Colors.grey,thickness: 1,endIndent: 20,indent: 20,)
                               ],
                             );
                           },
@@ -750,10 +742,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                       height: MediaQuery.of(context).size.width / 8,
                       child: TextField(
                         controller: dRDSpecify,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                            labelText: "Specify "
-                        ),
+                        decoration: editFormsInputDecoration('${ImmigrationTextHelper.elevenText}'),
                       ),
                     ),
                   ),
@@ -806,10 +795,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                       height: MediaQuery.of(context).size.width / 8,
                       child: TextField(
                         controller: visaRSpecify,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                            labelText: "Specify "
-                        ),
+                        decoration: editFormsInputDecoration('${ImmigrationTextHelper.elevenText}'),
                       ),
                     ),
                   ),

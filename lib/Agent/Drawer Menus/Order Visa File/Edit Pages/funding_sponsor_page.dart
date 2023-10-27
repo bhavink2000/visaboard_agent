@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:visaboard_agent/Agent/App%20Helper/Ui%20Helper/text_helper.dart';
 
 import '../../../App Helper/Api Repository/api_urls.dart';
 import '../../../App Helper/Get Access Token/get_access_token.dart';
@@ -107,7 +108,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("You have submitted request for Visa File SOP, Canada, on Date: December 7th, 2022 12:46 PM.",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
+              child: Text("${widget.editDetails.message}",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
             ),
           ),
         ),
@@ -122,7 +123,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
               padding: EdgeInsets.all(10),
               child: InkWell(
                 onTap: (){
-                  fsFundsType.add('');
+                  fsFundsType.add(null);
                   fsAmount.add(TextEditingController());
                   numberofitems++;
                   setState(() {});
@@ -144,17 +145,13 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
               Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
                     child: SizedBox(
                         width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width / 6.5,
+                        height: MediaQuery.of(context).size.width / 7.5,
                         child: DropdownButtonFormField(
                           dropdownColor: Colors.white,
-                          decoration: const InputDecoration(
-                            //border: InputBorder.none,
-                              hintText: 'Who is going to sponsor your studies, living & accommodation? *',
-                              hintStyle: TextStyle(fontSize: 10)
-                          ),
+                          decoration: editFormsInputDecoration('${FundingSponsorTextHelper.firstText}'),
                           value: _fsSStudies,
                           style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                           isExpanded: true,
@@ -190,25 +187,18 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                       height: MediaQuery.of(context).size.width / 8,
                       child: TextField(
                         controller: fsName,
-                        decoration: InputDecoration(
-                            hintText: 'Name ',
-                            hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                        ),
+                        decoration: editFormsInputDecoration('${FundingSponsorTextHelper.twoText}'),
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
                     child: SizedBox(
                         width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width / 6.5,
+                        height: MediaQuery.of(context).size.width / 7.5,
                         child: DropdownButtonFormField(
                           dropdownColor: Colors.white,
-                          decoration: const InputDecoration(
-                            //border: InputBorder.none,
-                              hintText: 'What is the occupation of your sponsor?*',
-                              hintStyle: TextStyle(fontSize: 10)
-                          ),
+                          decoration: editFormsInputDecoration('${FundingSponsorTextHelper.threeText}'),
                           value: _fsSOccupation,
                           style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                           isExpanded: true,
@@ -244,10 +234,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                       height: MediaQuery.of(context).size.width / 8,
                       child: TextField(
                         controller: fsSOrganization,
-                        decoration: InputDecoration(
-                            hintText: 'Name of the organization your sponsor offers duties *',
-                            hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                        ),
+                        decoration: editFormsInputDecoration('${FundingSponsorTextHelper.fourText}'),
                       ),
                     ),
                   ),
@@ -257,10 +244,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                       height: MediaQuery.of(context).size.width / 8,
                       child: TextField(
                         controller: fsSAnnualIncome,
-                        decoration: InputDecoration(
-                            hintText: 'What is the annual income of your sponsor (from all sources)?',
-                            hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                        ),
+                        decoration: editFormsInputDecoration(('${FundingSponsorTextHelper.fiveText}')),
                       ),
                     ),
                   ),
@@ -270,10 +254,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                       height: MediaQuery.of(context).size.width / 8,
                       child: TextField(
                         controller: fsSFundAvaiable,
-                        decoration: InputDecoration(
-                            hintText: 'How much fund is available with your sponsor to support your studies? *',
-                            hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                        ),
+                        decoration: editFormsInputDecoration('${FundingSponsorTextHelper.sixText}'),
                       ),
                     ),
                   ),
@@ -326,10 +307,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                             height: MediaQuery.of(context).size.width / 8,
                             child: TextField(
                               controller: fsBankName,
-                              decoration: InputDecoration(
-                                  hintText: 'Bank Name *',
-                                  hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                              ),
+                              decoration: editFormsInputDecoration('${FundingSponsorTextHelper.sevenText}'),
                             ),
                           ),
                         ),
@@ -339,10 +317,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                             height: MediaQuery.of(context).size.width / 8,
                             child: TextField(
                               controller: fsLoanAmount,
-                              decoration: InputDecoration(
-                                  hintText: 'Loan Amount *',
-                                  hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                              ),
+                              decoration: editFormsInputDecoration('${FundingSponsorTextHelper.eightText}'),
                             ),
                           ),
                         ),
@@ -352,10 +327,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                             height: MediaQuery.of(context).size.width / 8,
                             child: TextField(
                               controller: fsGuarantor,
-                              decoration: InputDecoration(
-                                  hintText: 'Guarantor *',
-                                  hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                              ),
+                              decoration: editFormsInputDecoration('${FundingSponsorTextHelper.nineText}'),
                             ),
                           ),
                         ),
@@ -421,24 +393,26 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                                 child: SizedBox(
                                     width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.width / 6.5,
+                                    height: MediaQuery.of(context).size.width / 7.5,
                                     child: DropdownButtonFormField(
                                       dropdownColor: Colors.white,
-                                      decoration: const InputDecoration(
-                                        //border: InputBorder.none,
-                                          hintText: 'Source of Fund *',
-                                          hintStyle: TextStyle(fontSize: 10)
-                                      ),
-                                      value: fsFundsType[index],
+                                      decoration: editFormsInputDecoration('${FundingSponsorTextHelper.tenText}'),
+                                      value: fsFundsType.length > index ? fsFundsType[index] : null,
                                       style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                                       isExpanded: true,
                                       onChanged: (value) {
                                         setState(() {
+                                          if(fsFundsType.length <= index){
+                                            fsFundsType.addAll(List.filled(index - fsFundsType.length + 1, null));
+                                          }
                                           fsFundsType[index] = value as String?;
                                         });
                                       },
                                       onSaved: (value) {
                                         setState(() {
+                                          if(fsFundsType.length <= index){
+                                            fsFundsType.addAll(List.filled(index - fsFundsType.length + 1, null));
+                                          }
                                           fsFundsType[index] = value as String?;
                                         });
                                       },
@@ -464,10 +438,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                                   height: MediaQuery.of(context).size.width / 8,
                                   child: TextField(
                                     controller: fsAmount[index],
-                                    decoration: InputDecoration(
-                                        hintText: 'Amount',
-                                        hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                                    ),
+                                    decoration: editFormsInputDecoration('${FundingSponsorTextHelper.elevenText}'),
                                   ),
                                 ),
                               ),

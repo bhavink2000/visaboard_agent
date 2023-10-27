@@ -176,10 +176,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                         height: MediaQuery.of(context).size.width / 8,
                         child: TextField(
                           controller: piFName,
-                          decoration: InputDecoration(
-                              hintText: 'Given Name/s (exactly as on your passport) *',
-                              hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                          ),
+                          decoration: editFormsInputDecoration('Given Name/s (exactly as on your passport) * '),
                         ),
                       ),
                     ),
@@ -189,10 +186,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                         height: MediaQuery.of(context).size.width / 8,
                         child: TextField(
                           controller: piMName,
-                          decoration: InputDecoration(
-                              hintText: 'Middle Name *',
-                              hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                          ),
+                          decoration: editFormsInputDecoration('Middle Name *'),
                         ),
                       ),
                     ),
@@ -202,10 +196,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                         height: MediaQuery.of(context).size.width / 8,
                         child: TextField(
                           controller: piLName,
-                          decoration: InputDecoration(
-                              hintText: 'Family Name (exactly as on your passport)*',
-                              hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                          ),
+                          decoration: editFormsInputDecoration('Family Name (exactly as on your passport)*'),
                         ),
                       ),
                     ),
@@ -261,10 +252,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                 height: MediaQuery.of(context).size.width / 8,
                                 child: TextField(
                                   controller: piOtherName,
-                                  decoration: InputDecoration(
-                                      hintText: 'Other Name',
-                                      hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                                  ),
+                                  decoration: editFormsInputDecoration('Other Name')
                                 ),
                               ),
                             ),
@@ -363,10 +351,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                         height: MediaQuery.of(context).size.width / 8,
                         child: TextField(
                           controller: piPassportNo,
-                          decoration: InputDecoration(
-                              hintText: 'Passport Number * ',
-                              hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                          ),
+                          decoration: editFormsInputDecoration('Passport Number *'),
                         ),
                       ),
                     ),
@@ -376,10 +361,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                         height: MediaQuery.of(context).size.width / 8,
                         child: TextField(
                           controller: piFirstLanguage,
-                          decoration: InputDecoration(
-                              hintText: 'First language *',
-                              hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                          ),
+                          decoration: editFormsInputDecoration('First Language *'),
                         ),
                       ),
                     ),
@@ -389,16 +371,12 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                         children: [
                           Container(
                               width: MediaQuery.of(context).size.width / 2.5,
-                              height: MediaQuery.of(context).size.width / 8,
+                              height: MediaQuery.of(context).size.width / 7.5,
                               child: DropdownButtonFormField(
                                 dropdownColor: Colors.white,
-                                decoration: const InputDecoration(
-                                  //border: InputBorder.none,
-                                    hintText: 'Country of citizenship',
-                                    hintStyle: TextStyle(fontSize: 10)
-                                ),
+                                decoration: editFormsInputDecoration('Country of citizenship'),
                                 value: _piCountryOfCitizenShip,
-                                style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
+                                style: TextStyle(fontSize: 12,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                                 isExpanded: true,
                                 onChanged: (value) {
                                   setState(() {
@@ -435,10 +413,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                 height: MediaQuery.of(context).size.width / 8,
                                 child: TextField(
                                   controller: piPassportExpiryDate,
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                      labelText: "Passport Expiry Date"
-                                  ),
+                                  decoration: editFormsInputDecoration('Passport expiry date'),
                                   readOnly: true,
                                   onTap: () async {
                                     DateTime? pickedDate = await showDatePicker(
@@ -475,10 +450,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                                 height: MediaQuery.of(context).size.width / 8,
                                 child: TextField(
                                   controller: piBirthDate,
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                      labelText: "Date of birth *"
-                                  ),
+                                  decoration: editFormsInputDecoration('Date of birth *'),
                                   readOnly: true,
                                   onTap: () async {
                                     DateTime? pickedDate = await showDatePicker(
@@ -705,10 +677,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: piEmail,
-                            decoration: InputDecoration(
-                                hintText: 'Email',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('Email'),
                           ),
                         ),
                       ),
@@ -718,10 +687,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: piMobile,
-                            decoration: InputDecoration(
-                                hintText: 'Phone number ',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('Mobile number'),
                           ),
                         ),
                       ),
@@ -731,10 +697,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: piParentEmail,
-                            decoration: InputDecoration(
-                                hintText: 'Parents email address',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('Parents email address'),
                           ),
                         ),
                       ),
@@ -744,10 +707,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: piParentMobile,
-                            decoration: InputDecoration(
-                                hintText: 'Alternate no. (Either parent)',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('Alternate no. (Either parent)'),
                           ),
                         ),
                       ),
@@ -767,10 +727,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: piPAAddress,
-                            decoration: InputDecoration(
-                                hintText: 'Address ',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('Address'),
                           ),
                         ),
                       ),
@@ -781,10 +738,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                             height: MediaQuery.of(context).size.width / 6.5,
                             child: DropdownButtonFormField(
                               dropdownColor: Colors.white,
-                              decoration: const InputDecoration(
-                                  hintText: 'Country',
-                                  hintStyle: TextStyle(fontSize: 10)
-                              ),
+                              decoration: editFormsInputDecoration('Country'),
                               value: _piPACountry,
                               style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                               isExpanded: true,
@@ -829,16 +783,12 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.width / 6.5,
                           child: DropdownButtonFormField(
-                            decoration: const InputDecoration(
-                              //border: InputBorder.none,
-                                hintText: 'State',
-                                hintStyle: TextStyle(fontSize: 12)
-                            ),
+                            decoration: editFormsInputDecoration('State'),
                             value: _piPAState,
                             isExpanded: true,
                             onTap: (){
@@ -883,15 +833,12 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
+                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.width / 6.5,
                           child: DropdownButtonFormField(
-                            decoration: const InputDecoration(
-                                hintText: 'City',
-                                hintStyle: TextStyle(fontSize: 12)
-                            ),
+                            decoration: editFormsInputDecoration('City'),
                             value: _piPACity,
                             isExpanded: true,
                             onChanged: (city) {
@@ -918,10 +865,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: piPAPostCode,
-                            decoration: InputDecoration(
-                                hintText: 'Postal/Zip Code ',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('Postal/Zip code'),
                           ),
                         ),
                       ),
@@ -956,10 +900,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: piCAAddress,
-                            decoration: InputDecoration(
-                                hintText: 'Address ',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('Address'),
                           ),
                         ),
                       ),
@@ -970,11 +911,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                             height: MediaQuery.of(context).size.width / 6.5,
                             child: DropdownButtonFormField(
                               dropdownColor: Colors.white,
-                              decoration: const InputDecoration(
-                                //border: InputBorder.none,
-                                  hintText: 'Country',
-                                  hintStyle: TextStyle(fontSize: 10)
-                              ),
+                              decoration: editFormsInputDecoration('Country'),
                               value: _piCACountry,
                               style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                               isExpanded: true,
@@ -1023,15 +960,12 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.width / 6.5,
                           child: DropdownButtonFormField<String>( // Specify the type for DropdownButtonFormField
-                            decoration: const InputDecoration(
-                              hintText: 'State',
-                              hintStyle: TextStyle(fontSize: 12),
-                            ),
+                            decoration: editFormsInputDecoration('State'),
                             value: _piCAState,
                             isExpanded: true,
                             onTap: () {
@@ -1072,16 +1006,12 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
+                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.width / 6.5,
                           child: DropdownButtonFormField(
-                            decoration: const InputDecoration(
-                              //border: InputBorder.none,
-                              hintText: 'City',
-                              hintStyle: TextStyle(fontSize: 12),
-                            ),
+                            decoration: editFormsInputDecoration('City'),
                             value: _piCACity,
                             isExpanded: true,
                             onChanged: (city) {
@@ -1107,10 +1037,7 @@ class _PersonalDetailsPageState extends State<PersonalDetailsPage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: piCAPostCode,
-                            decoration: InputDecoration(
-                                hintText: 'Postal/Zip Code ',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('Postal/Zip code'),
                           ),
                         ),
                       ),

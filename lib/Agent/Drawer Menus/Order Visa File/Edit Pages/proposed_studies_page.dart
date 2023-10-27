@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:visaboard_agent/Agent/App%20Helper/Ui%20Helper/text_helper.dart';
 import '../../../App Helper/Api Repository/api_urls.dart';
 import '../../../App Helper/Get Access Token/get_access_token.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Models/Drawer%20Menus%20Model/order_visafile_edit_model.dart';
@@ -31,7 +32,7 @@ class _ProposedStudiesPageState extends State<ProposedStudiesPage> {
   List<TextEditingController> cINtake = [TextEditingController()];
   List<TextEditingController> eDate = [TextEditingController()];
   List<TextEditingController> eFees = [TextEditingController()];
-  List<String> offerLetter = [];
+  List<String?> offerLetter = [];
 
   int numberofitems = 1;
   GetAccessToken getAccessToken = GetAccessToken();
@@ -83,7 +84,7 @@ class _ProposedStudiesPageState extends State<ProposedStudiesPage> {
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("You have submitted request for Visa File SOP, Canada, on Date: December 7th, 2022 12:46 PM.",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
+              child: Text("${widget.editDetails.message}",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
             ),
           ),
         ),
@@ -104,7 +105,7 @@ class _ProposedStudiesPageState extends State<ProposedStudiesPage> {
                   cINtake.add(TextEditingController());
                   eDate.add(TextEditingController());
                   eFees.add(TextEditingController());
-                  offerLetter.add('');
+                  offerLetter.add(null);
                   numberofitems++;
                   setState(() {});
                 },
@@ -122,6 +123,14 @@ class _ProposedStudiesPageState extends State<ProposedStudiesPage> {
             physics: BouncingScrollPhysics(),
             itemCount: numberofitems,
             itemBuilder: (context, index){
+
+              print("----------------");
+              print('index ->$index');
+              print('offerLetter ->${offerLetter.length}');
+              //print('offerLetter ->${offerLetter[index]}');
+              print('offerLetter ->${offerLetter}');
+
+              print("----------------");
               return Padding(
                 padding: EdgeInsets.all(10),
                 child: Card(
@@ -134,10 +143,7 @@ class _ProposedStudiesPageState extends State<ProposedStudiesPage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: eName[index],
-                            decoration: InputDecoration(
-                                hintText: 'Name of the Education Provider *',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('${ProposedStudiedTextHelper.firstText}'),
                           ),
                         ),
                       ),
@@ -147,39 +153,33 @@ class _ProposedStudiesPageState extends State<ProposedStudiesPage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: cName[index],
-                            decoration: InputDecoration(
-                                hintText: 'Name of the Course',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('${ProposedStudiedTextHelper.twoText}'),
                           ),
                         ),
                       ),
+
                       Padding(
                         padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
                         child: SizedBox(
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: campus[index],
-                            decoration: InputDecoration(
-                                hintText: 'Campus',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('${ProposedStudiedTextHelper.threeText}'),
                           ),
                         ),
                       ),
+
                       Padding(
                         padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
                         child: SizedBox(
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: cINtake[index],
-                            decoration: InputDecoration(
-                                hintText: 'When do you intend to enroll for your course / Intake',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('${ProposedStudiedTextHelper.fourText}'),
                           ),
                         ),
                       ),
+
                       Padding(
                         padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
                         child: Column(
@@ -197,21 +197,20 @@ class _ProposedStudiesPageState extends State<ProposedStudiesPage> {
                           ],
                         ),
                       ),
+
                       Visibility(
-                        visible: offerLetter[index] == 'Yes' ? true : false,
+                        visible: offerLetter.isEmpty ? false : offerLetter[index] == 'Yes' ? true : false,
                         child: Column(
                           children: [
                             Padding(
                               padding: const EdgeInsets.fromLTRB(15, 5, 15, 10),
                               child: SizedBox(
-                                width: MediaQuery.of(context).size.width / 2,
-                                height: MediaQuery.of(context).size.width / 6,
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.width / 8,
                                 child: TextField(
                                   controller: eDate[index],
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                      labelText: "Study Commencement Date"
-                                  ),
+                                  readOnly: true,
+                                  decoration: editFormsInputDecoration('${ProposedStudiedTextHelper.fiveText}'),
                                   onTap: () async {
                                     DateTime? pickedDate = await showDatePicker(
                                         context: context,
@@ -237,10 +236,7 @@ class _ProposedStudiesPageState extends State<ProposedStudiesPage> {
                                 height: MediaQuery.of(context).size.width / 8,
                                 child: TextField(
                                   controller: eFees[index],
-                                  decoration: InputDecoration(
-                                      hintText: 'Tuition Fees',
-                                      hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                                  ),
+                                  decoration: editFormsInputDecoration('${ProposedStudiedTextHelper.sixText}'),
                                 ),
                               ),
                             ),
@@ -307,7 +303,7 @@ class _ProposedStudiesPageState extends State<ProposedStudiesPage> {
   }
 
   Widget _buildRadioListTile(String title, int index) {
-    return RadioListTile(
+    return RadioListTile<String?>(
       title: Text(
         title,
         style: TextStyle(
@@ -317,10 +313,13 @@ class _ProposedStudiesPageState extends State<ProposedStudiesPage> {
         ),
       ),
       value: title,
-      groupValue: offerLetter[index],
-      onChanged: (value) {
+      groupValue: offerLetter.length > index ? offerLetter[index] : null,
+      onChanged: (String? value) {
         setState(() {
-          offerLetter[index] = value!;
+          if (offerLetter.length <= index) {
+            offerLetter.addAll(List.filled(index - offerLetter.length + 1, null));
+          }
+          offerLetter[index] = value;
         });
       },
     );

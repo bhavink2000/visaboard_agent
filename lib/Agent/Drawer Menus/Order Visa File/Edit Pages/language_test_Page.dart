@@ -28,16 +28,6 @@ class LanguageTestPage extends StatefulWidget {
 
 class _LanguageTestPageState extends State<LanguageTestPage> {
 
-  //String _englishTYpe;
-  //final certificateNo = TextEditingController();
-  //final reading = TextEditingController();
-  //final writing = TextEditingController();
-  //final speaking = TextEditingController();
-  //final listening = TextEditingController();
-  //final overall = TextEditingController();
-  //final testDate = TextEditingController();
-  //String yesNo = '';
-
   List<TextEditingController> cNo = [TextEditingController()];
   List<TextEditingController> read = [TextEditingController()];
   List<TextEditingController> write = [TextEditingController()];
@@ -158,10 +148,7 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: cNo[index],
-                            decoration: InputDecoration(
-                                hintText: 'Test Certificate Number ',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('Test certificate number'),
                           ),
                         ),
                       ),
@@ -175,10 +162,7 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                                 child: TextField(
                                   controller: read[index],
                                   keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                      hintText: 'Reading  ',
-                                      hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                                  ),
+                                  decoration: editFormsInputDecoration('Reading'),
                                 ),
                               ),
                             ),
@@ -191,10 +175,7 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                                 child: TextField(
                                   controller: write[index],
                                   keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                      hintText: 'Writing  ',
-                                      hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                                  ),
+                                  decoration: editFormsInputDecoration('Writing'),
                                 ),
                               ),
                             ),
@@ -211,10 +192,7 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                                 child: TextField(
                                   controller: speak[index],
                                   keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                      hintText: 'Speaking   ',
-                                      hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                                  ),
+                                  decoration: editFormsInputDecoration('Speaking'),
                                 ),
                               ),
                             ),
@@ -227,10 +205,7 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                                 child: TextField(
                                   controller: listen[index],
                                   keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                      hintText: 'Listening ',
-                                      hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                                  ),
+                                  decoration: editFormsInputDecoration('Listening'),
                                 ),
                               ),
                             ),
@@ -247,10 +222,7 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                                 child: TextField(
                                   controller: overA[index],
                                   keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                      hintText: 'Over all  ',
-                                      hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                                  ),
+                                  decoration: editFormsInputDecoration('Over all'),
                                 ),
                               ),
                             ),
@@ -260,14 +232,11 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                               padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
                               child: SizedBox(
                                 width: MediaQuery.of(context).size.width / 2.8,
-                                height: MediaQuery.of(context).size.width / 7,
+                                height: MediaQuery.of(context).size.width / 8,
                                 child: TextField(
                                   controller: tDate[index],
                                   style: const TextStyle(color: Colors.black),
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                      labelText: "Test Date"
-                                  ),
+                                  decoration: editFormsInputDecoration('Test date'),
                                   onTap: () async {
                                     DateTime? pickedDate = await showDatePicker(
                                         context: context,
@@ -298,13 +267,8 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                             height: MediaQuery.of(context).size.width / 6.5,
                             child: DropdownButtonFormField<String>(
                               dropdownColor: Colors.white,
-                              decoration: const InputDecoration(
-                                //border: InputBorder.none,
-                                  hintText: 'English Test Type',
-                                  hintStyle: TextStyle(fontSize: 10)
-                              ),
-                              //value: eType[index],
-                              value: eType.isNotEmpty ? eType[index] : null,
+                              decoration: editFormsInputDecoration('English test type'),
+                              value: eType.length > index ? eType[index] : null,
                               style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                               isExpanded: true,
                               onChanged: (value) {
@@ -340,23 +304,23 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
                         ),
                       ),
 
-                      // Padding(
-                      //   padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                      //   child: Column(
-                      //     children: [
-                      //       Align(
-                      //           alignment: Alignment.topLeft,
-                      //           child: Text("Have you taken any English Language Proficiency Test?",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10),)
-                      //       ),
-                      //       Row(
-                      //         children: [
-                      //           Expanded(child: _buildRadioListTile("Yes", index)),
-                      //           Expanded(child: _buildRadioListTile("No", index)),
-                      //         ],
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        child: Column(
+                          children: [
+                            Align(
+                                alignment: Alignment.topLeft,
+                                child: Text("Have you taken any English Language Proficiency Test?",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10),)
+                            ),
+                            Row(
+                              children: [
+                                Expanded(child: _buildRadioListTile("Yes", index)),
+                                Expanded(child: _buildRadioListTile("No", index)),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -439,20 +403,21 @@ class _LanguageTestPageState extends State<LanguageTestPage> {
   }
 
   Widget _buildRadioListTile(String title, int index) {
-    return RadioListTile(
+    return RadioListTile<String?>(
       title: Text(
         title,
         style: TextStyle(
-          fontFamily: Constants.OPEN_SANS,
-          letterSpacing: 0.5,
-          fontSize: 10,
+          fontSize: 14,
         ),
       ),
       value: title,
-      groupValue: yes_no[index],
-      onChanged: (value) {
+      groupValue: yes_no.length > index ? yes_no[index] : null,
+      onChanged: (String? value) {
         setState(() {
-          yes_no[index] = value!;
+          if (yes_no.length <= index) {
+            yes_no.addAll(List.filled(index - yes_no.length + 1, null));
+          }
+          yes_no[index] = value;
         });
       },
     );

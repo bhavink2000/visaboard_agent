@@ -151,10 +151,7 @@ class _AcademicsPageState extends State<AcademicsPage> {
                             height: MediaQuery.of(context).size.width / 8,
                             child: TextField(
                               controller: institutedName[index],
-                              decoration: InputDecoration(
-                                  hintText: 'Name of Institution ',
-                                  hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                              ),
+                              decoration: editFormsInputDecoration('Name of institution'),
                             ),
                           ),
                         ),
@@ -164,10 +161,7 @@ class _AcademicsPageState extends State<AcademicsPage> {
                             height: MediaQuery.of(context).size.width / 8,
                             child: TextField(
                               controller: courseName[index],
-                              decoration: InputDecoration(
-                                  hintText: 'Name of Course',
-                                  hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                              ),
+                              decoration: editFormsInputDecoration('Name of course'),
                             ),
                           ),
                         ),
@@ -175,17 +169,14 @@ class _AcademicsPageState extends State<AcademicsPage> {
                           children: [
                             Flexible(
                               child: Padding(
-                                padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+                                padding: const EdgeInsets.fromLTRB(15, 10, 15, 5),
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width / 2,
                                   height: MediaQuery.of(context).size.width / 8,
                                   child: TextField(
                                     controller: fromDate[index],
                                     readOnly: true,
-                                    decoration: InputDecoration(
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                        labelText: "Start Date"
-                                    ),
+                                    decoration: editFormsInputDecoration('Start date'),
                                     onTap: () async {
                                       DateTime? pickedDate = await showDatePicker(
                                           context: context,
@@ -208,16 +199,13 @@ class _AcademicsPageState extends State<AcademicsPage> {
                             ),
                             Flexible(
                               child: Padding(
-                                padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+                                padding: const EdgeInsets.fromLTRB(15, 10, 15, 5),
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width / 2,
                                   height: MediaQuery.of(context).size.width / 8,
                                   child: TextField(
                                     controller: toDate[index],
-                                    decoration: InputDecoration(
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                        labelText: "End Date"
-                                    ),
+                                    decoration: editFormsInputDecoration('End date'),
                                     onTap: () async {
                                       DateTime? pickedDate = await showDatePicker(
                                         context: context,
@@ -248,10 +236,7 @@ class _AcademicsPageState extends State<AcademicsPage> {
                               controller: percentage[index],
                               readOnly: true,
                               keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                  hintText: 'Percentage/CGPA/GPA',
-                                  hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                              ),
+                              decoration: editFormsInputDecoration('Percentage/CGPA/GPA'),
                             ),
                           ),
                         ),
@@ -261,31 +246,24 @@ class _AcademicsPageState extends State<AcademicsPage> {
                             height: MediaQuery.of(context).size.width / 8,
                             child: TextField(
                               controller: language[index],
-                              decoration: InputDecoration(
-                                  hintText: 'Primary Language of Instruction',
-                                  hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                              ),
+                              decoration: editFormsInputDecoration('Primary language of instruction'),
                             ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                          padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                           child: SizedBox(
                               width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width / 6.5,
+                              height: MediaQuery.of(context).size.width / 7.5,
                               child: DropdownButtonFormField<String>(
                                 dropdownColor: Colors.white,
-                                decoration: const InputDecoration(
-                                  hintText: 'Level Of Study',
-                                  hintStyle: TextStyle(fontSize: 10),
-                                ),
-                                value: selectedLevelOfStudy.isNotEmpty ? selectedLevelOfStudy[index] : null,
+                                decoration: editFormsInputDecoration('Level of study'),
+                                value: selectedLevelOfStudy.length > index ? selectedLevelOfStudy[index] : null,
                                 style: TextStyle(fontSize: 18, fontFamily: Constants.OPEN_SANS, color: Colors.black),
                                 isExpanded: true,
                                 onChanged: (value) {
                                   setState(() {
                                     if (selectedLevelOfStudy.length <= index) {
-                                      // Ensure the list has enough elements
                                       selectedLevelOfStudy.addAll(List.filled(index - selectedLevelOfStudy.length + 1, null));
                                     }
                                     selectedLevelOfStudy[index] = value as String?;

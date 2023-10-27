@@ -126,3 +126,13 @@ TextStyle SideMenuCardFotterData = TextStyle(fontFamily: Constants.OPEN_SANS,fon
 EdgeInsets SideMenuContainerPadding = const EdgeInsets.fromLTRB(15, 10, 15, 10);
 Text SideMenuDots = Text(":",style: TextStyle(color: PrimaryColorOne));
 Divider SideMenuDivider = Divider(color: PrimaryColorOne,thickness: 1,);
+
+
+InputDecoration editFormsInputDecoration(var labelName){
+  return InputDecoration(
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+      labelText: "$labelName",
+      labelStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
+  );
+}
+

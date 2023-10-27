@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:visaboard_agent/Agent/App%20Helper/Ui%20Helper/text_helper.dart';
 import '../../../App Helper/Api Repository/api_urls.dart';
 import '../../../App Helper/Get Access Token/get_access_token.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Models/Drawer%20Menus%20Model/order_visafile_edit_model.dart';
@@ -108,10 +109,7 @@ class _WorkExperincePageState extends State<WorkExperincePage> {
             height: MediaQuery.of(context).size.width / 8,
             child: TextField(
               controller: cNoJob,
-              decoration: InputDecoration(
-                  hintText: 'Contact no. of Job / business',
-                  hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-              ),
+              decoration: editFormsInputDecoration('${WorkExperienceTextHelper.firstText}'),
             ),
           ),
         ),
@@ -121,10 +119,7 @@ class _WorkExperincePageState extends State<WorkExperincePage> {
             height: MediaQuery.of(context).size.width / 8,
             child: TextField(
               controller: emailJob,
-              decoration: InputDecoration(
-                  hintText: 'Email address of work or business (If available) *',
-                  hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-              ),
+              decoration: editFormsInputDecoration('${WorkExperienceTextHelper.twoText}'),
             ),
           ),
         ),
@@ -169,41 +164,43 @@ class _WorkExperincePageState extends State<WorkExperincePage> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                         child: SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.width / 6.5,
-                            child: DropdownButtonFormField(
+                            height: MediaQuery.of(context).size.width / 7.5,
+                            child: DropdownButtonFormField<String>(
                               dropdownColor: Colors.white,
-                              decoration: const InputDecoration(
-                                //border: InputBorder.none,
-                                  hintText: 'Your Occupation',
-                                  hintStyle: TextStyle(fontSize: 10)
-                              ),
-                              value: occupationtype[index],
-                              style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
+                              decoration: editFormsInputDecoration('${WorkExperienceTextHelper.threeText}'),
+                              value: occupationtype.length > index ? occupationtype[index] : null,
+                              style: TextStyle(fontSize: 18, fontFamily: Constants.OPEN_SANS, color: Colors.black),
                               isExpanded: true,
                               onChanged: (value) {
                                 setState(() {
-                                  occupationtype[index] = value as String?;
+                                  if(occupationtype.length <= index){
+                                    occupationtype.addAll(List.filled(index - occupationtype.length + 1, null));
+                                  }
+                                  occupationtype[index] = value;
                                 });
                               },
                               onSaved: (value) {
                                 setState(() {
-                                  occupationtype[index] = value as String?;
+                                  if(occupationtype.length <= index){
+                                    occupationtype.addAll(List.filled(index - occupationtype.length + 1, null));
+                                  }
+                                  occupationtype[index] = value;
                                 });
                               },
                               validator: (value) {
                                 if (value == null) {
-                                  return "can't empty";
+                                  return "Can't be empty";
                                 } else {
                                   return null;
                                 }
                               },
                               items: occupationTypes?.map((item) {
-                                return DropdownMenuItem(
+                                return DropdownMenuItem<String>(
                                   value: item['id'].toString(),
-                                  child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
+                                  child: Text(item['name'], style: TextStyle(fontFamily: Constants.OPEN_SANS, fontSize: 10)),
                                 );
                               }).toList() ?? [],
                             )
@@ -215,10 +212,7 @@ class _WorkExperincePageState extends State<WorkExperincePage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: position[index],
-                            decoration: InputDecoration(
-                                hintText: 'Designation / Position *',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('${WorkExperienceTextHelper.fourText}'),
                           ),
                         ),
                       ),
@@ -228,10 +222,7 @@ class _WorkExperincePageState extends State<WorkExperincePage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: oName[index],
-                            decoration: InputDecoration(
-                                hintText: 'Name of the Organization *',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('${WorkExperienceTextHelper.fiveText}'),
                           ),
                         ),
                       ),
@@ -241,10 +232,7 @@ class _WorkExperincePageState extends State<WorkExperincePage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: earning[index],
-                            decoration: InputDecoration(
-                                hintText: 'Earnings per Month',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('${WorkExperienceTextHelper.sixText}'),
                           ),
                         ),
                       ),
@@ -258,10 +246,7 @@ class _WorkExperincePageState extends State<WorkExperincePage> {
                                 height: MediaQuery.of(context).size.width / 8,
                                 child: TextField(
                                   controller: sDate[index],
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                      labelText: "Start Date"
-                                  ),
+                                  decoration: editFormsInputDecoration('${WorkExperienceTextHelper.sevenText}'),
                                   onTap: () async {
                                     DateTime? pickedDate = await showDatePicker(
                                         context: context,
@@ -290,10 +275,7 @@ class _WorkExperincePageState extends State<WorkExperincePage> {
                                 height: MediaQuery.of(context).size.width / 8,
                                 child: TextField(
                                   controller: eDate[index],
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                      labelText: "End Date"
-                                  ),
+                                  decoration: editFormsInputDecoration('${WorkExperienceTextHelper.eightText}'),
                                   onTap: () async {
                                     DateTime? pickedDate = await showDatePicker(
                                       context: context,

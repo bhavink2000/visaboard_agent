@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:visaboard_agent/Agent/App%20Helper/Ui%20Helper/text_helper.dart';
 import '../../../App Helper/Api Repository/api_urls.dart';
 import '../../../App Helper/Get Access Token/get_access_token.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Models/Drawer%20Menus%20Model/order_visafile_edit_model.dart';
@@ -101,7 +102,7 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("You have submitted request for Visa File SOP, Canada, on Date: December 7th, 2022 12:46 PM.",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
+              child: Text("${widget.editDetails.message}",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
             ),
           ),
         ),
@@ -121,9 +122,9 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
                   fiOccupation.add(TextEditingController());
                   fiBirthPlace.add(TextEditingController());
                   fiBirthDate.add(TextEditingController());
-                  fiRelation.add('');
-                  fiMarital.add('');
-                  fiResidence.add('');
+                  fiRelation.add(null);
+                  fiMarital.add(null);
+                  fiResidence.add(null);
                   numberofitems++;
                   setState(() {});
                 },
@@ -153,35 +154,34 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: fiFNm[index],
-                            decoration: InputDecoration(
-                                hintText: 'Full Name ',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('${FamilyInfoTextHelper.firstText}'),
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                         child: SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.width / 6.5,
+                            height: MediaQuery.of(context).size.width / 7.5,
                             child: DropdownButtonFormField(
                               dropdownColor: Colors.white,
-                              decoration: const InputDecoration(
-                                //border: InputBorder.none,
-                                  hintText: 'Relation to you',
-                                  hintStyle: TextStyle(fontSize: 10)
-                              ),
-                              value: fiRelation[index],
+                              decoration: editFormsInputDecoration('${FamilyInfoTextHelper.twoText}'),
+                              value: fiRelation.length > index ? fiRelation[index] : null,
                               style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                               isExpanded: true,
                               onChanged: (value) {
                                 setState(() {
+                                  if(fiRelation.length <= index){
+                                    fiRelation.addAll(List.filled(index - fiRelation.length + 1, null));
+                                  }
                                   fiRelation[index] = value as String?;
                                 });
                               },
                               onSaved: (value) {
                                 setState(() {
+                                  if(fiRelation.length <= index){
+                                    fiRelation.addAll(List.filled(index - fiRelation.length + 1, null));
+                                  }
                                   fiRelation[index] = value as String?;
                                 });
                               },
@@ -208,34 +208,35 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: fiBirthPlace[index],
-                            decoration: InputDecoration(
-                                hintText: 'Place of Birth',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('${FamilyInfoTextHelper.threeText}'),
                           ),
                         ),
                       ),
+
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                         child: SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.width / 6.5,
+                            height: MediaQuery.of(context).size.width / 7.5,
                             child: DropdownButtonFormField(
                               dropdownColor: Colors.white,
-                              decoration: const InputDecoration(
-                                  hintText: 'Country of Residence',
-                                  hintStyle: TextStyle(fontSize: 10)
-                              ),
-                              value: fiResidence[index],
+                              decoration: editFormsInputDecoration('${FamilyInfoTextHelper.fourText}'),
+                              value: fiResidence.length > index ? fiResidence[index] : null,
                               style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                               isExpanded: true,
                               onChanged: (value) {
                                 setState(() {
+                                  if(fiResidence.length <= index){
+                                    fiResidence.addAll(List.filled(index - fiResidence.length + 1, null));
+                                  }
                                   fiResidence[index] = value as String?;
                                 });
                               },
                               onSaved: (value) {
                                 setState(() {
+                                  if(fiResidence.length <= index){
+                                    fiResidence.addAll(List.filled(index - fiResidence.length + 1, null));
+                                  }
                                   fiResidence[index] = value as String?;
                                 });
                               },
@@ -255,19 +256,18 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
                             )
                         ),
                       ),
+
                       Padding(
                         padding: const EdgeInsets.fromLTRB(15, 0, 15, 5),
                         child: SizedBox(
                           height: MediaQuery.of(context).size.width / 8,
                           child: TextField(
                             controller: fiOccupation[index],
-                            decoration: InputDecoration(
-                                hintText: 'Occupation',
-                                hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                            ),
+                            decoration: editFormsInputDecoration('${FamilyInfoTextHelper.fiveText}'),
                           ),
                         ),
                       ),
+
                       Column(
                         children: [
                           Padding(
@@ -302,6 +302,7 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
                           ),
                         ],
                       ),
+
                       Padding(
                         padding: const EdgeInsets.fromLTRB(15, 5, 15, 10),
                         child: SizedBox(
@@ -310,26 +311,20 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
                             children: [
                               SizedBox(
                                 width: MediaQuery.of(context).size.width / 2.3,
-                                height: MediaQuery.of(context).size.height / 6.3,
+                                height: MediaQuery.of(context).size.height / 8,
                                 child: TextField(
                                   controller: fiRemark[index],
-                                  decoration: InputDecoration(
-                                      hintText: 'Remark',
-                                      hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                                  ),
+                                  decoration: editFormsInputDecoration('${FamilyInfoTextHelper.sixText}'),
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(15, 10, 5, 0),
+                                padding: const EdgeInsets.fromLTRB(15, 5, 5, 10),
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width / 3,
-                                  height: MediaQuery.of(context).size.width / 8,
+                                  height: MediaQuery.of(context).size.height / 8,
                                   child: TextField(
                                     controller: fiBirthDate[index],
-                                    decoration: InputDecoration(
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                        labelText: "Date of birth"
-                                    ),
+                                    decoration: editFormsInputDecoration('${FamilyInfoTextHelper.sevenText}'),
                                     readOnly: true,
                                     onTap: () async {
                                       DateTime? pickedDate = await showDatePicker(
@@ -414,7 +409,7 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
   }
 
   Widget _buildRadioListTile(String title, int index) {
-    return RadioListTile(
+    return RadioListTile<String?>(
       title: Text(
         title,
         style: TextStyle(
@@ -424,9 +419,12 @@ class _FamilyInfoPageState extends State<FamilyInfoPage> {
         ),
       ),
       value: title,
-      groupValue: fiMarital[index],
-      onChanged: (value) {
+      groupValue: fiMarital.length > index ? fiMarital[index] : null,
+      onChanged: (String? value) {
         setState(() {
+          if (fiMarital.length <= index) {
+            fiMarital.addAll(List.filled(index - fiMarital.length + 1, null));
+          }
           fiMarital[index] = value;
         });
       },

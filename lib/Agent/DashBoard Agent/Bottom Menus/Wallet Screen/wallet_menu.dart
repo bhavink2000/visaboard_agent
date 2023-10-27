@@ -48,187 +48,204 @@ class _WalletMenuPageState extends State<WalletMenuPage> {
     };
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-        child: ChangeNotifierProvider<DashboardDataProvider>(
-          create: (BuildContext context)=>dashboardDataProvider,
-          child: Consumer<DashboardDataProvider>(
-            builder: (context, value, __){
-              switch(value.walletDData.status!){
-                case Status.loading:
-                  return const CenterLoading();
-                case Status.error:
-                  return const ErrorHelper();
-                case Status.completed:
-                  return Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.3,
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Card(
+                            elevation: 8,
+                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
+                            child: Container(
+                              height: MediaQuery.of(context).size.height / 20,
+                              decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.all(Radius.circular(40))
+                              ),
+                              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                              child: TextFormField(
+                                controller: wSearch,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Search',
+                                  hintStyle: TextStyle(fontSize: 15,fontFamily: Constants.OPEN_SANS),
+                                  suffixIcon: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        wSearch.clear();
+                                        wSearch.text = '';
+                                      });
+                                      Map wData = {
+                                        'search_text': '',
+                                      };
+                                      dashboardDataProvider.fetchWalletDashboard(1, getAccessToken.access_token, wData);
+                                      //homeMenusProvider.fetchTest(1, getAccessToken.access_token, testData);
+                                    },
+                                    child: const Icon(Icons.close),
+                                  ),
+                                ),
+                                onChanged: (value) {
+                                  Map wData = {
+                                    'search_text': wSearch.text,
+                                  };
+                                  dashboardDataProvider.fetchWalletDashboard(1, getAccessToken.access_token, wData);
+                                },
+                                // onTap: (){
+                                //   showSearch(
+                                //       context: context,
+                                //       delegate: WalletDashSearch(context: context,access_token: getAccessToken.access_token)
+                                //   );
+                                // },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 0, 10, 0),
+                child: ChangeNotifierProvider<DashboardDataProvider>(
+                  create: (BuildContext context)=>dashboardDataProvider,
+                  child: Consumer<DashboardDataProvider>(
+                    builder: (context, value, __){
+                      switch(value.walletDData.status!){
+                        case Status.loading:
+                          return Container(width: 20,height: 20,alignment: Alignment.center, child: const CircularProgressIndicator());
+                        case Status.error:
+                          return Container();
+                        case Status.completed:
+                          return Container(
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: PrimaryColorOne),
+                            padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
+                            child: Text("Available \nBalance: ${value.walletDData.data!.totalWalletAmount}",style: TextStyle(color: Colors.white70,fontFamily: Constants.OPEN_SANS,fontSize: 10)),
+                          );
+                      }
+                  },
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: ChangeNotifierProvider<DashboardDataProvider>(
+              create: (BuildContext context)=>dashboardDataProvider,
+              child: Consumer<DashboardDataProvider>(
+                builder: (context, value, __){
+                  switch(value.walletDData.status!){
+                    case Status.loading:
+                      return const CenterLoading();
+                    case Status.error:
+                      return const ErrorHelper();
+                    case Status.completed:
+                      return Column(
                         children: [
-                          Flexible(
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width / 1.3,
-                                child: Row(
-                                  children: [
-                                    Flexible(
-                                      child: Card(
-                                        elevation: 8,
-                                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
-                                        child: Container(
-                                          height: MediaQuery.of(context).size.height / 20,
-                                          decoration: const BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.all(Radius.circular(40))
-                                          ),
-                                          padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                          child: TextFormField(
-                                            controller: wSearch,
-                                            decoration: InputDecoration(
-                                                border: InputBorder.none,
-                                                hintText: 'Search',
-                                                hintStyle: TextStyle(fontSize: 15,fontFamily: Constants.OPEN_SANS),
-                                              suffixIcon: InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    wSearch.clear();
-                                                    wSearch.text = '';
-                                                  });
-                                                  Map wData = {
-                                                    'search_text': '',
-                                                  };
-                                                  dashboardDataProvider.fetchWalletDashboard(1, getAccessToken.access_token, wData);
-                                                  //homeMenusProvider.fetchTest(1, getAccessToken.access_token, testData);
-                                                },
-                                                child: const Icon(Icons.close),
+                          Expanded(
+                            child: Container(
+                              child: AnimationLimiter(
+                                child: ListView.builder(
+                                  physics: const BouncingScrollPhysics(),
+                                  itemCount: value.walletDData.data!.walletDData!.data!.length,
+                                  itemBuilder: (context, index){
+                                    var walletD = value.walletDData.data!.walletDData!.data;
+                                    return AnimationConfiguration.staggeredList(
+                                      position: index,
+                                      duration: const Duration(milliseconds: 1000),
+                                      child: SlideAnimation(
+                                        horizontalOffset: 50.0,
+                                        child: Column(
+                                          children: [
+                                            FadeInAnimation(
+                                              child: ExpandableNotifier(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                                                    child: ScrollOnExpand(
+                                                      child: Builder(
+                                                        builder: (context){
+                                                          var controller = ExpandableController.of(context, required: true);
+                                                          return InkWell(
+                                                            onTap: (){
+                                                              controller!.toggle();
+                                                            },
+                                                            child: Card(
+                                                              elevation: 5,
+                                                              clipBehavior: Clip.antiAlias,
+                                                              child: Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: <Widget>[
+                                                                  Expandable(
+                                                                    collapsed: buildCollapsed1(
+                                                                        walletD![index].id
+                                                                    ),
+                                                                    expanded: buildExpanded1(index),
+                                                                  ),
+                                                                  Expandable(
+                                                                    collapsed: buildCollapsed3(
+                                                                        walletD[index].serviceName,
+                                                                        walletD[index].letterTypeName
+                                                                    ),
+                                                                    expanded: buildExpanded3(
+                                                                        walletD[index].orderPrice,
+                                                                        walletD[index].creditAmount,
+                                                                        walletD[index].debitAmount,
+                                                                        walletD[index].paymentOn,
+                                                                        walletD[index].cancelOn,
+                                                                        walletD[index].refundOn
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
+                                                  )
                                               ),
                                             ),
-                                            onChanged: (value) {
-                                              Map wData = {
-                                                'search_text': wSearch.text,
-                                              };
-                                              dashboardDataProvider.fetchWalletDashboard(1, getAccessToken.access_token, wData);
-                                            },
-                                            // onTap: (){
-                                            //   showSearch(
-                                            //       context: context,
-                                            //       delegate: WalletDashSearch(context: context,access_token: getAccessToken.access_token)
-                                            //   );
-                                            // },
-                                          ),
+
+                                            if (walletD!.length == 10 || index + 1 != walletD!.length)
+                                              Container()
+                                            else
+                                              SizeHelper().getSize(context,walletD.length),
+
+                                            index + 1 == walletD.length ? CustomPaginationWidget(
+                                              currentPage: curentindex,
+                                              lastPage: dashboardDataProvider.walletDData.data!.walletDData!.lastPage!,
+                                              onPageChange: (page) {
+                                                setState(() {
+                                                  curentindex = page - 1;
+                                                });
+                                                dashboardDataProvider.fetchWalletDashboard(curentindex + 1, getAccessToken.access_token,wData);
+                                              },
+                                            ) : Container(),
+                                          ],
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    );
+                                  },
                                 ),
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(2, 0, 10, 0),
-                            child: Container(
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: PrimaryColorOne),
-                              padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
-                              child: Text("Available \nBalance: ${value.walletDData.data!.totalWalletAmount ?? 0.00}",style: TextStyle(color: Colors.white70,fontFamily: Constants.OPEN_SANS,fontSize: 10)),
-                            ),
-                          ),
                         ],
-                      ),
-                      Expanded(
-                        child: Container(
-                          child: AnimationLimiter(
-                            child: ListView.builder(
-                              physics: const BouncingScrollPhysics(),
-                              itemCount: value.walletDData.data!.walletDData!.data!.length,
-                              itemBuilder: (context, index){
-                                var walletD = value.walletDData.data!.walletDData!.data;
-                                walletBalance = value.walletDData.data!.totalWalletAmount;
-                                return AnimationConfiguration.staggeredList(
-                                  position: index,
-                                  duration: const Duration(milliseconds: 1000),
-                                  child: SlideAnimation(
-                                    horizontalOffset: 50.0,
-                                    child: Column(
-                                      children: [
-                                        FadeInAnimation(
-                                          child: ExpandableNotifier(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                                                child: ScrollOnExpand(
-                                                  child: Builder(
-                                                    builder: (context){
-                                                      var controller = ExpandableController.of(context, required: true);
-                                                      return InkWell(
-                                                        onTap: (){
-                                                          controller!.toggle();
-                                                        },
-                                                        child: Card(
-                                                          elevation: 5,
-                                                          clipBehavior: Clip.antiAlias,
-                                                          child: Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: <Widget>[
-                                                              Expandable(
-                                                                collapsed: buildCollapsed1(
-                                                                    walletD![index].id
-                                                                ),
-                                                                expanded: buildExpanded1(index),
-                                                              ),
-                                                              Expandable(
-                                                                collapsed: buildCollapsed3(
-                                                                    walletD[index].serviceName,
-                                                                    walletD[index].letterTypeName
-                                                                ),
-                                                                expanded: buildExpanded3(
-                                                                    walletD[index].orderPrice,
-                                                                    walletD[index].creditAmount,
-                                                                    walletD[index].debitAmount,
-                                                                    walletD[index].paymentOn,
-                                                                    walletD[index].cancelOn,
-                                                                    walletD[index].refundOn
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
-                                              )
-                                          ),
-                                        ),
-
-                                        if (walletD!.length == 10 || index + 1 != walletD!.length)
-                                          Container()
-                                        else
-                                          SizeHelper().getSize(context,walletD.length),
-
-                                        index + 1 == walletD.length ? CustomPaginationWidget(
-                                          currentPage: curentindex,
-                                          lastPage: dashboardDataProvider.walletDData.data!.walletDData!.lastPage!,
-                                          onPageChange: (page) {
-                                            setState(() {
-                                              curentindex = page - 1;
-                                            });
-                                            dashboardDataProvider.fetchWalletDashboard(curentindex + 1, getAccessToken.access_token,wData);
-                                          },
-                                        ) : Container(),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-              }
-            },
+                      );
+                  }
+                },
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

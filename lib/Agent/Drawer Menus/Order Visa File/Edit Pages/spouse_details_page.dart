@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:visaboard_agent/Agent/App%20Helper/Ui%20Helper/text_helper.dart';
 
 import '../../../App Helper/Api Repository/api_urls.dart';
 import '../../../App Helper/Get Access Token/get_access_token.dart';
@@ -110,7 +111,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("You have submitted request for Visa File SOP, Canada, on Date: December 7th, 2022 12:46 PM.",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
+                child: Text("${widget.editDetails.message}",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
               ),
             ),
           ),
@@ -127,10 +128,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                     height: MediaQuery.of(context).size.width / 8,
                     child: TextField(
                       controller: sdSpouseNm,
-                      decoration: InputDecoration(
-                          hintText: 'Full Name of Spouse',
-                          hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                      ),
+                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.firstText}'),
                     ),
                   ),
                 ),
@@ -140,10 +138,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                     height: MediaQuery.of(context).size.width / 8,
                     child: TextField(
                       controller: sdMaidenFNm,
-                      decoration: InputDecoration(
-                          hintText: 'Maiden Family Name (in case of female)',
-                          hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                      ),
+                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.twoText}'),
                     ),
                   ),
                 ),
@@ -153,10 +148,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                     height: MediaQuery.of(context).size.width / 8,
                     child: TextField(
                       controller: sdPassportNo,
-                      decoration: InputDecoration(
-                          hintText: 'Passport Number',
-                          hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                      ),
+                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.threeText}'),
                     ),
                   ),
                 ),
@@ -173,10 +165,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                     height: MediaQuery.of(context).size.width / 8,
                     child: TextField(
                       controller: sdSpouseBDate,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                          labelText: "DOB of Spouse"
-                      ),
+                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.fourText}'),
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
                             context: context,
@@ -205,10 +194,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                     height: MediaQuery.of(context).size.width / 8,
                     child: TextField(
                       controller: sdSpouseMDate,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                          labelText: "Marriage Date"
-                      ),
+                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.fiveText}'),
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
                           context: context,
@@ -237,10 +223,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
               height: MediaQuery.of(context).size.width / 8,
               child: TextField(
                 controller: sdMarriagePlace,
-                decoration: InputDecoration(
-                    hintText: 'Place of Marriage',
-                    hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                ),
+                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.sixText}'),
               ),
             ),
           ),
@@ -254,10 +237,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                     height: MediaQuery.of(context).size.width / 8,
                     child: TextField(
                       controller: sdEngageDate,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                          labelText: "Engagement Date"
-                      ),
+                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.sevenText}'),
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
                             context: context,
@@ -283,14 +263,10 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                   padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                   child: SizedBox(
                       width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.width / 6.5,
+                      height: MediaQuery.of(context).size.width / 7.5,
                       child: DropdownButtonFormField(
                         dropdownColor: Colors.white,
-                        decoration: const InputDecoration(
-                          //border: InputBorder.none,
-                            hintText: 'Occupation of Spouse',
-                            hintStyle: TextStyle(fontSize: 10)
-                        ),
+                        decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.eightText}'),
                         value: _spOccupation,
                         style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
                         isExpanded: true,
@@ -329,10 +305,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
               height: MediaQuery.of(context).size.width / 8,
               child: TextField(
                 controller: sdMarriageCRNo,
-                decoration: InputDecoration(
-                    hintText: 'Marriage Certificate Registration Number',
-                    hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                ),
+                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.nineText}'),
               ),
             ),
           ),
@@ -342,10 +315,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
               height: MediaQuery.of(context).size.width / 8,
               child: TextField(
                 controller: sdDivorceDRNo,
-                decoration: InputDecoration(
-                    hintText: 'Divorce Decree Registration Number',
-                    hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                ),
+                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.tenText}'),
               ),
             ),
           ),
@@ -355,10 +325,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
               height: MediaQuery.of(context).size.width / 8,
               child: TextField(
                 controller: sdHighQualificationSpouse,
-                decoration: InputDecoration(
-                    hintText: 'Highest Qualification of Spouse',
-                    hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                ),
+                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.elevenText}'),
               ),
             ),
           ),
@@ -368,10 +335,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
               height: MediaQuery.of(context).size.width / 8,
               child: TextField(
                 controller: sdDesignation,
-                decoration: InputDecoration(
-                    hintText: 'Designation / Position',
-                    hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                ),
+                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.twelveText}'),
               ),
             ),
           ),
@@ -381,10 +345,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
               height: MediaQuery.of(context).size.width / 8,
               child: TextField(
                 controller: sdOrganizationNm,
-                decoration: InputDecoration(
-                    hintText: 'Name & Address of the Organization',
-                    hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                ),
+                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.thirteenText}'),
               ),
             ),
           ),
@@ -398,10 +359,8 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                     height: MediaQuery.of(context).size.width / 8,
                     child: TextField(
                       controller: sdStartDate,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                          labelText: "Start Date"
-                      ),
+                      readOnly: true,
+                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.fourteenText}'),
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
                             context: context,
@@ -430,10 +389,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                     height: MediaQuery.of(context).size.width / 8,
                     child: TextField(
                       controller: sdEndDate,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                          labelText: "End Date"
-                      ),
+                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.fifteenText}'),
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
                           context: context,
@@ -462,10 +418,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
               height: MediaQuery.of(context).size.width / 8,
               child: TextField(
                 controller: sdAnnualIncomeSpouse,
-                decoration: InputDecoration(
-                    hintText: 'Annual income of Spouse',
-                    hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                ),
+                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.sixteenText}'),
               ),
             ),
           ),
@@ -546,24 +499,19 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                               height: MediaQuery.of(context).size.width / 8,
                               child: TextField(
                                 controller: sdChildNm[index],
-                                decoration: InputDecoration(
-                                    hintText: 'Full Name of Child',
-                                    hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                                ),
+                                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.seventeenText}'),
                               ),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(15, 5, 15, 10),
                             child: SizedBox(
-                              width: MediaQuery.of(context).size.width / 2,
-                              height: MediaQuery.of(context).size.width / 6,
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.width / 8,
                               child: TextField(
                                 controller: sdChildBirthDate[index],
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                    labelText: "Date of Birth of Child"
-                                ),
+                                readOnly: true,
+                                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.eighteenText}'),
                                 onTap: () async {
                                   DateTime? pickedDate = await showDatePicker(
                                       context: context,
@@ -589,10 +537,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                               height: MediaQuery.of(context).size.width / 8,
                               child: TextField(
                                 controller: sdChildBirthPlace[index],
-                                decoration: InputDecoration(
-                                    hintText: 'Place of Birth of Child',
-                                    hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                                ),
+                                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.nineteenText}'),
                               ),
                             ),
                           ),
@@ -602,10 +547,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                               height: MediaQuery.of(context).size.width / 8,
                               child: TextField(
                                 controller: sdChildPassportNo[index],
-                                decoration: InputDecoration(
-                                    hintText: 'Passport Number',
-                                    hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                                ),
+                                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.twentyText}'),
                               ),
                             ),
                           ),
@@ -615,10 +557,7 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                               height: MediaQuery.of(context).size.width / 8,
                               child: TextField(
                                 controller: sdChildSchoolNm[index],
-                                decoration: InputDecoration(
-                                    hintText: 'School Name',
-                                    hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                                ),
+                                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.twentyOneText}'),
                               ),
                             ),
                           ),
@@ -628,13 +567,11 @@ class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
                               height: MediaQuery.of(context).size.width / 8,
                               child: TextField(
                                 controller: sdChildStudy[index],
-                                decoration: InputDecoration(
-                                    hintText: 'Standard in which studying',
-                                    hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)
-                                ),
+                                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.twentyTwoText}'),
                               ),
                             ),
                           ),
+                          Divider(color: Colors.grey,thickness: 1,endIndent: 20,indent: 20,)
                         ],
                       );
                     },

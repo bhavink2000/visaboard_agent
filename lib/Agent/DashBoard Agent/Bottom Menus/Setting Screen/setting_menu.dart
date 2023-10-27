@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
@@ -96,7 +98,7 @@ class _SettingPageState extends State<SettingPage> {
                 style: TextStyle(fontFamily: Constants.OPEN_SANS,fontWeight: FontWeight.bold),textAlign: TextAlign.center,
               ),
             ),
-            formShowData('First Name', firstnm!),
+            formShowData('First Name', firstnm),
             formShowData('Middle Name', middlenm),
             formShowData('Last Name', lastnm),
             formShowData('Email', email),
@@ -297,16 +299,16 @@ class _SettingPageState extends State<SettingPage> {
             formShowData('GST No', gstno),
 
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Container(
                 decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(30))
                 ),
-                padding: const EdgeInsets.fromLTRB(10, 2, 0, 2),
+                padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
                 child: DropdownButtonFormField(
                   decoration: const InputDecoration(
-                      border: InputBorder.none,
+                      border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                       hintText: 'Country',
                       hintStyle: TextStyle(fontSize: 12)
                   ),
@@ -351,16 +353,16 @@ class _SettingPageState extends State<SettingPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Container(
                 decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(30))
                 ),
-                padding: const EdgeInsets.fromLTRB(10, 2, 0, 2),
+                padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
                 child: DropdownButtonFormField(
                   decoration: const InputDecoration(
-                      border: InputBorder.none,
+                      border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                       hintText: 'State',
                       hintStyle: TextStyle(fontSize: 12)
                   ),
@@ -403,16 +405,16 @@ class _SettingPageState extends State<SettingPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 20, 10),
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 10),
               child: Container(
                 decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(30))
                 ),
-                padding: const EdgeInsets.fromLTRB(20, 2, 0, 2),
+                padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
                 child: DropdownButtonFormField(
                   decoration: const InputDecoration(
-                      border: InputBorder.none,
+                      border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                       hintText: 'City',
                       hintStyle: TextStyle(fontSize: 12)
                   ),
@@ -453,7 +455,7 @@ class _SettingPageState extends State<SettingPage> {
                         child: InkWell(
                           onTap: (){
                             businessFile = null;
-                            firstnm!.text = '';
+                            firstnm.text = '';
                             middlenm.text = '';
                             lastnm.text = '';
                             email.text = '';
@@ -531,62 +533,33 @@ class _SettingPageState extends State<SettingPage> {
       await profileOBJ.then((value) async {
         profileData.add(value!.data!);
       });
-      id = profileData[0].id!;
-      firstnm.text = profileData[0].firstName!;
-      middlenm.text = profileData[0].middleName!;
-      lastnm.text = profileData[0].lastName!;
-      mobile.text = profileData[0].mobileNo!;
-      landlinemobile.text = profileData[0].altMobileNo!;
-      email.text = profileData[0].emailId!;
-      alternateemail.text = profileData[0].altEmailId!;
+      id = profileData[0].id ?? '';
+      firstnm.text = profileData[0].firstName ?? '';
+      middlenm.text = profileData[0].middleName ?? '';
+      lastnm.text = profileData[0].lastName ?? '';
+      mobile.text = profileData[0].mobileNo ?? '';
+      landlinemobile.text = profileData[0].altMobileNo ?? '';
+      email.text = profileData[0].emailId ?? '';
+      alternateemail.text = profileData[0].altEmailId ?? '';
 
-      companyname.text = profileData[0].companyName!;
-      companyaddress.text = profileData[0].companyAddress!;
-      postcode.text = profileData[0].postCode!;
-      address.text = profileData[0].address!;
+      companyname.text = profileData[0].companyName ?? '';
+      companyaddress.text = profileData[0].companyAddress ?? '';
+      postcode.text = profileData[0].postCode ?? '';
+      address.text = profileData[0].address ?? '';
 
-      bankname.text = profileData[0].bankName!;
-      accountname.text = profileData[0].accountName!;
-      accountno.text = profileData[0].accountNo!;
-      ifscno.text = profileData[0].ifscNo!;
-      bankaddress.text = profileData[0].bankAddress!;
-      gstno.text = profileData[0].gstNo!;
+      bankname.text = profileData[0].bankName ?? '';
+      accountname.text = profileData[0].accountName ?? '';
+      accountno.text = profileData[0].accountNo ?? '';
+      ifscno.text = profileData[0].ifscNo ?? '';
+      bankaddress.text = profileData[0].bankAddress ?? '';
+      gstno.text = profileData[0].gstNo ?? '';
 
-      if (profileData[0].linkedinLink != null) {
-        linkedinurl.text = profileData[0].linkedinLink;
-      } else {
-        linkedinurl.text = ''; // or any default value you prefer
-      }
-
-      if (profileData[0].facebookLink != null) {
-        facebookurl.text = profileData[0].facebookLink;
-      } else {
-        facebookurl.text = ''; // or any default value you prefer
-      }
-
-      if (profileData[0].twitterLink != null) {
-        twitterurl.text = profileData[0].twitterLink;
-      } else {
-        twitterurl.text = ''; // or any default value you prefer
-      }
-
-      if (profileData[0].instagramLink != null) {
-        instagramurl.text = profileData[0].instagramLink;
-      } else {
-        instagramurl.text = ''; // or any default value you prefer
-      }
-
-      if (profileData[0].youtubeLink != null) {
-        youtubenurl.text = profileData[0].youtubeLink;
-      } else {
-        youtubenurl.text = ''; // or any default value you prefer
-      }
-
-      if (profileData[0].websiteLink != null) {
-        websitenurl.text = profileData[0].websiteLink;
-      } else {
-        websitenurl.text = ''; // or any default value you prefer
-      }
+      linkedinurl.text = profileData[0].linkedinLink ?? '';
+      facebookurl.text = profileData[0].facebookLink ?? '';
+      twitterurl.text = profileData[0].twitterLink ?? '';
+      instagramurl.text = profileData[0].instagramLink ?? '';
+      youtubenurl.text = profileData[0].youtubeLink ?? '';
+      websitenurl.text = profileData[0].websiteLink ?? '';
 
       setState(() {
         isLoading = false;
@@ -600,7 +573,7 @@ class _SettingPageState extends State<SettingPage> {
       setState(() {
         isLoading = false;
       });
-      SnackBarMessageShow.errorMSG('Data Fetching Error', context);
+      SnackBarMessageShow.warningMSG('Data Fetching Error', context);
       print('error -> $e');
     }
   }
@@ -679,6 +652,7 @@ class _SettingPageState extends State<SettingPage> {
         } else {
           Navigator.pop(context);
           SnackBarMessageShow.errorMSG('$bodyMSG', context);
+          LoadingIndicater().onLoadExit(false, context);
         }
       }
       else if(response.statusCode == 400){
