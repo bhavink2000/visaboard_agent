@@ -2,11 +2,15 @@
 
 import 'dart:convert';
 import 'dart:ffi';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:visaboard_agent/Agent/Drawer%20Menus/Order%20Visa%20File/Form_Controller/academics_controller.dart';
+import 'package:visaboard_agent/Agent/Drawer%20Menus/Order%20Visa%20File/Ovf%20Widgets/edit_screen_textfield.dart';
+import 'package:visaboard_agent/Agent/Drawer%20Menus/Order%20Visa%20File/Ovf%20Widgets/edits_screens_header.dart';
 import '../../../App Helper/Api Repository/api_urls.dart';
 import '../../../App Helper/Get Access Token/get_access_token.dart';
 import '../../../App Helper/Ui Helper/snackbar_msg_show.dart';
@@ -19,422 +23,263 @@ class AcademicsPage extends StatefulWidget {
   OVFEditData editDetails;
   var user_id, user_sop_id;
   var tabStatus, tabName;
-  AcademicsPage({Key? key,this.pagecontroller,required this.editDetails,this.user_id,this.user_sop_id,this.tabStatus,this.tabName}) : super(key: key);
+  AcademicsPage(
+      {Key? key,
+      this.pagecontroller,
+      required this.editDetails,
+      this.user_id,
+      this.user_sop_id,
+      this.tabStatus,
+      this.tabName})
+      : super(key: key);
 
   @override
   State<AcademicsPage> createState() => _AcademicsPageState();
 }
 
 class _AcademicsPageState extends State<AcademicsPage> {
-
-  final acInstitutedName = TextEditingController();
-  final acCourseName = TextEditingController();
-  final acFromDate = TextEditingController();
-  final acToDate = TextEditingController();
-  final acPercentage = TextEditingController();
-  final acLanguage = TextEditingController();
-
-  List<TextEditingController> institutedName = [TextEditingController()];
-  List<TextEditingController> courseName = [TextEditingController()];
-  List<TextEditingController> fromDate = [TextEditingController()];
-  List<TextEditingController> toDate = [TextEditingController()];
-  List<TextEditingController> percentage = [TextEditingController()];
-  List<TextEditingController> language = [TextEditingController()];
-
-  int numberofitems = 1;
-  List<String?> selectedLevelOfStudy = [];
+  final acaController = Get.put(AcademicsController());
 
   GetAccessToken getAccessToken = GetAccessToken();
   @override
   void initState() {
     super.initState();
     getAccessToken.checkAuthentication(context, setState);
-    Future.delayed(const Duration(seconds: 1),(){
+    final acaController = Get.put(AcademicsController(
+        pageController: widget.pagecontroller, context: context));
+    Future.delayed(const Duration(seconds: 1), () {
       setState(() {
-        getEducationtype(getAccessToken.access_token);
+        acaController.getEducationType(
+            getAccessToken.access_token, widget.user_id, widget.user_sop_id);
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return PopScope(
+      onPopInvoked: (value){
+        acaController.clearFunction();
+      },
+        child: Obx(() => Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-                onPressed: (){
-                  Navigator.pop(context);
-                },
-                icon: const Icon(Icons.arrow_back)
-            ),
-            Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text("${widget.tabName}",
-                      style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 18,letterSpacing: 1),
-                    ),
-                    SizedBox(height: 5),
-                    Container(
-                      width: MediaQuery.of(context).size.width / 1.5,
-                      height: 2,
-                      color: widget.tabStatus == 1 ? Colors.green : Colors.red,
-                    )
-                  ],
-                )
-            )
-          ],
-        ),
-        const SizedBox(height: 10,),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
-                color: Colors.white,
-                boxShadow: [BoxShadow(color: Colors.black45.withOpacity(0.2), spreadRadius: 1, blurRadius: 5)]
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("${widget.editDetails.message}",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(10, 10, 0, 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Align(alignment: Alignment.topLeft,child: Text("Education History",style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,fontWeight: FontWeight.bold),)),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: InkWell(
-                  onTap: (){
-                    institutedName.add(TextEditingController());
-                    courseName.add(TextEditingController());
-                    fromDate.add(TextEditingController());
-                    toDate.add(TextEditingController());
-                    percentage.add(TextEditingController());
-                    language.add(TextEditingController());
-                    selectedLevelOfStudy.add(null);
-                    numberofitems++;
-                    setState(() {});
-                  },
-                  child: Container(
-                    color: PrimaryColorOne,
-                    padding: const EdgeInsets.all(6),
-                    child: Text("Add More +",style: TextStyle(color: Colors.white,fontFamily: Constants.OPEN_SANS,fontSize: 13),),
-                  ),
-                ),
-              ),
-            ],
-          ),
+        EditScreenHeader(
+          tabName: widget.tabName,
+          tabIndex: 2,
+          tabStatus: widget.tabStatus,
+          tabMessage: widget.editDetails.message,
         ),
         Expanded(
-          child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            itemCount: numberofitems,
-            itemBuilder: (context, index){
-              return Padding(
-                padding: const EdgeInsets.all(10),
-                child: Card(
-                  elevation: 8,
-                  child: Container(
-                    child: Column(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 10, 15, 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.width / 8,
-                            child: TextField(
-                              controller: institutedName[index],
-                              decoration: editFormsInputDecoration('Name of institution'),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.width / 8,
-                            child: TextField(
-                              controller: courseName[index],
-                              decoration: editFormsInputDecoration('Name of course'),
-                            ),
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(15, 10, 15, 5),
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  height: MediaQuery.of(context).size.width / 8,
-                                  child: TextField(
-                                    controller: fromDate[index],
-                                    readOnly: true,
-                                    decoration: editFormsInputDecoration('Start date'),
-                                    onTap: () async {
-                                      DateTime? pickedDate = await showDatePicker(
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime(2000),
-                                          lastDate: DateTime(2101)
-                                      );
-                                      if(pickedDate != null ){
-                                        String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                                        setState(() {
-                                          fromDate[index].text = formattedDate;
-                                        });
-                                      }else{
-                                        Fluttertoast.showToast(msg: "Date is not selected",backgroundColor: Colors.deepPurple,textColor: Colors.white);
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Flexible(
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(15, 10, 15, 5),
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  height: MediaQuery.of(context).size.width / 8,
-                                  child: TextField(
-                                    controller: toDate[index],
-                                    decoration: editFormsInputDecoration('End date'),
-                                    onTap: () async {
-                                      DateTime? pickedDate = await showDatePicker(
-                                        context: context,
-                                        initialDate: DateTime.now(),
-                                        firstDate: DateTime(2000),
-                                        lastDate: DateTime.now(),
-                                      );
-                                      if(pickedDate != null ){
-                                        String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                                        setState(() {
-                                          toDate[index].text = formattedDate;
-                                        });
-                                      }else{
-                                        Fluttertoast.showToast(msg: "Date is not selected",backgroundColor: Colors.deepPurple,textColor: Colors.white);
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
+                        Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "Education History",
+                              style: TextStyle(fontSize: 18, fontFamily: Constants.OPEN_SANS, fontWeight: FontWeight.bold),
                             )
-                          ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.width / 8,
-                            child: TextField(
-                              controller: percentage[index],
-                              readOnly: true,
-                              keyboardType: TextInputType.number,
-                              decoration: editFormsInputDecoration('Percentage/CGPA/GPA'),
+                          padding: const EdgeInsets.all(8.0),
+                          child: InkWell(
+                            onTap: () {
+                              acaController.institutedName.add(TextEditingController());
+                              acaController.courseName.add(TextEditingController());
+                              acaController.fromDate.add(TextEditingController());
+                              acaController.toDate.add(TextEditingController());
+                              acaController.percentage.add(TextEditingController());
+                              acaController.language.add(TextEditingController());
+                              acaController.selectedLevelOfStudy.add(null);
+                              acaController.numberOfField++;
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: PrimaryColorOne),
+                              child: Text(
+                                "Add More +",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: Constants.OPEN_SANS,
+                                    fontSize: 13),
+                              ),
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.width / 8,
-                            child: TextField(
-                              controller: language[index],
-                              decoration: editFormsInputDecoration('Primary language of instruction'),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                          child: SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width / 7.5,
-                              child: DropdownButtonFormField<String>(
-                                dropdownColor: Colors.white,
-                                decoration: editFormsInputDecoration('Level of study'),
-                                value: selectedLevelOfStudy.length > index ? selectedLevelOfStudy[index] : null,
-                                style: TextStyle(fontSize: 18, fontFamily: Constants.OPEN_SANS, color: Colors.black),
-                                isExpanded: true,
-                                onChanged: (value) {
-                                  setState(() {
-                                    if (selectedLevelOfStudy.length <= index) {
-                                      selectedLevelOfStudy.addAll(List.filled(index - selectedLevelOfStudy.length + 1, null));
-                                    }
-                                    selectedLevelOfStudy[index] = value as String?;
-                                  });
-                                },
-                                onSaved: (value) {
-                                  setState(() {
-                                    if (selectedLevelOfStudy.length <= index) {
-                                      selectedLevelOfStudy.addAll(List.filled(index - selectedLevelOfStudy.length + 1, null));
-                                    }
-                                    selectedLevelOfStudy[index] = value as String?;
-                                  });
-                                },
-                                validator: (value) {
-                                  if (value == null) {
-                                    return "can't be empty";
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                                items: educationTypes?.map((item) {
-                                  return DropdownMenuItem<String>(
-                                    value: item['id'].toString(),
-                                    child: Text(item['name'], style: TextStyle(fontFamily: Constants.OPEN_SANS, fontSize: 10)),
-                                  );
-                                }).toList() ?? [],
-                              )
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-              );
-            },
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                    itemCount: acaController.numberOfField.value,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        elevation: 8,
+                        child: Column(
+                          children: [
+                            EditSTextField(
+                                controller: acaController.institutedName[index],
+                                labelName: 'Name of institution'
+                            ),
+                            EditSTextField(
+                                controller: acaController.courseName[index],
+                                labelName: 'Name of course'
+                            ),
+                            Row(
+                              children: [
+                                Flexible(
+                                    child: EditSTextField(
+                                      controller: acaController.fromDate[index],
+                                      readOnly: true,
+                                      labelName: 'Start date',
+                                      onTap: () async {
+                                        DateTime? pickedDate = await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(1947),
+                                          lastDate: DateTime.now(),
+                                        );
+                                        if (pickedDate != null) {
+                                          String formatDate = DateFormat('yyyy-MM-DD').format(pickedDate);acaController.fromDate[index].text = formatDate;
+                                        } else {
+                                          Fluttertoast.showToast(msg: "Date is not selected", backgroundColor: Colors.deepPurple, textColor: Colors.white);
+                                        }
+                                      },
+                                    )),
+                                Flexible(
+                                    child: EditSTextField(
+                                      controller: acaController.toDate[index],
+                                      readOnly: true,
+                                      labelName: 'To date',
+                                      onTap: () async {
+                                        DateTime? pickedDate = await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(1947),
+                                          lastDate: DateTime.now(),
+                                        );
+                                        if (pickedDate != null) {
+                                          String formatDate = DateFormat('yyyy-MM-DD').format(pickedDate);acaController.toDate[index].text = formatDate;
+                                        } else {
+                                          Fluttertoast.showToast(msg: "Date is not selected", backgroundColor: Colors.deepPurple, textColor: Colors.white);
+                                        }
+                                      },
+                                    ))
+                              ],
+                            ),
+                            EditSTextField(
+                                controller: acaController.percentage[index],
+                                labelName: 'Percentage/CGPA/GPA'),
+                            EditSTextField(
+                                controller: acaController.language[index],
+                                labelName: 'Primary language of instruction'),
+                            Obx(() => Padding(
+                              padding:
+                              const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                              child: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  //height: MediaQuery.of(context).size.width / 7.5,
+                                  child: DropdownButtonFormField<String>(
+                                    dropdownColor: Colors.white,
+                                    decoration: editFormsInputDecoration('Level of study'),
+                                    value: acaController.selectedLevelOfStudy.length > index
+                                        ? acaController.selectedLevelOfStudy[index]
+                                        : null,
+                                    style: TextStyle(fontSize: 18, fontFamily: Constants.OPEN_SANS, color: Colors.black),
+                                    isExpanded: true,
+                                    icon: acaController.getEd.value == true ? Container(width: 20,height: 20,margin: EdgeInsets.fromLTRB(0, 0, 8, 0),child: CircularProgressIndicator()) : Icon(Icons.arrow_drop_down_sharp),
+                                    onChanged: (value) {
+                                      if (acaController.selectedLevelOfStudy.length <= index) {
+                                        acaController.selectedLevelOfStudy.addAll(List.filled(index - acaController.selectedLevelOfStudy.length + 1, null));
+                                      }
+                                      acaController.selectedLevelOfStudy[index] = value;
+                                    },
+                                    validator: (value) {
+                                      if (value == null) {
+                                        return "can't be empty";
+                                      } else {
+                                        return null;
+                                      }
+                                    },
+                                    items: acaController.educationTypes?.map((item) {
+                                      return DropdownMenuItem<String>(
+                                        value: item['id'].toString(),
+                                        child: Text(item['name'], style: TextStyle(fontFamily: Constants.OPEN_SANS, fontSize: 10)),
+                                      );
+                                    }).toList() ?? [],
+                                  )),
+                            )),
+                          ],
+                        ),
+                      );
+                    },
+                  )
+                ],
+              ),
+            ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(10, 5, 20, 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: InkWell(
-                  onTap: () {
-                    widget.pagecontroller.previousPage(duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: PrimaryColorOne,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    ),
-                    child: Text(
-                      "Back",
-                      style: TextStyle(color: Colors.white,fontSize: 15,fontFamily: Constants.OPEN_SANS),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.topRight,
-                child: InkWell(
-                  onTap: () async{
-                    updateAcademics();
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: PrimaryColorOne,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    ),
-                    child: Text(
-                      widget.tabStatus == 1 ? "Submit" : "Next",
-                      style: TextStyle(color: Colors.white,fontSize: 15,fontFamily: Constants.OPEN_SANS),
-                      textAlign: TextAlign.center,
+        BottomAppBar(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: InkWell(
+                    onTap: () {
+                      acaController.clearFunction();
+                      widget.pagecontroller.previousPage(duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: PrimaryColorOne,
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Text(
+                        "Back",
+                        style: TextStyle(color: Colors.white, fontSize: 15, fontFamily: Constants.OPEN_SANS),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+                Align(
+                  alignment: Alignment.topRight,
+                  child: InkWell(
+                    onTap: () async {
+                      acaController.updateAcademics(getAccessToken.access_token, widget.user_id, widget.user_sop_id);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: PrimaryColorOne,
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Text(
+                        widget.tabStatus == 1 ? "Submit" : "Next",
+                        style: TextStyle(color: Colors.white, fontSize: 15, fontFamily: Constants.OPEN_SANS),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         )
       ],
-    );
-  }
-
-  List? educationTypes;
-  Future<String?> getEducationtype(var accesstoken) async {
-    await http.post(
-        Uri.parse(ApiConstants.getOVFEdit),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $accesstoken',
-        },
-        body: {
-          'user_id': widget.user_id,
-          'user_sop_id': widget.user_sop_id
-        }
-    ).then((response) {
-      var data = json.decode(response.body);
-      setState(() {
-        educationTypes = data['data']['education_types'];
-      });
-      print("Education List -> $educationTypes");
-    });
-  }
-
-  Future<void> updateAcademics() async {
-    try {
-      Dio dio = Dio(BaseOptions(
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ${getAccessToken.access_token}',
-            'Accept': 'application/json',
-          }
-      ));
-
-      FormData formData = FormData.fromMap({
-        'step': 2,
-        'user_id': widget.user_id,
-        'user_sop_id': widget.user_sop_id,
-      });
-      for(int i = 0; i < institutedName.length; i++) {
-        formData.fields.addAll([
-          MapEntry('user_education[$i][education_type_id]', selectedLevelOfStudy[i].toString()),
-          MapEntry('user_education[$i][other_education_type_name]', 'educationName'),
-          MapEntry('user_education[$i][institute_name]', institutedName[i].text),
-          MapEntry('user_education[$i][course_name]', courseName[i].text),
-          MapEntry('user_education[$i][from_date]', fromDate[i].text),
-          MapEntry('user_education[$i][to_date]', toDate[i].text),
-          MapEntry('user_education[$i][grade]', percentage[i].text),
-          MapEntry('user_education[$i][language]', language[i].text),
-        ]);
-      }
-      print("Form Data->${formData.fields}");
-      final response = await dio.post(
-          ApiConstants.getOVFUpdate,
-          data: formData,
-          onSendProgress: (int sent, int total) {
-            print('$sent $total');
-          }
-      );
-
-      print("response code ->${response.statusCode}");
-      print("response Message ->${response.statusMessage}");
-
-      if (response.statusCode == 200) {
-        var jsonResponse = response.data;
-        var status = jsonResponse['status'];
-        var message = jsonResponse['message'];
-
-        print("Status -> $status");
-        print("Message -> $message");
-
-        if (status == 200) {
-          SnackBarMessageShow.successsMSG('$message', context);
-          widget.pagecontroller.nextPage(duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
-        } else {
-          SnackBarMessageShow.errorMSG('$message', context);
-          Navigator.pop(context);
-        }
-      } else {
-        SnackBarMessageShow.errorMSG('Something went wrong', context);
-        Navigator.pop(context);
-      }
-    } catch (error) {
-      SnackBarMessageShow.errorMSG('Something went wrong', context);
-      Navigator.pop(context);
-    }
+    )));
   }
 }

@@ -11,17 +11,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:provider/provider.dart';
 
-import '../../App Helper/Api Repository/api_urls.dart';
-import '../../App Helper/Enums/enums_status.dart';
-import '../../App Helper/Get Access Token/get_access_token.dart';
-import '../../App Helper/Models/Drawer Menus Model/upload_docs_model.dart';
-import '../../App Helper/Providers/Drawer Data Provider/drawer_menu_provider.dart';
-import '../../App Helper/Routes/App Routes/drawer_menus_routes_names.dart';
-import '../../App Helper/Ui Helper/error_helper.dart';
-import '../../App Helper/Ui Helper/loading_always.dart';
-import '../../App Helper/Ui Helper/snackbar_msg_show.dart';
-import '../../App Helper/Ui Helper/ui_helper.dart';
-import '../../Authentication Pages/OnBoarding/constants/constants.dart';
+import '../../../App Helper/Api Repository/api_urls.dart';
+import '../../../App Helper/Enums/enums_status.dart';
+import '../../../App Helper/Get Access Token/get_access_token.dart';
+import '../../../App Helper/Models/Drawer Menus Model/upload_docs_model.dart';
+import '../../../App Helper/Providers/Drawer Data Provider/drawer_menu_provider.dart';
+import '../../../App Helper/Routes/App Routes/drawer_menus_routes_names.dart';
+import '../../../App Helper/Ui Helper/error_helper.dart';
+import '../../../App Helper/Ui Helper/loading_always.dart';
+import '../../../App Helper/Ui Helper/snackbar_msg_show.dart';
+import '../../../App Helper/Ui Helper/ui_helper.dart';
+import '../../../Authentication Pages/OnBoarding/constants/constants.dart';
 
 class UploadDocs extends StatefulWidget {
   var user_sop_id,user_id;

@@ -7,7 +7,7 @@ class UserAuthentication {
 
   Future<dynamic> loginApi(dynamic data)async{
     try{
-      dynamic response = await apiServicesTypePostGet.postApiResponse(ApiConstants.Login, data);
+      dynamic response = await apiServicesTypePostGet.postApiResponse(ApiConstants.login, data);
       return response;
     }catch(e){
       throw e;

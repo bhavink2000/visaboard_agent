@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:visaboard_agent/Agent/App%20Helper/Ui%20Helper/ui_helper.dart';
 import 'package:visaboard_agent/Agent/Authentication%20Pages/OnBoarding/constants/constants.dart';
 
 import '../../App Helper/Api Repository/api_urls.dart';
@@ -192,13 +193,18 @@ class _SignUpScreen extends State<SignUpScreen> {
                       child: FadeInAnimation(
                         child: SizedBox(
                           //width: MediaQuery.of(context).size.width / 2,
-                          height: MediaQuery.of(context).size.width / 7,
+                          //height: MediaQuery.of(context).size.width / 7,
                           child: DropdownButtonFormField(
                             decoration: InputDecoration(
-                              //border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
+                              //border: OutlineInputBorder(borderRadius: BorderRadius.circular(0)),
                                 hintText: 'Country',
-                                hintStyle: TextStyle(fontSize: 12,fontFamily: Constants.OPEN_SANS,letterSpacing: 1,color: Colors.white)
+                                hintStyle: TextStyle(fontSize: 12,fontFamily: Constants.OPEN_SANS,letterSpacing: 1,color: Colors.white),
+                                enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white60)),
+                                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                              contentPadding: EdgeInsets.zero
                             ),
+                            dropdownColor: PrimaryColorTwo,
+                            menuMaxHeight: 400,
                             value: _selectedCountry,
                             isExpanded: true,
                             onTap: (){
@@ -233,7 +239,7 @@ class _SignUpScreen extends State<SignUpScreen> {
                             items: countryList?.map((item) {
                               return DropdownMenuItem(
                                 value: item['id'].toString(),
-                                child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.black87,letterSpacing: 1),),
+                                child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.white,letterSpacing: 1),),
                               );
                             }).toList() ?? [],
                           ),
@@ -550,7 +556,7 @@ class _SignUpScreen extends State<SignUpScreen> {
   }
 
   void signUpData() async {
-    var url = ApiConstants.SignUp;
+    var url = ApiConstants.signUp;
     try {
       final response = await http.post(
         Uri.parse(url),

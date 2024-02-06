@@ -4,21 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Enums/enums_status.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Ui%20Helper/loading_always.dart';
-import 'package:visaboard_agent/Agent/Drawer%20Menus/Order%20Visa%20File/service_requested.dart';
+import 'package:visaboard_agent/Agent/Drawer%20Menus/Order%20Visa%20File/Ovf%20Screens/service_requested.dart';
 
-import '../../App Helper/Get Access Token/get_access_token.dart';
-import '../../App Helper/Providers/Drawer Data Provider/drawer_menu_provider.dart';
-import '../../App Helper/Ui Helper/error_helper.dart';
-import '../../Authentication Pages/OnBoarding/constants/constants.dart';
-import 'Edit Pages/academics_page.dart';
-import 'Edit Pages/family_inforamtion_page.dart';
-import 'Edit Pages/funding_sponsor_page.dart';
-import 'Edit Pages/immigration_history_page.dart';
-import 'Edit Pages/language_test_Page.dart';
-import 'Edit Pages/personal_details_page.dart';
-import 'Edit Pages/proposed_studies_page.dart';
-import 'Edit Pages/spouse_details_page.dart';
-import 'Edit Pages/work_experince_page.dart';
+import '../../../App Helper/Get Access Token/get_access_token.dart';
+import '../../../App Helper/Providers/Drawer Data Provider/drawer_menu_provider.dart';
+import '../../../App Helper/Ui Helper/error_helper.dart';
+import '../../../Authentication Pages/OnBoarding/constants/constants.dart';
+import '../Edit Pages/academics_page.dart';
+import '../Edit Pages/family_inforamtion_page.dart';
+import '../Edit Pages/funding_sponsor_page.dart';
+import '../Edit Pages/immigration_history_page.dart';
+import '../Edit Pages/language_test_Page.dart';
+import '../Edit Pages/personal_details_page.dart';
+import '../Edit Pages/proposed_studies_page.dart';
+import '../Edit Pages/spouse_details_page.dart';
+import '../Edit Pages/work_experince_page.dart';
 
 
 class EditOrderVisaFile extends StatefulWidget {
@@ -30,7 +30,7 @@ class EditOrderVisaFile extends StatefulWidget {
 }
 
 class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
-  int _currentPage = 0;
+  int currentPage = 0;
   final PageController _pageController = PageController(initialPage: 0);
 
   GetAccessToken getAccessToken = GetAccessToken();
@@ -47,16 +47,12 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
       'user_id': '${widget.user_id}',
       'user_sop_id': '${widget.user_sop_id}'
     };
-    print("Body -> $body");
     getAccessToken.checkAuthentication(context, setState);
     Future.delayed(const Duration(seconds: 1),(){
       setState(() {
         agentDrawerMenuProvider.fetchOVFEdit(1, getAccessToken.access_token, body);
       });
     });
-    // Future.delayed(const Duration(seconds: 5),(){
-    //   openServiceRBox();
-    // });
   }
 
   @override
@@ -67,7 +63,7 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
 
   _onPageChanged(int index) {
     setState(() {
-      _currentPage = index;
+      currentPage = index;
     });
   }
   String tabName = "";
@@ -122,7 +118,7 @@ class _EditOrderVisaFileState extends State<EditOrderVisaFile> {
                               user_sop_id: widget.user_sop_id,
                             );
                           case 'Work Experience':
-                            return WorkExperincePage(
+                            return WorkExperiencePage(
                               pagecontroller: _pageController,
                               editDetails: item!,
                               tabStatus: tab[index].status,

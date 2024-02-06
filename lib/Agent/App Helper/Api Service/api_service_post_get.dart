@@ -42,7 +42,7 @@ class ApiServicePostGet extends ApiServicesTypePostGet{
           'Accept': 'application/json',
           'Authorization': 'Bearer $access_token',
         },
-      ).timeout(Duration(seconds: 5));
+      ).timeout(Duration(seconds: 30));
       responseJson = returnResponse(response);
     }on SocketMessage{
       throw FetchDataException(message: "No Internet Connection");
@@ -62,7 +62,7 @@ class ApiServicePostGet extends ApiServicesTypePostGet{
             'Authorization': 'Bearer $access_token',
           },
           body: data
-      ).timeout(Duration(seconds: 10));
+      ).timeout(Duration(seconds: 30));
       print("in after post response->${response.body}");
       responseJson = returnResponse(response);
       print("in after post api response ->$responseJson");

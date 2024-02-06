@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: AppRoutesName.splashscreen,
         onGenerateRoute: AppRoutes.generateRoute,
+        theme: ThemeData(useMaterial3: false),
       ),
     );
   }

@@ -35,25 +35,30 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  lottie:
-  intl: ^0.17.0
-  flutter_staggered_animations:
-  flutter_vector_icons:
-  expandable: ^5.0.1
-  bottom_navy_bar: ^6.0.0
-  flutter_advanced_drawer:
+
+  # Network
   http:
   dio:
   form_data:
+
+  # State Management
   provider:
   get:
+
+  lottie: ^3.0.0
+  intl: ^0.17.0
+  flutter_staggered_animations:
+  flutter_vector_icons: ^2.0.0
+  expandable: ^5.0.1
+  bottom_navy_bar: ^6.0.0
+  flutter_advanced_drawer:
   syncfusion_flutter_datepicker: ^20.3.52
   tap_to_expand: ^0.6.1
   awesome_snackbar_content: ^0.1.0
-  google_fonts:
+  google_fonts: ^6.1.0
   badges:
   flutter_widget_from_html_core:
-  #fluttertoast: ^7.0.1
+#fluttertoast: ^7.0.1
   fluttertoast: ^8.2.2
   shared_preferences: ^2.0.7
   image_picker: ^0.8.4+5

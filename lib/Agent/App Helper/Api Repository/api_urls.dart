@@ -1,21 +1,16 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names
 class ApiConstants {
-/*
-Demo
-Username :- noreply@visaboard.in
-Password :- supreme@123
- */
 
-  static String URL = "https://demo.visaboard.in/api/vb-agent/"; // demo
-  //static String URL = "https://www.visaboard.in/api/vb-agent/"; // live
+  //static String URL = "https://demo.visaboard.in/api/vb-agent/"; // demo
+  static String URL = "https://www.visaboard.in/api/vb-agent/"; // live
 
-  static String Login = "${URL}login";
-  static String deactiveUser = "${URL}user/in-active";
+  static String login = "${URL}login";
+  static String dActiveUser = "${URL}user/in-active";
 
-  static String SignUp = "${URL}signup";
+  static String signUp = "${URL}signup";
 
-  static String ForgotPassowrd = "${URL}post-forgot-password";
-  static String ChangePassword = "${URL}change-password";
+  static String forgotPassword = "${URL}post-forgot-password";
+  static String changePassword = "${URL}change-password";
 
   static String getProfile = "${URL}edit-profile";
 
@@ -32,9 +27,9 @@ Password :- supreme@123
   static String getClient = "${URL}user/list";
   static String getClientAdd = "${URL}user/add";
   static String getSopCalculation = "${URL}sop-calculation";
-  static String CheckPaymentMethod = "${URL}user/check-available-payment-method";
-  static String CheckRozarPayPayment = "${URL}user/sop/payment/razorpay-pay";
-  static String CheckStripePayment = "${URL}user/sop/payment/stripe-pay";
+  static String checkPaymentMethod = "${URL}user/check-available-payment-method";
+  static String checkRozarPayPayment = "${URL}user/sop/payment/razorpay-pay";
+  static String checkStripePayment = "${URL}user/sop/payment/stripe-pay";
 
   static String getQRCode = "${URL}user/download-qr-code";
   static String getQRSticker = "${URL}user/download-qr-code/download/sticker";
@@ -49,7 +44,7 @@ Password :- supreme@123
   static String getTransaction = "${URL}user/transaction/list";
 
   static String getOrderVisaFile = "${URL}user/sop/list";
-  static String SendMessage = "${URL}send/message";
+  static String sendMessage = "${URL}send/message";
   static String getOVFEdit = "${URL}user/edit";
   static String getOVFUpdate = "${URL}user/update";
   static String getOVFChat = "${URL}user/sop/";
@@ -65,7 +60,8 @@ Password :- supreme@123
 
 class ApiUrls{
 
-  static String URL = "https://www.visaboard.in/api/vbx/";
+  static String URL = "https://www.visaboard.in/api/vbx/";                    // live
+  //static String URL = "https://demo.visaboard.in/api/vbx/";                 // demo
 
   static String getCountry = "${URL}get-country";
   static String getState = "${URL}get-state-by-country";

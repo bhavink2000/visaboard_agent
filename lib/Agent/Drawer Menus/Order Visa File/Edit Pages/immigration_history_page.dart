@@ -119,7 +119,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
             child: Column(
               children: [
                 Align(
@@ -159,10 +159,10 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                         child: SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.width / 6.5,
+                            //height: MediaQuery.of(context).size.width / 6.5,
                             child: DropdownButtonFormField(
                               dropdownColor: Colors.white,
                               decoration: editFormsInputDecoration('${ImmigrationTextHelper.firstText}'),
@@ -196,10 +196,10 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                         child: SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.width / 6.5,
+                            //height: MediaQuery.of(context).size.width / 6.5,
                             child: DropdownButtonFormField(
                               dropdownColor: Colors.white,
                               decoration: editFormsInputDecoration('${ImmigrationTextHelper.twoText}'),
@@ -239,7 +239,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             child: Column(
               children: [
                 Align(
@@ -290,8 +290,8 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                             setState(() {});
                           },
                           child: Container(
-                            color: PrimaryColorOne,
                             padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: PrimaryColorOne),
                             child: Text("Add More +",style: TextStyle(color: Colors.white,fontFamily: Constants.OPEN_SANS,fontSize: 13),),
                           ),
                         ),
@@ -308,7 +308,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                   padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                   child: SizedBox(
                                       width: MediaQuery.of(context).size.width,
-                                      height: MediaQuery.of(context).size.width / 6.5,
+                                      //height: MediaQuery.of(context).size.width / 6.5,
                                       child: DropdownButtonFormField(
                                         dropdownColor: Colors.white,
                                         decoration: editFormsInputDecoration('${ImmigrationTextHelper.threeText}'),
@@ -361,7 +361,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                   padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                   child: SizedBox(
                                       width: MediaQuery.of(context).size.width,
-                                      height: MediaQuery.of(context).size.width / 6.5,
+                                      //height: MediaQuery.of(context).size.width / 6.5,
                                       child: DropdownButtonFormField(
                                         dropdownColor: Colors.white,
                                         decoration: editFormsInputDecoration('${ImmigrationTextHelper.fourText}'),
@@ -412,7 +412,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                       padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
                                       child: SizedBox(
                                         width: MediaQuery.of(context).size.width / 2.8,
-                                        height: MediaQuery.of(context).size.width / 8,
+                                        //height: MediaQuery.of(context).size.width / 8,
                                         child: TextField(
                                           controller: dDate[index],
                                           decoration: editFormsInputDecoration('${ImmigrationTextHelper.fiveText}'),
@@ -440,7 +440,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                       padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
                                       child: SizedBox(
                                         width: MediaQuery.of(context).size.width / 2.8,
-                                        height: MediaQuery.of(context).size.width / 8,
+                                        //height: MediaQuery.of(context).size.width / 8,
                                         child: TextField(
                                           controller: aDate[index],
                                           decoration: editFormsInputDecoration('${ImmigrationTextHelper.sixText}'),
@@ -479,7 +479,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             child: Column(
               children: [
                 Align(
@@ -530,8 +530,8 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                             setState(() {});
                           },
                           child: Container(
-                            color: PrimaryColorOne,
                             padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: PrimaryColorOne),
                             child: Text("Add More +",style: TextStyle(color: Colors.white,fontFamily: Constants.OPEN_SANS,fontSize: 13),),
                           ),
                         ),
@@ -548,7 +548,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                   padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                   child: SizedBox(
                                       width: MediaQuery.of(context).size.width,
-                                      height: MediaQuery.of(context).size.width / 6.5,
+                                      //height: MediaQuery.of(context).size.width / 6.5,
                                       child: DropdownButtonFormField(
                                         dropdownColor: Colors.white,
                                         decoration: editFormsInputDecoration('${ImmigrationTextHelper.sevenText}'),
@@ -597,7 +597,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                   padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                   child: SizedBox(
                                       width: MediaQuery.of(context).size.width,
-                                      height: MediaQuery.of(context).size.width / 6.5,
+                                      //height: MediaQuery.of(context).size.width / 6.5,
                                       child: DropdownButtonFormField(
                                         dropdownColor: Colors.white,
                                         decoration: editFormsInputDecoration('${ImmigrationTextHelper.eightText}'),
@@ -648,7 +648,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                       padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
                                       child: SizedBox(
                                         width: MediaQuery.of(context).size.width / 3,
-                                        height: MediaQuery.of(context).size.width / 8,
+                                        //height: MediaQuery.of(context).size.width / 8,
                                         child: TextField(
                                           controller: rDate[index],
                                           decoration: editFormsInputDecoration('${ImmigrationTextHelper.nineText}'),
@@ -676,7 +676,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                                       padding: const EdgeInsets.fromLTRB(15, 5, 0, 10),
                                       child: SizedBox(
                                         width: MediaQuery.of(context).size.width / 2.2,
-                                        height: MediaQuery.of(context).size.width / 8,
+                                        //height: MediaQuery.of(context).size.width / 8,
                                         child: TextField(
                                           controller: rNumber[index],
                                           decoration: editFormsInputDecoration('${ImmigrationTextHelper.tenText}'),
@@ -698,7 +698,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             child: Column(
               children: [
                 Align(
@@ -739,7 +739,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                     padding: const EdgeInsets.fromLTRB(15, 5, 15, 10),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width / 1,
-                      height: MediaQuery.of(context).size.width / 8,
+                      //height: MediaQuery.of(context).size.width / 8,
                       child: TextField(
                         controller: dRDSpecify,
                         decoration: editFormsInputDecoration('${ImmigrationTextHelper.elevenText}'),
@@ -751,7 +751,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             child: Column(
               children: [
                 Align(
@@ -792,7 +792,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
                     padding: const EdgeInsets.fromLTRB(15, 5, 15, 10),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width / 1,
-                      height: MediaQuery.of(context).size.width / 8,
+                      //height: MediaQuery.of(context).size.width / 8,
                       child: TextField(
                         controller: visaRSpecify,
                         decoration: editFormsInputDecoration('${ImmigrationTextHelper.elevenText}'),
@@ -804,7 +804,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             child: Column(
               children: [
                 Align(
@@ -843,7 +843,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             child: Column(
               children: [
                 Align(
@@ -882,7 +882,7 @@ class _ImmigrationHistoryPageState extends State<ImmigrationHistoryPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             child: Column(
               children: [
                 Align(

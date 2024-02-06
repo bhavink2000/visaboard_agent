@@ -564,7 +564,7 @@ class _ProfilePage extends State<ProfilePage>{
       'Accept': 'application/json',
       'Authorization': 'Bearer ${getAccessToken.access_token}',
     };
-    http.post(Uri.parse(ApiConstants.ChangePassword),
+    http.post(Uri.parse(ApiConstants.changePassword),
         headers: headers,
         body: {
           "current_password": currentPassword.text,
@@ -591,7 +591,7 @@ class _ProfilePage extends State<ProfilePage>{
       };
       
       var response = await http.get(
-          Uri.parse(ApiConstants.deactiveUser),
+          Uri.parse(ApiConstants.dActiveUser),
         headers: headers,
       );
       print("response ->${response.body}");

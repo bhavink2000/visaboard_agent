@@ -10,15 +10,15 @@ import 'package:provider/provider.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Enums/enums_status.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Providers/Drawer%20Data%20Provider/drawer_menu_provider.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Routes/App%20Routes/drawer_menus_routes_names.dart';
-import '../../App Helper/Api Repository/api_urls.dart';
-import '../../App Helper/Get Access Token/get_access_token.dart';
-import '../../App Helper/Routes/App Routes/app_routes_name.dart';
-import '../../App Helper/Ui Helper/error_helper.dart';
-import '../../App Helper/Ui Helper/loading.dart';
-import '../../App Helper/Ui Helper/loading_always.dart';
-import '../../App Helper/Ui Helper/snackbar_msg_show.dart';
-import '../../App Helper/Ui Helper/ui_helper.dart';
-import '../../Authentication Pages/OnBoarding/constants/constants.dart';
+import '../../../App Helper/Api Repository/api_urls.dart';
+import '../../../App Helper/Get Access Token/get_access_token.dart';
+import '../../../App Helper/Routes/App Routes/app_routes_name.dart';
+import '../../../App Helper/Ui Helper/error_helper.dart';
+import '../../../App Helper/Ui Helper/loading.dart';
+import '../../../App Helper/Ui Helper/loading_always.dart';
+import '../../../App Helper/Ui Helper/snackbar_msg_show.dart';
+import '../../../App Helper/Ui Helper/ui_helper.dart';
+import '../../../Authentication Pages/OnBoarding/constants/constants.dart';
 
 class ChatScreenOrderVisaFile extends StatefulWidget {
   var client_id, c_id,client_fnm, client_lnm,service_nm, letter_nm, country_nm, order_p,user_sop_id;
@@ -413,7 +413,17 @@ class _ChatScreenOrderVisaFile extends State<ChatScreenOrderVisaFile> {
                               padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
                               child: InkWell(
                                 onTap: (){
-                                  sendMessage();
+                                  if(subject.text.isEmpty){
+                                    Navigator.pop(context);
+                                    SnackBarMessageShow.warningMSG('subject field is required.', context);
+                                  }
+                                  else if(descrption.text.isEmpty){
+                                    Navigator.pop(context);
+                                    SnackBarMessageShow.warningMSG('description field is required.', context);
+                                  }
+                                  else{
+                                    sendMessage();
+                                  }
                                 },
                                 child: Text(
                                   "Send",
@@ -462,7 +472,7 @@ class _ChatScreenOrderVisaFile extends State<ChatScreenOrderVisaFile> {
     }
 
     var response = await dio.post(
-        ApiConstants.SendMessage,
+        ApiConstants.sendMessage,
         options: Options(validateStatus: (_)=> true),
         data: formData,
         onSendProgress: (int sent, int total) {

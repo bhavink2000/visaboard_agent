@@ -107,7 +107,7 @@ class PaymentController {
     print("u id-> $usID");
 
     var response = await http.post(
-      Uri.parse(ApiConstants.CheckStripePayment),
+      Uri.parse(ApiConstants.checkStripePayment),
       headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer ${access_token}',

@@ -226,7 +226,7 @@ class _LoginPage extends State<LoginPage>{
                                 enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white60)),
                                 focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
                                 fillColor: Colors.lightBlueAccent,
-                                labelText: 'UserName',
+                                labelText: 'Username',
                                 labelStyle: TextStyle(color: Colors.white70,),
                               ),
                             ),
@@ -260,9 +260,9 @@ class _LoginPage extends State<LoginPage>{
                                       child: Icon(
                                           obScured
                                               ?
-                                          Icons.visibility_sharp
+                                          Icons.visibility_off_rounded
                                               :
-                                          Icons.visibility_off_sharp,
+                                          Icons.visibility_rounded,
                                         color: Colors.white,
                                       ),
                                     ),
@@ -316,7 +316,13 @@ class _LoginPage extends State<LoginPage>{
                                                         TextButton(
                                                           child: Text("Send",style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.black),),
                                                           onPressed: (){
-                                                            forgotPasswordData();
+                                                            if(email.text.isEmpty){
+                                                              Navigator.pop(context);
+                                                              SnackBarMessageShow.warningMSG('Enter email id', context);
+                                                            }
+                                                            else{
+                                                              forgotPasswordData();
+                                                            }
                                                           },
                                                         ),
                                                       ],
@@ -329,7 +335,7 @@ class _LoginPage extends State<LoginPage>{
                                         }
                                     );
                                   },
-                                  child: Text("Forgot Password",style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.white,letterSpacing: 0.5),)
+                                  child: Text("Forgot password",style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.white,letterSpacing: 0.5),)
                                 )
                               ],
                             ),
@@ -438,7 +444,7 @@ class _LoginPage extends State<LoginPage>{
   }
 
   void forgotPasswordData() async {
-    var url = ApiConstants.ForgotPassowrd;
+    var url = ApiConstants.forgotPassword;
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -451,17 +457,35 @@ class _LoginPage extends State<LoginPage>{
         var bodyStatus = jsonData['status'];
         var bodyMSG = jsonData['message'];
         if (bodyStatus == 200) {
+          setState(() {
+            email.text = '';
+          });
           SnackBarMessageShow.successsMSG('$bodyMSG', context);
           Navigator.pushNamed(context, AppRoutesName.login);
         } else {
-          SnackBarMessageShow.errorMSG('$bodyMSG', context);
+          setState(() {
+            email.text = '';
+          });
+          Navigator.pop(context);
+          SnackBarMessageShow.warningMSG('$bodyMSG', context);
         }
-      } else {
-        SnackBarMessageShow.errorMSG('Failed to load data', context);
+      }else if(response.statusCode == 500){
+        Navigator.pop(context);
+        SnackBarMessageShow.warningMSG('Internal server error', context);
+      }
+      else {
+        setState(() {
+          email.text = '';
+        });
+        Navigator.pop(context);
+        SnackBarMessageShow.warningMSG('Failed to load data', context);
       }
     } catch (e) {
+      setState(() {
+        email.text = '';
+      });
       print(e.toString());
-      SnackBarMessageShow.errorMSG('Something went wrong', context);
+      SnackBarMessageShow.warningMSG('Something went wrong', context);
     }
   }
 }

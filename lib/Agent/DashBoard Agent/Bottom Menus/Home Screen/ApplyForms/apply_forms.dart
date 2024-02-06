@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -40,6 +41,7 @@ class _ApplyFormsState extends State<ApplyForms> {
   void initState() {
     super.initState();
     getAccessToken.checkAuthentication(context, setState);
+    quntity.text = '1';
     Future.delayed(const Duration(seconds: 1),(){
       setState(() {
         _getserviceList(getAccessToken.access_token);
@@ -64,7 +66,7 @@ class _ApplyFormsState extends State<ApplyForms> {
       childDecoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(16))),
       child: Scaffold(
         backgroundColor: const Color(0xff0052D4),
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: Align(alignment: Alignment.topRight,child: Text(widget.name.toString().toUpperCase(),style: AllHeader)),
           elevation: 0,
@@ -74,481 +76,479 @@ class _ApplyFormsState extends State<ApplyForms> {
               icon: const Icon(Icons.arrow_back,color: Colors.white,size: 30,)
           ),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              topRight: Radius.circular(15),
+            ),
+            color: Colors.white,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(5),
+                                bottomLeft: Radius.circular(5),
+                                topRight: Radius.circular(25),
+                                bottomRight: Radius.circular(25)
+                            ),
+                            color: PrimaryColorOne
+                        ),
+                        padding: const EdgeInsets.fromLTRB(15, 10, 25, 10),
+                        child: Text("Quick Apply",style: TextStyle(fontSize: 15,color: Colors.white,fontFamily: Constants.OPEN_SANS),),
+                      ),
+                    ),
                   ),
-                  color: Colors.white,
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(5),
-                                      bottomLeft: Radius.circular(5),
-                                      topRight: Radius.circular(25),
-                                      bottomRight: Radius.circular(25)
-                                  ),
-                                  color: PrimaryColorOne
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
+                    child: Card(
+                      elevation: 5,
+                      color: PrimaryColorOne,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      child: Row(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                            child: Icon(Icons.room_service,color: Colors.white),
+                          ),
+                          const Spacer(),
+                          Container(
+                            width: MediaQuery.of(context).size.width / 1.3,
+                            height: MediaQuery.of(context).size.width / 7.5,
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.white),
+                            padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                            child: DropdownButtonFormField(
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Service Type',
+                                  hintStyle: TextStyle(fontSize: 12,fontFamily: Constants.OPEN_SANS,letterSpacing: 1)
                               ),
-                              padding: const EdgeInsets.fromLTRB(15, 10, 25, 10),
-                              child: Text("Quick Apply",style: TextStyle(fontSize: 15,color: Colors.white,fontFamily: Constants.OPEN_SANS),),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-                          child: Card(
-                            elevation: 5,
-                            color: PrimaryColorOne,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                            child: Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-                                  child: Icon(Icons.room_service,color: Colors.white),
-                                ),
-                                const Spacer(),
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 1.3,
-                                  height: MediaQuery.of(context).size.width / 7.5,
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.white),
-                                  padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
-                                  child: DropdownButtonFormField(
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: 'Service Type',
-                                        hintStyle: TextStyle(fontSize: 12,fontFamily: Constants.OPEN_SANS,letterSpacing: 1)
-                                    ),
-                                    value: _selectedService,
-                                    isExpanded: true,
-                                    onTap: (){
-                                      setState(() {
-                                        countryList!.clear();
-                                        letterList!.clear();
-                                        _selectedService = null;
-                                        _selectedCountry = null;
-                                        _selectedLetter = null;
-                                        _selectedLetterPrice = null;
-                                        college_name_show = null;
-                                        _getCountryList(getAccessToken.access_token);
-                                      });
-                                    },
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _selectedService = value as String?;
-                                        _selectedCountry = null;
-                                        _selectedLetter = null;
-                                        _selectedLetterPrice = null;
-                                        college_name_show = null;
-                                        _getCountryList(getAccessToken.access_token);
-                                        print("Service ->$_selectedService");
-                                      });
-                                    },
-                                    onSaved: (value) {
-                                      setState(() {
-                                        _selectedService = value as String?;
-                                      });
-                                    },
-                                    validator: (value) {
-                                      if (value == null) {
-                                        return "can't empty";
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                    items: serviceList?.map((item) {
-                                      return DropdownMenuItem(
-                                        value: item['id'], // Ensure this is a unique identifier
-                                        child: Text(item['name'], style: TextStyle(fontFamily: Constants.OPEN_SANS, fontSize: 10),),
-                                      );
-                                    }).toList() ?? [],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-                          child: Card(
-                            elevation: 5,
-                            color: PrimaryColorOne,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                            child: Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-                                  child: Icon(Icons.code,color: Colors.white),
-                                ),
-                                const Spacer(),
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 1.3,
-                                  height: MediaQuery.of(context).size.width / 7.5,
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.white),
-                                  padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
-                                  child: DropdownButtonFormField(
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: 'Country',
-                                        hintStyle: TextStyle(fontSize: 12,fontFamily: Constants.OPEN_SANS,letterSpacing: 1)
-                                    ),
-                                    value: _selectedCountry,
-                                    isExpanded: true,
-                                    onTap: (){
-                                      if(_selectedLetter == null){
-                                        setState(() {
-                                          letterList!.clear();
-                                          _selectedLetter == null ;
-                                          //_getCountryList(getAccessToken.access_token);
-                                          //_getletterList(getAccessToken.access_token, _selectedService, _selectedCountry);
-                                        });
-                                      }
-                                      else{
-                                        setState(() {
-                                          _selectedLetter = null;
-                                          //_getCountryList(getAccessToken.access_token);
-                                        });
-                                      }
-                                    },
-                                    onChanged: (country) {
-                                      if(_selectedLetter == null){
-                                        setState(() {
-                                          _selectedCountry = country as String?;
-                                          _selectedLetter == null;
-                                          _getletterList(getAccessToken.access_token, _selectedService, _selectedCountry);
-                                          print("country ->$_selectedCountry}");
-                                        });
-                                      }
-                                      else{
-                                        setState(() {
-                                          _selectedLetter = null;
-                                          _getCountryList(getAccessToken.access_token);
-                                        });
-                                      }
-                                    },
-                                    items: countryList?.map((item) {
-                                      return DropdownMenuItem(
-                                        value: item['id'].toString(),
-                                        child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10),),
-                                      );
-                                    }).toList() ?? [],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-                          child: Card(
-                            elevation: 5,
-                            color: PrimaryColorOne,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                            child: Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-                                  child: Icon(Icons.legend_toggle,color: Colors.white),
-                                ),
-                                const Spacer(),
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 1.3,
-                                  height: MediaQuery.of(context).size.width / 7.5,
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.white),
-                                  padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
-                                  child: DropdownButtonFormField(
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: 'Letter Type',
-                                        hintStyle: TextStyle(fontSize: 12,fontFamily: Constants.OPEN_SANS,letterSpacing: 1)
-                                    ),
-                                    value: _selectedLetter,
-                                    isExpanded: true,
-                                    onChanged: (value) {
-                                      if(letterList!.isNotEmpty){
-                                        setState(() {
-                                          _selectedLetter = value as String?;
-                                          checkShowData();
-                                        });
-                                      }
-                                      else{
-                                        print("else");
-                                      }
-                                    },
-                                    onSaved: (value) {
-                                      setState(() {
-                                        _selectedLetter = value as String?;
-                                      });
-                                    },
-                                    validator: (value) {
-                                      if (value == null) {
-                                        return "can't empty";
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                    items: letterList?.map((item) {
-                                      return DropdownMenuItem(
-                                        value: item['id'].toString(),
-                                        child: Text("${item['name']}\n(Price :- "
-                                            '${getAccessToken.countryId == '101' ? '\u{20B9}' : '\$'}'
-                                            "${getAccessToken.countryId == '101'
-                                            ? item['price'] == null ? 0 : item['price']
-                                            : item['usd_price'] == null ? 0 : item['usd_price']})",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 9)),
-                                      );
-                                    }).toSet().toList() ?? [],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-                          child: Card(
-                            elevation: 5,
-                            color: PrimaryColorOne,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                            child: Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-                                  child: Icon(Icons.person_pin,color: Colors.white),
-                                ),
-                                const Spacer(),
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 1.3,
-                                  height: MediaQuery.of(context).size.width / 7.5,
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.white),
-                                  padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
-                                  child: DropdownButtonFormField(
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: 'Clients',
-                                        hintStyle: TextStyle(fontSize: 12,fontFamily: Constants.OPEN_SANS,letterSpacing: 1)
-                                    ),
-                                    value: _clientId,
-                                    isExpanded: true,
-                                    onChanged: (value) {
-                                      _clientId = value as String?;
-                                    },
-                                    onSaved: (value) {
-                                      setState(() {
-                                        _clientId = value as String?;
-                                      });
-                                    },
-                                    validator: (value) {
-                                      if (value == null) {
-                                        return "can't empty";
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                    items: clientSList?.map((item) {
-                                      return DropdownMenuItem(
-                                        value: item['enc_id'],
-                                        child: Row(
-                                          children: [
-                                            Text("${item['first_name']} ${item['last_name']}",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12)),
-                                            const SizedBox(width: 5),
-                                            Text("(Id -${item['id']})",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
-                                          ],
-                                        ),
-                                      );
-                                    }).toSet().toList() ?? [],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        formDataShow('Note', desc),
-                        Visibility(
-                          visible: college_name_show == 1 ? true : false,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-                            child: Card(
-                              elevation: 5,
-                              color: PrimaryColorOne,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                              child: Row(
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-                                    child: Icon(Icons.school,color: Colors.white),
-                                  ),
-                                  const Spacer(),
-                                  Container(
-                                    width: MediaQuery.of(context).size.width / 1.3,
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.white),
-                                    padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
-                                    child: TextField(
-                                      controller: collage,
-                                      style: TextStyle(fontFamily: Constants.OPEN_SANS,letterSpacing: 1),
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: 'College',
-                                        hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Visibility(
-                          visible: college_name_show == 0 ? true : false,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 4,
-                                  height: MediaQuery.of(context).size.height / 22,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      border: Border.all(color: Colors.grey,width: 1)
-                                  ),
-                                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                  child: TextFormField(
-                                      controller: quntity,
-                                      keyboardType: TextInputType.number,
-                                      decoration: InputDecoration(
-                                          hintText: 'Quantity',
-                                          hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12)
-                                      )
-                                  ),
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 1.6,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey,width: 1),
-                                      borderRadius: BorderRadius.circular(15)
-                                  ),
-                                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("Order Price",style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.black),),
-                                      Text("${_selectedLetterPrice}",style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.black),),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Text("Payment Options",
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontFamily: Constants.OPEN_SANS,
-                                
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                checkColor: Colors.white,
-                                value: wallet,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    wallet = value!;
-                                  });
-                                },
-                              ),
-                              Text("Pay From Wallet",style: TextStyle(fontFamily: Constants.OPEN_SANS),),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              InkWell(
-                                onTap: (){
+                              value: _selectedService,
+                              isExpanded: true,
+                              onTap: (){
+                                setState(() {
+                                  countryList!.clear();
+                                  letterList!.clear();
                                   _selectedService = null;
                                   _selectedCountry = null;
                                   _selectedLetter = null;
                                   _selectedLetterPrice = null;
-                                  Navigator.pop(context);
-                                },
-                                child: Container(
-                                  width: 100,
-                                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),color: PrimaryColorOne
+                                  college_name_show = null;
+                                  _getCountryList(getAccessToken.access_token);
+                                });
+                              },
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedService = value as String?;
+                                  _selectedCountry = null;
+                                  _selectedLetter = null;
+                                  _selectedLetterPrice = null;
+                                  college_name_show = null;
+                                  _getCountryList(getAccessToken.access_token);
+                                  print("Service ->$_selectedService");
+                                });
+                              },
+                              onSaved: (value) {
+                                setState(() {
+                                  _selectedService = value as String?;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return "can't empty";
+                                } else {
+                                  return null;
+                                }
+                              },
+                              items: serviceList?.map((item) {
+                                return DropdownMenuItem(
+                                  value: item['id'], // Ensure this is a unique identifier
+                                  child: Text(item['name'], style: TextStyle(fontFamily: Constants.OPEN_SANS, fontSize: 10),),
+                                );
+                              }).toList() ?? [],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
+                    child: Card(
+                      elevation: 5,
+                      color: PrimaryColorOne,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      child: Row(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                            child: Icon(Icons.code,color: Colors.white),
+                          ),
+                          const Spacer(),
+                          Container(
+                            width: MediaQuery.of(context).size.width / 1.3,
+                            height: MediaQuery.of(context).size.width / 7.5,
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.white),
+                            padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                            child: DropdownButtonFormField(
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Country',
+                                  hintStyle: TextStyle(fontSize: 12,fontFamily: Constants.OPEN_SANS,letterSpacing: 1)
+                              ),
+                              value: _selectedCountry,
+                              isExpanded: true,
+                              onTap: (){
+                                if(_selectedLetter == null){
+                                  setState(() {
+                                    letterList!.clear();
+                                    _selectedLetter == null ;
+                                    //_getCountryList(getAccessToken.access_token);
+                                    //_getletterList(getAccessToken.access_token, _selectedService, _selectedCountry);
+                                  });
+                                }
+                                else{
+                                  setState(() {
+                                    _selectedLetter = null;
+                                    //_getCountryList(getAccessToken.access_token);
+                                  });
+                                }
+                              },
+                              onChanged: (country) {
+                                if(_selectedLetter == null){
+                                  setState(() {
+                                    _selectedCountry = country as String?;
+                                    _selectedLetter == null;
+                                    _getletterList(getAccessToken.access_token, _selectedService, _selectedCountry);
+                                    print("country ->$_selectedCountry}");
+                                  });
+                                }
+                                else{
+                                  setState(() {
+                                    _selectedLetter = null;
+                                    _getCountryList(getAccessToken.access_token);
+                                  });
+                                }
+                              },
+                              items: countryList?.map((item) {
+                                return DropdownMenuItem(
+                                  value: item['id'].toString(),
+                                  child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10),),
+                                );
+                              }).toList() ?? [],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
+                    child: Card(
+                      elevation: 5,
+                      color: PrimaryColorOne,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      child: Row(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                            child: Icon(Icons.legend_toggle,color: Colors.white),
+                          ),
+                          const Spacer(),
+                          Container(
+                            width: MediaQuery.of(context).size.width / 1.3,
+                            height: MediaQuery.of(context).size.width / 7.5,
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.white),
+                            padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                            child: DropdownButtonFormField(
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Letter Type',
+                                  hintStyle: TextStyle(fontSize: 12,fontFamily: Constants.OPEN_SANS,letterSpacing: 1)
+                              ),
+                              value: _selectedLetter,
+                              isExpanded: true,
+                              onChanged: (value) {
+                                if(letterList!.isNotEmpty){
+                                  setState(() {
+                                    _selectedLetter = value as String?;
+                                    checkShowData();
+                                  });
+                                }
+                                else{
+                                  print("else");
+                                }
+                              },
+                              onSaved: (value) {
+                                setState(() {
+                                  _selectedLetter = value as String?;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return "can't empty";
+                                } else {
+                                  return null;
+                                }
+                              },
+                              items: letterList?.map((item) {
+                                return DropdownMenuItem(
+                                  value: item['id'].toString(),
+                                  child: Text("${item['name']}\n(Price :- "
+                                      '${getAccessToken.countryId == '101' ? '\u{20B9}' : '\$'}'
+                                      "${getAccessToken.countryId == '101'
+                                      ? item['price'] == null ? 0 : item['price']
+                                      : item['usd_price'] == null ? 0 : item['usd_price']})",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 9)),
+                                );
+                              }).toSet().toList() ?? [],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
+                    child: Card(
+                      elevation: 5,
+                      color: PrimaryColorOne,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      child: Row(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                            child: Icon(Icons.person_pin,color: Colors.white),
+                          ),
+                          const Spacer(),
+                          Container(
+                            width: MediaQuery.of(context).size.width / 1.3,
+                            height: MediaQuery.of(context).size.width / 7.5,
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.white),
+                            padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                            child: DropdownButtonFormField(
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Clients',
+                                  hintStyle: TextStyle(fontSize: 12,fontFamily: Constants.OPEN_SANS,letterSpacing: 1)
+                              ),
+                              value: _clientId,
+                              isExpanded: true,
+                              onChanged: (value) {
+                                _clientId = value as String?;
+                              },
+                              onSaved: (value) {
+                                setState(() {
+                                  _clientId = value as String?;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return "can't empty";
+                                } else {
+                                  return null;
+                                }
+                              },
+                              items: clientSList?.map((item) {
+                                return DropdownMenuItem(
+                                  value: item['enc_id'],
+                                  child: Row(
+                                    children: [
+                                      Text("${item['first_name']} ${item['last_name']}",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12)),
+                                      const SizedBox(width: 5),
+                                      Text("(Id -${item['id']})",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
+                                    ],
                                   ),
-                                  child: Text("Discard",style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.white,letterSpacing: 1),),
+                                );
+                              }).toSet().toList() ?? [],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  formDataShow('Note', desc),
+                  Visibility(
+                    visible: college_name_show == 1 ? true : false,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
+                      child: Card(
+                        elevation: 5,
+                        color: PrimaryColorOne,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                        child: Row(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                              child: Icon(Icons.school,color: Colors.white),
+                            ),
+                            const Spacer(),
+                            Container(
+                              width: MediaQuery.of(context).size.width / 1.3,
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.white),
+                              padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                              child: TextField(
+                                controller: collage,
+                                style: TextStyle(fontFamily: Constants.OPEN_SANS,letterSpacing: 1),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'College',
+                                  hintStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12),
                                 ),
                               ),
-                              InkWell(
-                                onTap: (){
-                                  if(_selectedService == null){
-                                    Fluttertoast.showToast(msg: 'Please select service');
-                                  }
-                                  else if(_selectedCountry == null || _selectedCountry == ''){
-                                    Fluttertoast.showToast(msg: 'Please select country');
-                                  }
-                                  else if(_selectedLetter == null || _selectedLetter == ''){
-                                    Fluttertoast.showToast(msg: 'Please select letter');
-                                  }
-                                  else if(_clientId == null){
-                                    Fluttertoast.showToast(msg: 'Please select client');
-                                  }
-                                  else if(_selectedService == '1'){
-                                    if(collage.text.isEmpty){
-                                      Fluttertoast.showToast(msg: 'Please enter collage');
-                                    }
-                                  }
-                                  else if(quntity.text.isEmpty){
-                                    Fluttertoast.showToast(msg: 'Please enter quantity');
-                                  }
-                                  else{
-                                    addApplicant();
-                                  }
-                                },
-                                child: Container(
-                                  width: 100,
-                                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),color: PrimaryColorOne
-                                  ),
-                                  child: Text("Pay Now",style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.white,letterSpacing: 1),textAlign: TextAlign.center,),
-                                ),
-                              ),
-                            ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: college_name_show == 0 ? true : false,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width / 4,
+                            //height: MediaQuery.of(context).size.height / 22,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.grey,width: 1)
+                            ),
+                            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                            child: TextFormField(
+                                controller: quntity,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(5)
+                                ],
+                                decoration: InputDecoration(
+                                    labelText: 'Quantity',
+                                    labelStyle: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12),
+                                  contentPadding: EdgeInsets.all(0),
+                                  isDense: true
+                                )
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width / 1.6,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey,width: 1),
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Order price",style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.black),),
+                                Text("${getAccessToken.countryId == '101' ? '\u{20B9}' : '\$'} ${_selectedLetterPrice}",style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.black),),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text("Payment options",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: Constants.OPEN_SANS,
+
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          checkColor: Colors.white,
+                          value: wallet,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              wallet = value!;
+                            });
+                          },
+                        ),
+                        Text("Pay from wallet",style: TextStyle(fontFamily: Constants.OPEN_SANS),),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: (){
+                            _selectedService = null;
+                            _selectedCountry = null;
+                            _selectedLetter = null;
+                            _selectedLetterPrice = null;
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            width: 120,
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),color: PrimaryColorOne
+                            ),
+                            child: Text("Discard",style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.white,letterSpacing: 1),),
                           ),
                         ),
-                      ]),
-                ),
-              ),
-            ),
-          ],
+                        InkWell(
+                          onTap: (){
+                            if(_selectedService == null || _selectedService == ''){
+                              Fluttertoast.showToast(msg: 'Please select service');
+                            }
+                            else if(_selectedCountry == null || _selectedCountry == ''){
+                              Fluttertoast.showToast(msg: 'Please select country');
+                            }
+                            else if(_selectedLetter == null || _selectedLetter == ''){
+                              Fluttertoast.showToast(msg: 'Please select letter');
+                            }
+                            else if(_clientId == null || _clientId == ''){
+                              Fluttertoast.showToast(msg: 'Please select client');
+                            }
+                            else if(_selectedService == '1'){
+                              if(collage.text.isEmpty){
+                                Fluttertoast.showToast(msg: 'Please enter collage');
+                              }
+                            }
+                            else{
+                              addApplicant();
+                            }
+                          },
+                          child: Container(
+                            width: 120,
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),color: PrimaryColorOne
+                            ),
+                            child: Text("Pay now",style: TextStyle(fontFamily: Constants.OPEN_SANS,color: Colors.white,letterSpacing: 1),textAlign: TextAlign.center,),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ]),
+          ),
         ),
       ),
     );
@@ -649,6 +649,7 @@ class _ApplyFormsState extends State<ApplyForms> {
       var data = json.decode(response.body);
       setState(() {
         letterList = data['data'];
+        letterList?.removeWhere((element) => element['allow_usd'] == 1);
       });
     });
   }

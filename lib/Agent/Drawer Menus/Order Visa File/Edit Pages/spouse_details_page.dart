@@ -1,12 +1,17 @@
 // ignore_for_file: use_build_context_synchronously, must_be_immutable
 
 import 'dart:convert';
+import 'dart:developer';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:visaboard_agent/Agent/App%20Helper/Ui%20Helper/text_helper.dart';
+import 'package:visaboard_agent/Agent/Drawer%20Menus/Order%20Visa%20File/Form_Controller/spouse_details_controller.dart';
+import 'package:visaboard_agent/Agent/Drawer%20Menus/Order%20Visa%20File/Ovf%20Widgets/edit_screen_textfield.dart';
+import 'package:visaboard_agent/Agent/Drawer%20Menus/Order%20Visa%20File/Ovf%20Widgets/edits_screens_header.dart';
 
 import '../../../App Helper/Api Repository/api_urls.dart';
 import '../../../App Helper/Get Access Token/get_access_token.dart';
@@ -28,712 +33,371 @@ class SpouseDetailsPage extends StatefulWidget {
 }
 
 class _SpouseDetailsPageState extends State<SpouseDetailsPage> {
-
-  final sdSpouseNm = TextEditingController();
-  final sdMaidenFNm = TextEditingController();
-  final sdPassportNo = TextEditingController();
-  final sdSpouseBDate = TextEditingController();
-  final sdSpouseMDate = TextEditingController();
-  final sdMarriagePlace = TextEditingController();
-  final sdEngageDate = TextEditingController();
-  final sdMarriageCRNo = TextEditingController();
-  final sdDivorceDRNo = TextEditingController();
-  final sdHighQualificationSpouse = TextEditingController();
-  final sdDesignation = TextEditingController();
-  final sdOrganizationNm = TextEditingController();
-  final sdStartDate = TextEditingController();
-  final sdEndDate = TextEditingController();
-  final sdAnnualIncomeSpouse = TextEditingController();
-
-  int noOfChild = 1;
-  String sdChildBox = "";
-  List<TextEditingController> sdChildNm = [TextEditingController()];
-  List<TextEditingController> sdChildBirthDate = [TextEditingController()];
-  List<TextEditingController> sdChildBirthPlace = [TextEditingController()];
-  List<TextEditingController> sdChildPassportNo = [TextEditingController()];
-  List<TextEditingController> sdChildSchoolNm = [TextEditingController()];
-  List<TextEditingController> sdChildStudy = [TextEditingController()];
-
-  String? _spOccupation;
+  
 
   GetAccessToken getAccessToken = GetAccessToken();
+  
+  final sdController = Get.put(SpouseController());
+  
   @override
   void initState() {
     super.initState();
     getAccessToken.checkAuthentication(context, setState);
+    final sdController = Get.put(SpouseController(pageController: widget.pagecontroller,context: context));
     Future.delayed(const Duration(seconds: 1),(){
       setState(() {
-        getOccupationType(getAccessToken.access_token);
+        sdController.getOccupationType(getAccessToken.access_token, widget.user_id, widget.user_sop_id);
+        //getOccupationType(getAccessToken.access_token);
       });
     });
   }
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+    return PopScope(
+      onPopInvoked: (value){
+        sdController.clearFunction();
+      },
+      child: Obx(() => Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                  onPressed: (){
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back)
-              ),
-              Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text("${widget.tabName}",
-                        style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 18,letterSpacing: 1),
-                      ),
-                      SizedBox(height: 5),
-                      Container(
-                        width: MediaQuery.of(context).size.width / 1.5,
-                        height: 2,
-                        color: widget.tabStatus == 1 ? Colors.green : Colors.red,
-                      )
-                    ],
-                  )
-              )
-            ],
+          EditScreenHeader(
+            tabName: widget.tabName,
+            tabIndex: 5,
+            tabStatus: widget.tabStatus,
+            tabMessage: widget.editDetails.message,
           ),
-          const SizedBox(height: 10,),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          Expanded(
             child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(15)),
-                  color: Colors.white,
-                  boxShadow: [BoxShadow(color: Colors.black45.withOpacity(0.2), spreadRadius: 1, blurRadius: 5)]
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("${widget.editDetails.message}",style: TextStyle(fontSize: 13,fontFamily: Constants.OPEN_SANS,color: Colors.green),),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 10, 0, 5),
-            child: Align(alignment: Alignment.topLeft,child: Text("Spouse Detail",style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,fontWeight: FontWeight.bold),)),
-          ),
-          Container(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.width / 8,
-                    child: TextField(
-                      controller: sdSpouseNm,
-                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.firstText}'),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.width / 8,
-                    child: TextField(
-                      controller: sdMaidenFNm,
-                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.twoText}'),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.width / 8,
-                    child: TextField(
-                      controller: sdPassportNo,
-                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.threeText}'),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Row(
-            children: [
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: MediaQuery.of(context).size.width / 8,
-                    child: TextField(
-                      controller: sdSpouseBDate,
-                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.fourText}'),
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime.now(),
-                        );
-                        if(pickedDate != null ){
-                          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                          setState(() {
-                            sdSpouseBDate.text = formattedDate;
-                          });
-                        }else{
-                          Fluttertoast.showToast(msg: "Date is not selected",backgroundColor: Colors.deepPurple,textColor: Colors.white);
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: MediaQuery.of(context).size.width / 8,
-                    child: TextField(
-                      controller: sdSpouseMDate,
-                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.fiveText}'),
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime.now(),
-                        );
-                        if(pickedDate != null ){
-                          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                          setState(() {
-                            sdSpouseMDate.text = formattedDate;
-                          });
-                        }else{
-                          Fluttertoast.showToast(msg: "Date is not selected",backgroundColor: Colors.deepPurple,textColor: Colors.white);
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.width / 8,
-              child: TextField(
-                controller: sdMarriagePlace,
-                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.sixText}'),
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 5, 15, 10),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: MediaQuery.of(context).size.width / 8,
-                    child: TextField(
-                      controller: sdEngageDate,
-                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.sevenText}'),
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2101)
-                        );
-                        if(pickedDate != null ){
-                          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                          setState(() {
-                            sdEngageDate.text = formattedDate;
-                          });
-                        }else{
-                          Fluttertoast.showToast(msg: "Date is not selected",backgroundColor: Colors.deepPurple,textColor: Colors.white);
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.width / 7.5,
-                      child: DropdownButtonFormField(
-                        dropdownColor: Colors.white,
-                        decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.eightText}'),
-                        value: _spOccupation,
-                        style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,color: Colors.black),
-                        isExpanded: true,
-                        onChanged: (value) {
-                          setState(() {
-                            _spOccupation = value as String?;
-                          });
-                        },
-                        onSaved: (value) {
-                          setState(() {
-                            _spOccupation = value as String?;
-                          });
-                        },
-                        validator: (value) {
-                          if (value == null) {
-                            return "can't empty";
-                          } else {
-                            return null;
-                          }
-                        },
-                        items: occupationTypes?.map((item) {
-                          return DropdownMenuItem(
-                            value: item['id'].toString(),
-                            child: Text(item['name'],style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 10)),
-                          );
-                        }).toList() ?? [],
-                      )
-                  ),
-                ),
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.width / 8,
-              child: TextField(
-                controller: sdMarriageCRNo,
-                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.nineText}'),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.width / 8,
-              child: TextField(
-                controller: sdDivorceDRNo,
-                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.tenText}'),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.width / 8,
-              child: TextField(
-                controller: sdHighQualificationSpouse,
-                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.elevenText}'),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.width / 8,
-              child: TextField(
-                controller: sdDesignation,
-                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.twelveText}'),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.width / 8,
-              child: TextField(
-                controller: sdOrganizationNm,
-                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.thirteenText}'),
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: MediaQuery.of(context).size.width / 8,
-                    child: TextField(
-                      controller: sdStartDate,
-                      readOnly: true,
-                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.fourteenText}'),
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2101)
-                        );
-                        if(pickedDate != null ){
-                          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                          setState(() {
-                            sdStartDate.text = formattedDate;
-                          });
-                        }else{
-                          Fluttertoast.showToast(msg: "Date is not selected",backgroundColor: Colors.deepPurple,textColor: Colors.white);
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: MediaQuery.of(context).size.width / 8,
-                    child: TextField(
-                      controller: sdEndDate,
-                      decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.fifteenText}'),
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime.now(),
-                        );
-                        if(pickedDate != null ){
-                          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                          setState(() {
-                            sdEndDate.text = formattedDate;
-                          });
-                        }else{
-                          Fluttertoast.showToast(msg: "Date is not selected",backgroundColor: Colors.deepPurple,textColor: Colors.white);
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.width / 8,
-              child: TextField(
-                controller: sdAnnualIncomeSpouse,
-                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.sixteenText}'),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-            child: Column(
-              children: [
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Text("Do you have any child ?",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12),)
-                ),
-                Row(
+              width: MediaQuery.of(context).size.width,
+              child: SingleChildScrollView(
+                child: Column(
                   children: [
-                    Flexible(
-                      child: RadioListTile(
-                        title: Text("Yes",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 13),),
-                        value: "Yes",
-                        groupValue: sdChildBox,
-                        onChanged: (value){
-                          setState(() {
-                            sdChildBox = value.toString();
-                          });
-                        },
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 0, 5),
+                      child: Align(alignment: Alignment.topLeft,child: Text("Spouse Detail",style: TextStyle(fontSize: 18,fontFamily: Constants.OPEN_SANS,fontWeight: FontWeight.bold),)),
+                    ),
+                    EditSTextField(controller: sdController.sdSpouseNm, labelName: '${SpouseDetailsTextHelper.firstText}'),
+                    EditSTextField(controller: sdController.sdMaidenFNm, labelName: '${SpouseDetailsTextHelper.twoText}'),
+                    EditSTextField(controller: sdController.sdPassportNo, labelName: '${SpouseDetailsTextHelper.threeText}'),
+                    Row(
+                      children: [
+                        Flexible(
+                            child: EditSTextField(
+                              controller: sdController.sdSpouseBDate,
+                              labelName: '${SpouseDetailsTextHelper.fourText}',
+                              readOnly: true,
+                              onTap: ()async{
+                                DateTime? pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(2000),
+                                  lastDate: DateTime.now(),
+                                );
+                                if(pickedDate != null ){
+                                  String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                                  sdController.sdSpouseBDate.text = formattedDate;
+                                }else{
+                                  Fluttertoast.showToast(msg: "Date is not selected",backgroundColor: Colors.deepPurple,textColor: Colors.white);
+                                }
+                              },
+                            )
+                        ),
+                        Flexible(
+                            child: EditSTextField(
+                              controller: sdController.sdSpouseMDate,
+                              labelName: '${SpouseDetailsTextHelper.fiveText}',
+                              readOnly: true,
+                              onTap: ()async{
+                                DateTime? pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(2000),
+                                  lastDate: DateTime.now(),
+                                );
+                                if(pickedDate != null ){
+                                  String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                                  sdController.sdSpouseMDate.text = formattedDate;
+                                }else{
+                                  Fluttertoast.showToast(msg: "Date is not selected",backgroundColor: Colors.deepPurple,textColor: Colors.white);
+                                }
+                              },
+                            )
+                        )
+                      ],
+                    ),
+                    EditSTextField(controller: sdController.sdMarriagePlace, labelName: '${SpouseDetailsTextHelper.sixText}'),
+                    Row(
+                      children: [
+                        Flexible(
+                            child: EditSTextField(
+                              controller: sdController.sdEngageDate,
+                              labelName: '${SpouseDetailsTextHelper.sevenText}',
+                              readOnly: true,
+                              onTap: ()async{
+                                DateTime? pickedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(2000),
+                                    lastDate: DateTime.now()
+                                );
+                                if(pickedDate != null ){
+                                  String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                                  sdController.sdEngageDate.text = formattedDate;
+                                }else{
+                                  Fluttertoast.showToast(msg: "Date is not selected",backgroundColor: Colors.deepPurple,textColor: Colors.white);
+                                }
+                              },
+                            )
+                        ),
+                        Flexible(
+                          child: Obx(() => Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                            child: SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                //height: MediaQuery.of(context).size.width / 7.5,
+                                child: DropdownButtonFormField(
+                                  dropdownColor: Colors.white,
+                                  decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.eightText}'),
+                                  value: sdController.spOccupation.value.isNotEmpty
+                                      ? sdController.spOccupation.value
+                                      : (sdController.occupationTypes?.isNotEmpty == true
+                                      ? sdController.occupationTypes![0]['id'].toString()
+                                      : null),
+                                  style: TextStyle(fontSize: 18, fontFamily: Constants.OPEN_SANS, color: Colors.black),
+                                  isExpanded: true,
+                                  onChanged: (value) {
+                                    sdController.spOccupation.value = value.toString();
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.toString().isEmpty) {
+                                      return "Can't be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  items: sdController.occupationTypes?.map((item) {
+                                    return DropdownMenuItem(
+                                      value: item['id'].toString(),
+                                      child: Text(item['name'], style: TextStyle(fontFamily: Constants.OPEN_SANS, fontSize: 10)),
+                                    );
+                                  }).toList() ?? [],
+                                )
+
+                            ),
+                          )),
+                        )
+                      ],
+                    ),
+                    EditSTextField(controller: sdController.sdMarriageCRNo, labelName: '${SpouseDetailsTextHelper.nineText}'),
+                    EditSTextField(controller: sdController.sdDivorceDRNo, labelName: '${SpouseDetailsTextHelper.tenText}'),
+                    EditSTextField(controller: sdController.sdHighQualificationSpouse, labelName: '${SpouseDetailsTextHelper.elevenText}'),
+                    EditSTextField(controller: sdController.sdDesignation, labelName: '${SpouseDetailsTextHelper.twelveText}'),
+                    EditSTextField(controller: sdController.sdOrganizationNm, labelName: '${SpouseDetailsTextHelper.thirteenText}'),
+                    Row(
+                      children: [
+                        Flexible(
+                            child: EditSTextField(
+                              controller: sdController.sdStartDate,
+                              labelName: '${SpouseDetailsTextHelper.fourteenText}',
+                              readOnly: true,
+                              onTap: ()async{
+                                DateTime? pickedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(2000),
+                                    lastDate: DateTime.now()
+                                );
+                                if(pickedDate != null ){
+                                  String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                                  sdController.sdStartDate.text = formattedDate;
+                                }else{
+                                  Fluttertoast.showToast(msg: "Date is not selected",backgroundColor: Colors.deepPurple,textColor: Colors.white);
+                                }
+                              },
+                            )
+                        ),
+                        Flexible(
+                            child: EditSTextField(
+                              controller: sdController.sdEndDate,
+                              labelName: '${SpouseDetailsTextHelper.fifteenText}',
+                              readOnly: true,
+                              onTap: ()async{
+                                DateTime? pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(2000),
+                                  lastDate: DateTime.now(),
+                                );
+                                if(pickedDate != null ){
+                                  String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                                  sdController.sdEndDate.text = formattedDate;
+                                }else{
+                                  Fluttertoast.showToast(msg: "Date is not selected",backgroundColor: Colors.deepPurple,textColor: Colors.white);
+                                }
+                              },
+                            )
+                        )
+                      ],
+                    ),
+                    EditSTextField(controller: sdController.sdAnnualIncomeSpouse, labelName: '${SpouseDetailsTextHelper.sixteenText}'),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                      child: Column(
+                        children: [
+                          Align(
+                              alignment: Alignment.topLeft,
+                              child: Text("Do you have any child ?",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 12),)
+                          ),
+                          Row(
+                            children: [
+                              Flexible(
+                                child: RadioListTile(
+                                  title: Text("Yes",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 13),),
+                                  value: "Yes",
+                                  groupValue: sdController.sdChildBox.value,
+                                  onChanged: (value){
+                                    sdController.sdChildBox.value = value.toString();
+                                  },
+                                ),
+                              ),
+                              Flexible(
+                                child: RadioListTile(
+                                  title: Text("No",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 13),),
+                                  value: "No",
+                                  groupValue: sdController.sdChildBox.value,
+                                  onChanged: (value){
+                                    sdController.sdChildBox.value = value.toString();
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    Flexible(
-                      child: RadioListTile(
-                        title: Text("No",style: TextStyle(fontFamily: Constants.OPEN_SANS,fontSize: 13),),
-                        value: "No",
-                        groupValue: sdChildBox,
-                        onChanged: (value){
-                          setState(() {
-                            sdChildBox = value.toString();
-                          });
-                        },
+                    Visibility(
+                      visible: sdController.sdChildBox.value == 'Yes' ? true : false,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: InkWell(
+                              onTap: (){
+                                sdController.sdChildNm.add(TextEditingController());
+                                sdController.sdChildBirthPlace.add(TextEditingController());
+                                sdController.sdChildBirthDate.add(TextEditingController());
+                                sdController.sdChildPassportNo.add(TextEditingController());
+                                sdController.sdChildSchoolNm.add(TextEditingController());
+                                sdController.sdChildStudy.add(TextEditingController());
+                                sdController.noOfChild++;
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(6),
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: PrimaryColorOne),
+                                child: Text("Add More +",style: TextStyle(color: Colors.white,fontFamily: Constants.OPEN_SANS,fontSize: 13),),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height / 2,
+                            child: ListView.builder(
+                              shrinkWrap: false,
+                              itemCount: sdController.noOfChild.value,
+                              itemBuilder: (context, index){
+                                return Column(
+                                  children: [
+                                    EditSTextField(controller: sdController.sdChildNm[index], labelName: '${SpouseDetailsTextHelper.seventeenText}'),
+                                    EditSTextField(
+                                      controller: sdController.sdChildBirthDate[index],
+                                      labelName: '${SpouseDetailsTextHelper.eighteenText}',
+                                      readOnly: true,
+                                      onTap: ()async{
+                                        DateTime? pickedDate = await showDatePicker(
+                                            context: context,
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime(2000),
+                                            lastDate: DateTime.now()
+                                        );
+                                        if(pickedDate != null ){
+                                          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                                          sdController.sdChildBirthDate[index].text = formattedDate;
+                                        }else{
+                                          Fluttertoast.showToast(msg: "Date is not selected",backgroundColor: Colors.deepPurple,textColor: Colors.white);
+                                        }
+                                      },
+                                    ),
+                                    EditSTextField(controller: sdController.sdChildBirthPlace[index], labelName: '${SpouseDetailsTextHelper.nineteenText}'),
+                                    EditSTextField(controller: sdController.sdChildPassportNo[index], labelName: '${SpouseDetailsTextHelper.twentyText}'),
+                                    EditSTextField(controller: sdController.sdChildSchoolNm[index], labelName: '${SpouseDetailsTextHelper.twentyOneText}'),
+                                    EditSTextField(controller: sdController.sdChildStudy[index], labelName: '${SpouseDetailsTextHelper.twentyTwoText}'),
+                                    Divider(color: Colors.grey,thickness: 1,endIndent: 20,indent: 20,)
+                                  ],
+                                );
+                              },
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
-          Visibility(
-            visible: sdChildBox == 'No' ? false : true,
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: InkWell(
-                    onTap: (){
-                      sdChildNm.add(TextEditingController());
-                      sdChildBirthPlace.add(TextEditingController());
-                      sdChildBirthDate.add(TextEditingController());
-                      sdChildPassportNo.add(TextEditingController());
-                      sdChildSchoolNm.add(TextEditingController());
-                      sdChildStudy.add(TextEditingController());
-                      noOfChild++;
-                      setState(() {});
-                    },
-                    child: Container(
-                      color: PrimaryColorOne,
-                      padding: EdgeInsets.all(6),
-                      child: Text("Add More +",style: TextStyle(color: Colors.white,fontFamily: Constants.OPEN_SANS,fontSize: 13),),
+          BottomAppBar(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: InkWell(
+                      onTap: (){
+                        sdController.clearFunction();
+                        widget.pagecontroller.previousPage(duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: PrimaryColorOne,
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Text(
+                          "Back",
+                          style: TextStyle(color: Colors.white,fontSize: 15,fontFamily: Constants.OPEN_SANS),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 2,
-                  child: ListView.builder(
-                    itemCount: noOfChild,
-                    itemBuilder: (context, index){
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.width / 8,
-                              child: TextField(
-                                controller: sdChildNm[index],
-                                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.seventeenText}'),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 5, 15, 10),
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width / 8,
-                              child: TextField(
-                                controller: sdChildBirthDate[index],
-                                readOnly: true,
-                                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.eighteenText}'),
-                                onTap: () async {
-                                  DateTime? pickedDate = await showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime(2000),
-                                      lastDate: DateTime(2101)
-                                  );
-                                  if(pickedDate != null ){
-                                    String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                                    setState(() {
-                                      sdChildBirthDate[index].text = formattedDate;
-                                    });
-                                  }else{
-                                    Fluttertoast.showToast(msg: "Date is not selected",backgroundColor: Colors.deepPurple,textColor: Colors.white);
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.width / 8,
-                              child: TextField(
-                                controller: sdChildBirthPlace[index],
-                                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.nineteenText}'),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.width / 8,
-                              child: TextField(
-                                controller: sdChildPassportNo[index],
-                                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.twentyText}'),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.width / 8,
-                              child: TextField(
-                                controller: sdChildSchoolNm[index],
-                                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.twentyOneText}'),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.width / 8,
-                              child: TextField(
-                                controller: sdChildStudy[index],
-                                decoration: editFormsInputDecoration('${SpouseDetailsTextHelper.twentyTwoText}'),
-                              ),
-                            ),
-                          ),
-                          Divider(color: Colors.grey,thickness: 1,endIndent: 20,indent: 20,)
-                        ],
-                      );
-                    },
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: InkWell(
+                      onTap: (){
+                        sdController.updateSpouse(getAccessToken.access_token, widget.user_id, widget.user_sop_id);
+                        //updateSpouse();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: PrimaryColorOne,
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Text(
+                          widget.tabStatus == 1 ? "Submit" : "Next",
+                          style: TextStyle(color: Colors.white,fontSize: 15,fontFamily: Constants.OPEN_SANS),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 5, 20, 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: InkWell(
-                    onTap: (){
-                      widget.pagecontroller.previousPage(duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                        color: PrimaryColorOne,
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Text(
-                        "Back",
-                        style: TextStyle(color: Colors.white,fontSize: 15,fontFamily: Constants.OPEN_SANS),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: InkWell(
-                    onTap: (){
-                       updateSpouse();
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                        color: PrimaryColorOne,
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Text(
-                        widget.tabStatus == 1 ? "Submit" : "Next",
-                        style: TextStyle(color: Colors.white,fontSize: 15,fontFamily: Constants.OPEN_SANS),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
         ],
-      ),
+      )),
     );
-  }
-
-  List? occupationTypes;
-  Future<String?> getOccupationType(var accesstoken) async {
-    print("States Calling");
-    await http.post(
-        Uri.parse(ApiConstants.getOVFEdit),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $accesstoken',
-        },
-        body: {
-          'user_id': widget.user_id,
-          'user_sop_id': widget.user_sop_id
-        }
-    ).then((response) {
-      var data = json.decode(response.body);
-      setState(() {
-        occupationTypes = data['data']['occupation'];
-      });
-      print("Education List -> $occupationTypes");
-    });
-  }
-  Future<void> updateSpouse() async {
-    var childStatus = sdChildBox == 'Yes' ? 1 : 0;
-    try {
-      Dio dio = Dio(BaseOptions(
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ${getAccessToken.access_token}',
-            'Accept': 'application/json',
-          }
-      ));
-
-      FormData formData = FormData.fromMap({
-        'step': 5,
-        'user_id': widget.user_id,
-        'user_sop_id': widget.user_sop_id,
-        'user[spouse_full_name]': sdSpouseNm.text,
-        'user[spouse_family_name]': sdMaidenFNm.text,
-        'user[spouse_passport_no]': sdPassportNo.text,
-        'user[spouse_dob]': sdSpouseBDate.text,
-        'user[date_of_marriage]': sdSpouseMDate.text,
-        'user[place_of_marriage]': sdMarriagePlace.text,
-        'user[date_of_betrothal]': sdEngageDate.text,
-        'user[marriage_reg_no]': sdMarriageCRNo.text,
-        'user[divorce_reg_no]': sdDivorceDRNo.text,
-        'user[spouse_education]': sdHighQualificationSpouse.text,
-        'user_spouse_experience[0][occupation]': _spOccupation.toString(),
-        'user_spouse_experience[0][designation]': sdDesignation.text,
-        'user_spouse_experience[0][organization_address]': sdOrganizationNm.text,
-        'user_spouse_experience[0][from_date]': sdStartDate.text,
-        'user_spouse_experience[0][to_date]': sdEndDate.text,
-        'user_spouse_experience[0][annual_income]': sdAnnualIncomeSpouse.text,
-        'user[have_child_status]': childStatus.toString(),
-      });
-      print("Form Data ->${formData.fields}");
-      if(childStatus == 1){
-        for(int i = 0; i < sdChildNm.length; i++) {
-          formData.fields.addAll([
-            MapEntry('user_child_detail[$i][full_name]', sdChildNm[i].text),
-            MapEntry('user_experience[$i][dob]', sdChildBirthDate[i].text),
-            MapEntry('user_experience[$i][birth_place]', sdChildBirthPlace[i].text),
-            MapEntry('user_experience[$i][passport_no]', sdChildPassportNo[i].text),
-            MapEntry('user_experience[$i][institute_name]', sdChildSchoolNm[i].text),
-            MapEntry('user_experience[$i][study_standard]', sdChildStudy[i].text),
-          ]);
-        }
-      }
-      final response = await dio.post(
-          ApiConstants.getOVFUpdate,
-          data: formData,
-          onSendProgress: (int sent, int total) {
-            print('$sent $total');
-          }
-      ).onError((error, stackTrace){
-        print("error > $error");
-        return Future.error(error!);
-      });
-      print("response code ->${response.statusCode}");
-      print("response Message ->${response.statusMessage}");
-      if (response.statusCode == 200) {
-        var jsonResponse = response.data;
-        var status = jsonResponse['status'];
-        var message = jsonResponse['message'];
-
-        print("Status -> $status");
-        print("Message -> $message");
-
-        if (status == 200) {
-          SnackBarMessageShow.successsMSG('$message', context);
-          widget.pagecontroller.nextPage(duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
-        } else {
-          SnackBarMessageShow.errorMSG('$message', context);
-          Navigator.pop(context);
-        }
-      } else {
-        SnackBarMessageShow.errorMSG('Something went wrong', context);
-        Navigator.pop(context);
-      }
-    } catch (error) {
-      SnackBarMessageShow.errorMSG('Something went wrong', context);
-      //Navigator.pop(context);
-    }
   }
 }

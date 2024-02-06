@@ -129,8 +129,8 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                   setState(() {});
                 },
                 child: Container(
-                  color: PrimaryColorOne,
                   padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: PrimaryColorOne),
                   child: Text("Add More +",style: TextStyle(color: Colors.white,fontFamily: Constants.OPEN_SANS,fontSize: 13),),
                 ),
               ),
@@ -145,10 +145,10 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
               Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
                     child: SizedBox(
                         width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width / 7.5,
+                        //height: MediaQuery.of(context).size.width / 7.5,
                         child: DropdownButtonFormField(
                           dropdownColor: Colors.white,
                           decoration: editFormsInputDecoration('${FundingSponsorTextHelper.firstText}'),
@@ -182,9 +182,9 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.width / 8,
+                      //height: MediaQuery.of(context).size.width / 8,
                       child: TextField(
                         controller: fsName,
                         decoration: editFormsInputDecoration('${FundingSponsorTextHelper.twoText}'),
@@ -192,10 +192,10 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                     child: SizedBox(
                         width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width / 7.5,
+                        //height: MediaQuery.of(context).size.width / 7.5,
                         child: DropdownButtonFormField(
                           dropdownColor: Colors.white,
                           decoration: editFormsInputDecoration('${FundingSponsorTextHelper.threeText}'),
@@ -229,9 +229,9 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.width / 8,
+                      //height: MediaQuery.of(context).size.width / 8,
                       child: TextField(
                         controller: fsSOrganization,
                         decoration: editFormsInputDecoration('${FundingSponsorTextHelper.fourText}'),
@@ -239,9 +239,9 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.width / 8,
+                      //height: MediaQuery.of(context).size.width / 8,
                       child: TextField(
                         controller: fsSAnnualIncome,
                         decoration: editFormsInputDecoration(('${FundingSponsorTextHelper.fiveText}')),
@@ -249,9 +249,9 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.width / 8,
+                      //height: MediaQuery.of(context).size.width / 8,
                       child: TextField(
                         controller: fsSFundAvaiable,
                         decoration: editFormsInputDecoration('${FundingSponsorTextHelper.sixText}'),
@@ -259,7 +259,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                     child: Column(
                       children: [
                         Align(
@@ -302,9 +302,9 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+                          padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                           child: SizedBox(
-                            height: MediaQuery.of(context).size.width / 8,
+                            //height: MediaQuery.of(context).size.width / 8,
                             child: TextField(
                               controller: fsBankName,
                               decoration: editFormsInputDecoration('${FundingSponsorTextHelper.sevenText}'),
@@ -312,9 +312,9 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+                          padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                           child: SizedBox(
-                            height: MediaQuery.of(context).size.width / 8,
+                            //height: MediaQuery.of(context).size.width / 8,
                             child: TextField(
                               controller: fsLoanAmount,
                               decoration: editFormsInputDecoration('${FundingSponsorTextHelper.eightText}'),
@@ -322,9 +322,9 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+                          padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                           child: SizedBox(
-                            height: MediaQuery.of(context).size.width / 8,
+                            //height: MediaQuery.of(context).size.width / 8,
                             child: TextField(
                               controller: fsGuarantor,
                               decoration: editFormsInputDecoration('${FundingSponsorTextHelper.nineText}'),
@@ -335,7 +335,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                     child: Column(
                       children: [
                         Align(
@@ -390,10 +390,10 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                           child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                                padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                 child: SizedBox(
                                     width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.width / 7.5,
+                                    //height: MediaQuery.of(context).size.width / 7.5,
                                     child: DropdownButtonFormField(
                                       dropdownColor: Colors.white,
                                       decoration: editFormsInputDecoration('${FundingSponsorTextHelper.tenText}'),
@@ -435,7 +435,7 @@ class _FundingSponsorPageState extends State<FundingSponsorPage> {
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
                                 child: SizedBox(
-                                  height: MediaQuery.of(context).size.width / 8,
+                                  //height: MediaQuery.of(context).size.width / 8,
                                   child: TextField(
                                     controller: fsAmount[index],
                                     decoration: editFormsInputDecoration('${FundingSponsorTextHelper.elevenText}'),
